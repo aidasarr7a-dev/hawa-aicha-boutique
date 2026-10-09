@@ -21,7 +21,7 @@ $lignes = [];
 foreach ($items as $i) {
     $lignes[] = '• ' . $i['nom_produit'] . ' × ' . $i['quantite'] . ' = ' . fcfa($i['prix'] * $i['quantite']);
 }
-$message = "Bonjour Hawa Aïcha Boutique, je viens de passer la commande n°{$cmd['id']}.\n"
+$message = "Bonjour Hawa Aïcha Boutique, je viens de passer la commande {$cmd['numero_commande']}.\n"
          . "Nom : {$cmd['prenom']} {$cmd['nom']}\n"
          . "Lieu : {$cmd['quartier']}, {$cmd['ville']}\n"
          . implode("\n", $lignes) . "\n"
@@ -38,7 +38,7 @@ require __DIR__ . '/includes/header.php';
 <div class="panel text-center mx-auto" style="max-width:640px">
   <div class="mb-3" style="font-size:3.5rem;color:var(--rose)"><i class="fa-solid fa-circle-check"></i></div>
   <h1 class="page-title">Merci <?= e($cmd['prenom']) ?> !</h1>
-  <p class="text-muted">Votre commande <strong>n°<?= (int)$cmd['id'] ?></strong> a bien été enregistrée. Nous vous contactons très vite pour confirmer la livraison.</p>
+  <p class="text-muted">Votre commande <strong><?= e($cmd['numero_commande']) ?></strong> a bien été enregistrée. Nous vous contactons très vite pour confirmer la livraison.</p>
 
   <div class="text-start border rounded-4 p-3 my-4" style="border-color:#f0d3e1!important">
     <?php foreach ($items as $i): ?>

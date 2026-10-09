@@ -29,6 +29,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Formulaires à envoi unique : le bouton se désactive après le premier clic
+  document.querySelectorAll('form[data-envoi-unique]').forEach(function (form) {
+    form.addEventListener('submit', function () {
+      var btn = form.querySelector('button:not([type="button"])');
+      if (!btn) return;
+      setTimeout(function () { btn.disabled = true; }, 0);
+      if (btn.dataset.texteEnvoi) btn.textContent = btn.dataset.texteEnvoi;
+    });
+  });
+
   // Disparition automatique des alertes
   document.querySelectorAll('.alert-success').forEach(function (a) {
     setTimeout(function () {

@@ -7,11 +7,21 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Statuts de commande : [libellé, couleur Bootstrap]
 const STATUTS = [
-    'nouvelle'  => ['Nouvelle',  'warning'],
-    'confirmee' => ['Confirmée', 'info'],
-    'livree'    => ['Livrée',    'success'],
-    'annulee'   => ['Annulée',   'secondary'],
+    'nouvelle'       => ['Nouvelle',                'warning'],
+    'en_preparation' => ['En préparation',          'info'],
+    'prete'          => ['Prête à livrer / remettre', 'primary'],
+    'livree'         => ['Livrée / remise',         'success'],
+    'annulee'        => ['Annulée',                 'secondary'],
+];
+
+// Statuts de paiement (indépendants du statut de commande)
+const STATUTS_PAIEMENT = [
+    'en_attente' => ['Paiement en attente', 'warning'],
+    'paye'       => ['Payé',                'success'],
+    'echec'      => ['Échec / annulé',      'danger'],
+    'rembourse'  => ['Remboursé',           'secondary'],
 ];
 
 const ICONES_CATEGORIES = [
@@ -55,10 +65,39 @@ function logo_url(): string
         : base_url('assets/img/logo.svg');
 }
 
+/**
+ * Lien WhatsApp. Tant que le numéro n'est pas renseigné dans config.php,
+ * WhatsApp s'ouvre avec le message et le client choisit le destinataire.
+ */
 function wa_link(string $message = ''): string
 {
     $url = 'https://wa.me/' . WHATSAPP_NUMBER;
     return $message !== '' ? $url . '?text=' . rawurlencode($message) : $url;
+}
+
+/** Affiche une coordonnée de config.php, ou « à compléter » si elle est vide. */
+function info_boutique(string $valeur, string $siVide = 'À compléter'): string
+{
+    return trim($valeur) !== '' ? e($valeur) : '<span class="a-completer">' . e($siVide) . '</span>';
+}
+
+function badge_statut(string $statut): string
+{
+    [$label, $cls] = STATUTS[$statut] ?? [$statut, 'secondary'];
+    return '<span class="badge text-bg-' . e($cls) . ' rounded-pill">' . e($label) . '</span>';
+}
+
+function badge_paiement(?string $statut): string
+{
+    $statut = $statut ?? 'en_attente';
+    [$label, $cls] = STATUTS_PAIEMENT[$statut] ?? [$statut, 'secondary'];
+    return '<span class="badge text-bg-' . e($cls) . ' rounded-pill">' . e($label) . '</span>';
+}
+
+/** Numéro de commande lisible et unique, basé sur l'identifiant : HA-2026-00012 */
+function numero_commande(int $id, ?string $date = null): string
+{
+    return 'HA-' . date('Y', $date ? strtotime($date) : time()) . '-' . str_pad((string)$id, 5, '0', STR_PAD_LEFT);
 }
 
 /* ---------- CSRF & messages flash ---------- */
@@ -116,7 +155,7 @@ function stock_info(int $stock): array
     if ($stock <= 0) {
         return ['Épuisé', 'soldout'];
     }
-    if ($stock <= 3) {
+    if ($stock <= SEUIL_STOCK) {
         return ['Dernières pièces', 'low'];
     }
     return ['En stock', 'ok'];
