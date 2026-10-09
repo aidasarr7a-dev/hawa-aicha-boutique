@@ -8,26 +8,34 @@ if (!empty($_SESSION['admin_id'])) {
 $erreur = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
-    // Petite temporisation contre les essais en rafale
-    $_SESSION['essais'] = ($_SESSION['essais'] ?? 0) + 1;
-    if ($_SESSION['essais'] > 5) {
-        sleep(2);
-    }
-    $user = trim($_POST['username'] ?? '');
-    $pass = (string)($_POST['password'] ?? '');
+    // Limitation des essais : 5 échecs par adresse IP sur 15 minutes (enregistrés en base)
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'inconnue';
+    $pdo = db();
+    $pdo->exec('DELETE FROM tentatives_connexion WHERE date_tentative < NOW() - INTERVAL 1 DAY');
+    $nb = $pdo->prepare('SELECT COUNT(*) FROM tentatives_connexion WHERE ip = ? AND date_tentative > NOW() - INTERVAL 15 MINUTE');
+    $nb->execute([$ip]);
 
-    $st = db()->prepare('SELECT * FROM admins WHERE username = ?');
-    $st->execute([$user]);
-    $admin = $st->fetch();
+    if ((int)$nb->fetchColumn() >= 5) {
+        $erreur = 'Trop de tentatives. Merci de patienter 15 minutes avant de réessayer.';
+    } else {
+        $user = trim($_POST['username'] ?? '');
+        $pass = (string)($_POST['password'] ?? '');
 
-    if ($admin && password_verify($pass, $admin['password_hash'])) {
-        session_regenerate_id(true);
-        $_SESSION['admin_id'] = (int)$admin['id'];
-        $_SESSION['admin_nom'] = $admin['username'];
-        $_SESSION['essais'] = 0;
-        redirect('index.php');
+        // Connexion avec l'identifiant ou l'adresse e-mail
+        $st = $pdo->prepare('SELECT * FROM admins WHERE username = ? OR (email IS NOT NULL AND email = ?) LIMIT 1');
+        $st->execute([$user, $user]);
+        $admin = $st->fetch();
+
+        if ($admin && password_verify($pass, $admin['password_hash'])) {
+            $pdo->prepare('DELETE FROM tentatives_connexion WHERE ip = ?')->execute([$ip]);
+            session_regenerate_id(true);
+            $_SESSION['admin_id'] = (int)$admin['id'];
+            $_SESSION['admin_nom'] = $admin['nom'] ?: $admin['username'];
+            redirect('index.php');
+        }
+        $pdo->prepare('INSERT INTO tentatives_connexion (ip) VALUES (?)')->execute([$ip]);
+        $erreur = 'Identifiant ou mot de passe incorrect.';
     }
-    $erreur = 'Identifiant ou mot de passe incorrect.';
 }
 ?><!DOCTYPE html>
 <html lang="fr">
@@ -54,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php if ($erreur): ?><div class="alert alert-danger rounded-4 py-2"><?= e($erreur) ?></div><?php endif; ?>
       <form method="post">
         <?= csrf_field() ?>
-        <div class="mb-3"><label class="form-label" for="username">Identifiant</label><input class="form-control" id="username" name="username" required autofocus autocomplete="username"></div>
+        <div class="mb-3"><label class="form-label" for="username">Identifiant ou e-mail</label><input class="form-control" id="username" name="username" required autofocus autocomplete="username"></div>
         <div class="mb-4"><label class="form-label" for="password">Mot de passe</label><input class="form-control" id="password" name="password" type="password" required autocomplete="current-password"></div>
         <button class="btn btn-rose w-100 btn-lg">Se connecter</button>
       </form>

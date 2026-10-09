@@ -1,0 +1,12 @@
+# Hawa Aïcha Boutique — protection des fichiers internes
+Options -Indexes
+
+# Scripts SQL, documentation, cahier des charges et fichiers cachés : jamais servis au public
+<FilesMatch "\.(sql|md|pdf|log|ini|bak)$|^\.">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(migrations|\.git)(/|$) - [F,L]
+</IfModule>

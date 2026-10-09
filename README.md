@@ -1,45 +1,133 @@
-# Hawa Aïcha Boutique — site e-commerce
+# Hawa Aïcha Boutique — site e-commerce PHP / MySQL
 
-Boutique en ligne mobile-first (HTML, CSS, Bootstrap 5, JavaScript, PHP, MySQL, PDO, Font Awesome).
-Thème rose et blanc (#fdf2f7 · #d63384 · #f8c8dc).
+> *L’élégance au quotidien, en gros comme au détail.*
 
-## Installation (XAMPP / WAMP / hébergement PHP)
+Boutique en ligne dynamique (PHP 8, MySQL/MariaDB, PDO, HTML5, CSS3, Bootstrap 5, JavaScript, Font Awesome),
+conforme au cahier des charges `Cahier_des_charges_Hawa_Aicha_Boutique.pdf`.
+Palette rose : `#FDEEF3` · `#F6C9D9` · `#E895B3` · `#C5628C` · `#9F3E63` · texte `#333333`.
 
-1. Copiez le dossier `hawa-aicha-boutique` dans `htdocs` (XAMPP) ou à la racine de votre hébergement.
-2. Dans phpMyAdmin, importez `schema.sql` (crée la base `hawa_aicha`, les tables, les catégories et des produits d'exemple).
-3. Ouvrez `config.php` et vérifiez : identifiants MySQL, **numéro WhatsApp** (format international sans « + », ex. `221770000000`).
-4. Ouvrez `http://localhost/hawa-aicha-boutique/`.
+---
 
-## Espace administrateur
+## 1. Lancer le site sur XAMPP
 
-- Adresse : `/admin/login.php` (lien discret en bas du site)
-- Identifiant : `admin` — mot de passe : `admin123`
-- **Changez le mot de passe dès la première connexion** (bouton « Mot de passe »).
+1. Copiez le dossier `hawa-aicha-boutique` dans `C:\xampp\htdocs\`.
+2. Ouvrez le **XAMPP Control Panel** et cliquez sur **Start** pour **Apache** et **MySQL**.
+3. Ouvrez phpMyAdmin : <http://localhost/phpmyadmin>
+   - **Installation neuve** (la base `hawa_aicha` n'existe pas) : onglet *Importer* → `schema.sql`.
+   - **Base déjà existante** : faites d'abord un export (onglet *Exporter*), puis importez
+     `migrations/2026-10-09_v2_cahier_des_charges.sql`. Ce script ne supprime aucune donnée
+     et peut être relancé sans risque. **Ne réimportez pas `schema.sql` sur une base existante.**
+4. Ouvrez le site : <http://localhost/hawa-aicha-boutique/>
 
-L'administrateur peut : ajouter / modifier / supprimer les produits (prix, stock, photo, « Nouveau », visible/masqué), gérer les catégories, consulter les commandes, changer leur statut (une commande annulée remet les articles en stock) et contacter le client sur WhatsApp.
+Les réglages de connexion MySQL se trouvent dans `config.php` (par défaut : `localhost`, `root`, sans mot de passe, base `hawa_aicha`).
 
-## Logo
+## 2. Identifiants de démonstration (environnement local)
 
-Un logo provisoire est fourni (`assets/img/logo.svg`). Pour utiliser le vrai logo Hawa Aïcha, déposez-le sous le nom `assets/img/logo.png` : il sera utilisé automatiquement.
+| Espace | Adresse | Identifiant | Mot de passe |
+|---|---|---|---|
+| Administration | <http://localhost/hawa-aicha-boutique/admin/login.php> | `admin` | `HawaDemo2026!` |
 
-## Parcours client
+- Le mot de passe est stocké haché (`password_hash`), jamais en clair.
+- **Changez-le dès la première connexion** : bouton « Mot de passe » de l'administration.
+- Après 5 erreurs de connexion depuis la même adresse, la connexion est bloquée 15 minutes.
 
-Produit → Ajouter au panier → Panier → Informations client → Commande → Confirmation (+ envoi WhatsApp pré-rempli).
-Le stock est décrémenté à la commande ; les prix sont toujours recalculés côté serveur.
+## 3. Informations à compléter avant la mise en ligne (`config.php`)
 
-## Sécurité incluse
+| Réglage | Valeur actuelle |
+|---|---|
+| `WHATSAPP_NUMBER`, `CONTACT_TELEPHONE` | 78 545 25 44 — **numéro de présentation du projet** |
+| `WAVE_NUMERO`, `ORANGE_MONEY_NUMERO` | 78 545 25 44 — **numéro de présentation du projet** |
+| `BOUTIQUE_ADRESSE` | Golf Sud, arrêt BRT de Golf Sud |
+| `CONTACT_EMAIL`, `ZONE_LIVRAISON` | vides → le site affiche « à compléter » |
+| Prix des six produits | prix de démonstration, à fixer dans l'administration |
+| Logo | provisoire (`assets/img/logo.svg`) ; déposez le vrai logo sous `assets/img/logo.png`, il sera utilisé automatiquement |
 
-Requêtes préparées PDO, protection CSRF, mots de passe hachés, échappement des sorties, validation et renommage des images envoyées (JPG/PNG/WebP, 3 Mo), exécution de scripts interdite dans `uploads/`.
+Le tableau de bord de l'administration rappelle les informations encore vides.
 
-## Structure
+## 4. Fonctionnalités
 
-    index.php  produits.php  produit.php  panier.php  commander.php  merci.php  contact.php
-    admin/     connexion, tableau de bord, produits, catégories, commandes, mot de passe
-    includes/  db.php, functions.php, header.php, footer.php
-    assets/    css/style.css, js/app.js, img/logo.svg
-    uploads/   photos des produits
-    schema.sql, config.php
+**Site public** : accueil (slogan, bannière, présentation, produits vedettes, avantages), À propos,
+catalogue (recherche, catégories, prix min/max, disponibilité), fiche produit (photo, stock, quantité),
+panier en session (quantités, suppression, sous-totaux, total, message WhatsApp prérempli),
+commande (nom, téléphone, adresse/quartier, ville/commune, livraison, paiement, instructions),
+confirmation avec numéro de commande et consignes de paiement, reçu imprimable, contact, bouton WhatsApp.
+
+**Commande** : prix et quantités recalculés côté serveur depuis la base, transaction SQL
+(stock décrémenté seulement s'il est suffisant), numéro unique `HA-AAAA-NNNNN`, jeton à usage unique
+contre les doubles envois, commande bloquée si le stock a changé avant la validation.
+
+**Paiements** (Wave, Orange Money, Espèces) : sans API officielle, chaque commande crée un paiement
+**« en attente »**. L'administrateur le confirme **manuellement** après vérification réelle
+(mode, date, référence facultative). Statuts : En attente, Payé, Échec/annulé, Remboursé —
+indépendants du statut de la commande. Aucun paiement n'est marqué « Payé » automatiquement.
+
+**Administration** : tableau de bord (produits, commandes, nouvelles commandes, paiements en attente,
+ruptures, ventes réellement payées), produits (ajout, modification, photo, désactivation, suppression),
+stock (à réapprovisionner, épuisés, masqués), catégories, commandes (recherche par numéro, téléphone
+ou nom ; statuts Nouvelle → En préparation → Prête → Livrée/remise, ou Annulée ; frais de livraison),
+paiements, reçu imprimable, changement de mot de passe, déconnexion sécurisée.
+
+**Reçu** : récapitulatif A4 imprimable ou enregistrable en PDF depuis le navigateur. Il affiche
+« Payé » uniquement après confirmation, sinon « Paiement en attente — non payé ».
+Ce document n'est pas présenté comme une facture fiscale.
+
+## 5. Base de données (`hawa_aicha`)
+
+Le nom proposé par le cahier des charges (`hawaaicha_boutique`) n'a pas été repris : la base
+`hawa_aicha` existait déjà et a été conservée. Correspondance avec le cahier des charges :
+
+| Cahier des charges | Projet |
+|---|---|
+| `admins.mot_de_passe_hash` | `admins.password_hash` |
+| `commandes.date_commande`, `montant_total`, `statut_commande`, `instructions` | `created_at`, `total`, `statut`, `remarque` |
+| `details_commande` (`prix_unitaire`, `sous_total`) | `commande_items` (`prix`, `sous_total` calculé) |
+| `produits.date_creation` | `produits.created_at` |
+| `clients`, `paiements` | identiques |
+
+Tables : `admins`, `tentatives_connexion`, `categories`, `produits`, `clients`, `commandes`,
+`commande_items`, `paiements` (InnoDB, clés étrangères, index). Le nom et le prix de chaque
+produit sont copiés dans la commande : modifier le catalogue ne change pas l'historique.
+Le stock et le prix ne peuvent pas être négatifs (contraintes `CHECK`).
+
+## 6. Sécurité
+
+Requêtes préparées PDO · `password_hash` / `password_verify` · régénération de l'identifiant de session
+à la connexion · déconnexion par formulaire POST protégé · protection CSRF sur tous les formulaires ·
+échappement des sorties (`htmlspecialchars`) · validation serveur des champs, prix, quantités et statuts ·
+photos contrôlées (type réel, extension, 3 Mo, nom aléatoire), exécution de scripts interdite dans `uploads/` ·
+transactions SQL pour commande, stock et paiements · limitation des tentatives de connexion ·
+fichiers internes (`.sql`, `.md`, `.pdf`, `migrations/`, `includes/`, `.git`) inaccessibles depuis le navigateur ·
+messages d'erreur sans détail technique.
+
+## 7. Structure
+
+    index.php  apropos.php  produits.php  produit.php  panier.php  commander.php  merci.php  recu.php  contact.php
+    admin/        connexion, tableau de bord, produits, catégories, commandes, paiements, mot de passe
+    includes/     db.php (PDO), functions.php, header.php, footer.php
+    assets/       css/style.css, css/recu.css, js/app.js, img/logo.svg
+    uploads/      photos des produits (modifiables depuis l'administration)
+    migrations/   scripts de mise à jour d'une base existante
+    schema.sql    installation neuve        config.php    réglages
+
+## 8. Photos de démonstration
+
+Photos libres de droits issues d'[Unsplash](https://unsplash.com/license), sans marque visible,
+remplaçables depuis l'administration (Produits → modifier → Photo) :
+parfum d'intérieur `n8BjsYWTH8w`, parfum corporel `D1P-vxlB_K0`, crème solaire `Xp0bTCLD07k`,
+sac à main `jKoRZkv2o0U`, voile `65v_6djIAFs`, jalabé `BGQDXS73ktE`
+(page de chaque photo : `https://unsplash.com/photos/<identifiant>`).
+
+## 9. Tests réalisés (XAMPP, PHP 8.2, MariaDB 10.4)
+
+Accueil sans erreur et catalogue chargé depuis MySQL · photos, recherche, catégories, filtres prix et
+disponibilité · ajout, modification et suppression dans le panier · commande enregistrée avec ses lignes,
+son client, son paiement et un numéro unique · double envoi sans doublon · stock insuffisant bloqué ·
+trois modes de paiement, confirmation manuelle, échec, remboursement · annulation : stock rétabli une
+seule fois · reçu « en attente » puis « Payé » · accès au reçu limité · connexion, blocage après 5 échecs,
+déconnexion, protection de toutes les pages admin · ajout, modification, désactivation, suppression d'un
+produit, refus d'un faux fichier image · affichage ordinateur et téléphone (390 px).
 
 ## Pour aller plus loin
 
-Intégration du paiement Wave / Orange Money via leur API marchande, calcul automatique des frais de livraison par zone.
+Intégration des API marchandes Wave / Orange Money (confirmation automatique), calcul automatique des
+frais de livraison par zone, e-mail de confirmation de commande.

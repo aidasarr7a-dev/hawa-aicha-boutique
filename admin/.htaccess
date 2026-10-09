@@ -1,0 +1,4 @@
+# Les fragments internes (_auth, _header, _footer) ne sont jamais appelés directement
+<FilesMatch "^_">
+  Require all denied
+</FilesMatch>
