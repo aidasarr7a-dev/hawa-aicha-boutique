@@ -188,3 +188,7 @@ a { text-decoration: none; }
   .hero { padding: 2.2rem 1.1rem; border-radius: 1.5rem; }
   .cart-line { flex-wrap: wrap; }
 }
+
+/* ---------- Paiement / informations à compléter ---------- */
+.pay-info { background: var(--rose-bg); border-radius: 1rem; padding: 1rem 1.1rem; }
+.a-completer { font-style: italic; color: var(--muted); }

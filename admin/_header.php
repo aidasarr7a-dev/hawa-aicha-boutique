@@ -7,6 +7,7 @@ $liens = [
     'produits'   => ['produits.php',   'fa-box-open',    'Produits'],
     'categories' => ['categories.php', 'fa-layer-group', 'Catégories'],
     'commandes'  => ['commandes.php',  'fa-receipt',     'Commandes'],
+    'paiements'  => ['paiements.php',  'fa-wallet',      'Paiements'],
 ];
 ?><!DOCTYPE html>
 <html lang="fr">
@@ -37,7 +38,7 @@ $liens = [
       <div class="d-flex flex-wrap gap-2">
         <a class="btn btn-outline-rose btn-sm" href="<?= e(base_url('index.php')) ?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Voir le site</a>
         <a class="btn btn-outline-rose btn-sm" href="motdepasse.php"><i class="fa-solid fa-key me-1"></i>Mot de passe</a>
-        <a class="btn btn-rose btn-sm" href="logout.php"><i class="fa-solid fa-right-from-bracket me-1"></i>Déconnexion</a>
+        <form method="post" action="logout.php" class="d-inline"><?= csrf_field() ?><button class="btn btn-rose btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i>Déconnexion</button></form>
       </div>
     </div>
   </div>

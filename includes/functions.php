@@ -94,6 +94,22 @@ function badge_paiement(?string $statut): string
     return '<span class="badge text-bg-' . e($cls) . ' rounded-pill">' . e($label) . '</span>';
 }
 
+/** Consignes de paiement affichées au client selon le mode choisi (HTML). */
+function instructions_paiement(string $mode, int $montant, string $numeroCommande): string
+{
+    $comptes = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO];
+    if (isset($comptes[$mode])) {
+        $numero = trim($comptes[$mode]) !== ''
+            ? '<strong class="text-nowrap">' . e($comptes[$mode]) . '</strong>'
+            : 'le numéro qui vous sera communiqué par la boutique sur WhatsApp';
+        return 'Envoyez <strong class="text-nowrap">' . fcfa($montant) . '</strong> par <strong>' . e($mode) . '</strong> au ' . $numero
+             . ', en indiquant la référence <strong>' . e($numeroCommande) . '</strong>. '
+             . 'Votre paiement sera confirmé par la boutique après vérification.';
+    }
+    return 'Vous réglez <strong class="text-nowrap">' . fcfa($montant) . '</strong> en <strong>espèces</strong> à la livraison ou au retrait de votre commande. '
+         . 'Le paiement est enregistré à la réception de l\'argent.';
+}
+
 /** Numéro de commande lisible et unique, basé sur l'identifiant : HA-2026-00012 */
 function numero_commande(int $id, ?string $date = null): string
 {

@@ -16,6 +16,9 @@ if (!$cmd) {
 $items = db()->prepare('SELECT * FROM commande_items WHERE commande_id = ?');
 $items->execute([$id]);
 $items = $items->fetchAll();
+$sp = db()->prepare('SELECT statut_paiement FROM paiements WHERE commande_id = ?');
+$sp->execute([$id]);
+$statutPaiement = $sp->fetchColumn() ?: 'en_attente';
 
 $lignes = [];
 foreach ($items as $i) {
@@ -48,14 +51,26 @@ require __DIR__ . '/includes/header.php';
       </div>
     <?php endforeach; ?>
     <hr>
-    <div class="d-flex justify-content-between"><strong>Total</strong><strong class="text-nowrap" style="color:var(--rose)"><?= fcfa($cmd['total']) ?></strong></div>
-    <div class="small text-muted mt-2">Paiement : <?= e($cmd['paiement']) ?> · Livraison : <?= e($cmd['quartier']) ?>, <?= e($cmd['ville']) ?></div>
+    <div class="d-flex justify-content-between"><strong>Total</strong><strong class="text-nowrap total-line fs-6"><?= fcfa($cmd['total']) ?></strong></div>
+    <div class="small text-muted mt-2"><?= e($cmd['mode_livraison']) ?> · <?= e($cmd['quartier']) ?>, <?= e($cmd['ville']) ?></div>
   </div>
 
-  <p class="mb-3">Pour aller plus vite, envoyez-nous votre commande sur WhatsApp :</p>
-  <a class="btn btn-wa btn-lg px-4" target="_blank" rel="noopener" href="<?= e(wa_link($message)) ?>">
-    <i class="fa-brands fa-whatsapp me-2"></i>Envoyer sur WhatsApp
-  </a>
+  <div class="text-start pay-info mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <strong><i class="fa-solid fa-wallet me-1"></i> Paiement : <?= e($cmd['paiement']) ?></strong>
+      <?= badge_paiement($statutPaiement) ?>
+    </div>
+    <p class="small mb-0"><?= instructions_paiement($cmd['paiement'], (int)$cmd['total'], $cmd['numero_commande']) ?></p>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-center gap-2">
+    <a class="btn btn-outline-rose btn-lg px-4" target="_blank" href="<?= e(base_url('recu.php?id=' . (int)$cmd['id'])) ?>">
+      <i class="fa-solid fa-print me-2"></i>Mon reçu
+    </a>
+    <a class="btn btn-wa btn-lg px-4" target="_blank" rel="noopener" href="<?= e(wa_link($message)) ?>">
+      <i class="fa-brands fa-whatsapp me-2"></i>Envoyer sur WhatsApp
+    </a>
+  </div>
   <div class="mt-3"><a href="<?= e(base_url('produits.php')) ?>">Continuer mes achats</a></div>
 </div>
 
