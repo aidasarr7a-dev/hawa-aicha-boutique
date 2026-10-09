@@ -131,10 +131,10 @@ INSERT INTO categories (id, nom, icone) VALUES
   (6, 'Maison', 'fa-house');
 
 -- Les six produits de démonstration (prix de démonstration, à modifier dans l'administration)
-INSERT INTO produits (categorie_id, nom, description, prix, stock, nouveau) VALUES
-  (1, 'Parfum d''intérieur', 'Parfum destiné à apporter une senteur agréable à la maison.', 4000, 8, 0),
-  (1, 'Parfum corporel', 'Parfum pour une utilisation quotidienne.', 3500, 12, 1),
-  (2, 'Crème solaire', 'Produit de protection solaire pour les soins de la peau.', 5000, 15, 1),
-  (3, 'Sac à main féminin', 'Sac élégant pour sorties et usage quotidien.', 9500, 5, 1),
-  (4, 'Voile pour femme', 'Voile élégant pour compléter différentes tenues.', 6000, 10, 1),
-  (5, 'Jalabé', 'Tenue traditionnelle élégante et confortable.', 12000, 4, 0);
+INSERT INTO produits (categorie_id, nom, description, prix, stock, nouveau, image) VALUES
+  (1, 'Parfum d''intérieur', 'Parfum destiné à apporter une senteur agréable à la maison.', 4000, 8, 0, 'aa6d9e308b60110b5075.jpg'),
+  (1, 'Parfum corporel', 'Parfum pour une utilisation quotidienne.', 3500, 12, 1, '63ddb7d39bcb946365bb.jpg'),
+  (2, 'Crème solaire', 'Produit de protection solaire pour les soins de la peau.', 5000, 15, 1, '08662ba3f88d249c97d3.jpg'),
+  (3, 'Sac à main féminin', 'Sac élégant pour sorties et usage quotidien.', 9500, 5, 1, 'e10cf1b5d0e50d857246.jpg'),
+  (4, 'Voile pour femme', 'Voile élégant pour compléter différentes tenues.', 6000, 10, 1, '4044a31816ba993c6f1c.jpg'),
+  (5, 'Jalabé', 'Tenue traditionnelle élégante et confortable.', 12000, 4, 0, '0f0394656b0681c5f813.jpg');

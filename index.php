@@ -17,9 +17,9 @@ $nouveautes = db()->query(
 <section class="hero mb-5">
   <div class="row align-items-center g-4">
     <div class="col-lg-7">
-      <span class="eyebrow"><i class="fa-solid fa-sparkles me-1"></i> Nouveaux arrivages réguliers</span>
-      <h1 class="mt-3 mb-3">Des produits de <span>qualité</span> à prix accessibles</h1>
-      <p class="lead text-muted mb-4">Parfums, beauté, sacs, chaussures, jalabés et bien plus : trouvez tout au même endroit et commandez en quelques clics depuis votre téléphone.</p>
+      <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Nouveaux arrivages réguliers</span>
+      <h1 class="mt-3 mb-3">L’élégance <span>au quotidien</span>, en gros comme au détail</h1>
+      <p class="lead text-muted mb-4">Parfums, soins de beauté, sacs, voiles et jalabés : des produits de qualité à prix accessibles pour toute la famille, à commander en quelques clics depuis votre téléphone.</p>
       <div class="d-flex flex-wrap gap-2">
         <a href="<?= e(base_url('produits.php')) ?>" class="btn btn-rose btn-lg px-4">Voir les produits</a>
         <a href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, j\'aimerais avoir des informations.')) ?>" target="_blank" rel="noopener" class="btn btn-wa btn-lg px-4">
@@ -29,10 +29,14 @@ $nouveautes = db()->query(
     </div>
     <div class="col-lg-5 d-none d-md-block">
       <div class="hero-art" aria-hidden="true">
-        <div class="tile"><i class="fa-solid fa-spray-can-sparkles"></i></div>
-        <div class="tile"><i class="fa-solid fa-bag-shopping"></i></div>
-        <div class="tile"><i class="fa-solid fa-shirt"></i></div>
-        <div class="tile"><i class="fa-solid fa-heart"></i></div>
+        <?php
+        $vitrine = array_values(array_filter($nouveautes, fn($p) => !empty($p['image'])));
+        $icones = ['fa-spray-can-sparkles', 'fa-bag-shopping', 'fa-shirt', 'fa-heart'];
+        for ($i = 0; $i < 4; $i++): ?>
+          <div class="tile">
+            <?php if (isset($vitrine[$i])): ?><img src="<?= e(product_image($vitrine[$i]['image'])) ?>" alt=""><?php else: ?><i class="fa-solid <?= $icones[$i] ?>"></i><?php endif; ?>
+          </div>
+        <?php endfor; ?>
       </div>
     </div>
   </div>
@@ -58,8 +62,8 @@ $nouveautes = db()->query(
 <section class="mb-5">
   <div class="d-flex justify-content-between align-items-end mb-4">
     <div>
-      <h2 class="section-title">Nouveautés</h2>
-      <p class="section-sub mb-0">Les derniers arrivages de la boutique.</p>
+      <h2 class="section-title">Produits vedettes</h2>
+      <p class="section-sub mb-0">Nouveautés et coups de cœur de la boutique.</p>
     </div>
     <a href="<?= e(base_url('produits.php')) ?>" class="btn btn-outline-rose btn-sm">Tout voir <i class="fa-solid fa-arrow-right ms-1"></i></a>
   </div>
@@ -73,12 +77,26 @@ $nouveautes = db()->query(
 </section>
 
 <section class="mb-5">
+  <div class="panel presentation">
+    <div class="row g-4 align-items-center">
+      <div class="col-md-8">
+        <h2 class="section-title">Bienvenue chez Hawa Aïcha</h2>
+        <p class="text-muted mb-0">Hawa Aïcha Boutique propose des produits de beauté, de parfumerie, de mode et des accessoires pour les femmes, les hommes et toute la famille. Notre engagement : une sélection soignée, des prix accessibles et une vente en gros comme au détail. Les arrivages changent régulièrement, revenez souvent !</p>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <a href="<?= e(base_url('apropos.php')) ?>" class="btn btn-outline-rose px-4">Découvrir la boutique</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5">
   <h2 class="section-title mb-4">Pourquoi Hawa Aïcha ?</h2>
   <div class="row g-3">
     <div class="col-6 col-lg-3"><div class="why-card"><i class="fa-solid fa-star"></i><h5>Qualité</h5><p class="text-muted small mb-0">Des articles sélectionnés auprès de fournisseurs fiables.</p></div></div>
     <div class="col-6 col-lg-3"><div class="why-card"><i class="fa-solid fa-tags"></i><h5>Prix accessibles</h5><p class="text-muted small mb-0">Des prix cassés pour toute la famille, en FCFA.</p></div></div>
-    <div class="col-6 col-lg-3"><div class="why-card"><i class="fa-solid fa-boxes-stacked"></i><h5>Variété</h5><p class="text-muted small mb-0">Plusieurs catégories de produits au même endroit.</p></div></div>
-    <div class="col-6 col-lg-3"><div class="why-card"><i class="fa-solid fa-mobile-screen"></i><h5>Commande facile</h5><p class="text-muted small mb-0">Commandez depuis votre téléphone, payez avec Wave ou Orange Money.</p></div></div>
+    <div class="col-6 col-lg-3"><div class="why-card"><i class="fa-solid fa-boxes-stacked"></i><h5>Gros et détail</h5><p class="text-muted small mb-0">À l’unité pour vous, en quantité pour les revendeuses.</p></div></div>
+    <div class="col-6 col-lg-3"><div class="why-card"><i class="fa-solid fa-mobile-screen"></i><h5>Commande facile</h5><p class="text-muted small mb-0">Commandez depuis votre téléphone, payez par Wave, Orange Money ou en espèces.</p></div></div>
   </div>
 </section>
 

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id  = (int)($_POST['id'] ?? 0);
     $retour = $_POST['retour'] ?? '';
     // Redirection uniquement vers une page locale du site
-    if (!preg_match('/^[a-z_]+\.php(\?[\w=&%.\-]*)?$/i', $retour)) {
+    if (!preg_match('/^[a-z_]+\.php(\?[\w=&%.+\-]*)?$/i', $retour)) {
         $retour = 'panier.php';
     }
 
@@ -106,6 +106,14 @@ require __DIR__ . '/includes/header.php';
         <hr>
         <div class="d-flex justify-content-between align-items-center mb-3"><span class="fw-medium">Total</span><span class="total-line"><?= fcfa($total) ?></span></div>
         <a href="<?= e(base_url('commander.php')) ?>" class="btn btn-rose w-100 btn-lg">Commander <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        <?php
+        $waPanier = "Bonjour Hawa Aïcha Boutique, je suis intéressé(e) par :\n";
+        foreach ($lignes as $l) {
+            $waPanier .= '• ' . $l['p']['nom'] . ' × ' . $l['qty'] . ' = ' . fcfa($l['sous_total']) . "\n";
+        }
+        $waPanier .= 'Total : ' . fcfa($total);
+        ?>
+        <a href="<?= e(wa_link($waPanier)) ?>" target="_blank" rel="noopener" class="btn btn-wa w-100 mt-2"><i class="fa-brands fa-whatsapp me-1"></i> Poser une question sur WhatsApp</a>
         <form method="post" class="mt-2 text-center">
           <?= csrf_field() ?>
           <input type="hidden" name="action" value="clear">

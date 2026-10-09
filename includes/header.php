@@ -10,8 +10,8 @@ $nbPanier = cart_count();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e($fullTitle) ?></title>
-  <meta name="description" content="Parfums, beauté, sacs, chaussures, jalabés, sous-vêtements et articles pour la maison : des produits de qualité à prix accessibles, nouveautés régulières, commande simple depuis votre téléphone.">
-  <meta name="theme-color" content="#d63384">
+  <meta name="description" content="Hawa Aïcha Boutique : parfums, beauté, sacs, voiles et jalabés. Des produits de qualité à prix accessibles, en gros comme au détail, à commander depuis votre téléphone.">
+  <meta name="theme-color" content="#C5628C">
   <link rel="icon" href="<?= e(base_url('assets/img/logo.svg')) ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +40,7 @@ $nbPanier = cart_count();
       <ul class="navbar-nav mx-auto mb-2 mb-md-0 gap-md-2">
         <li class="nav-item"><a class="nav-link <?= $page === 'accueil' ? 'active' : '' ?>" href="<?= e(base_url('index.php')) ?>">Accueil</a></li>
         <li class="nav-item"><a class="nav-link <?= $page === 'produits' ? 'active' : '' ?>" href="<?= e(base_url('produits.php')) ?>">Produits</a></li>
+        <li class="nav-item"><a class="nav-link <?= $page === 'apropos' ? 'active' : '' ?>" href="<?= e(base_url('apropos.php')) ?>">À propos</a></li>
         <li class="nav-item"><a class="nav-link <?= $page === 'contact' ? 'active' : '' ?>" href="<?= e(base_url('contact.php')) ?>">Contact</a></li>
         <li class="nav-item"><a class="nav-link d-md-none <?= $page === 'panier' ? 'active' : '' ?>" href="<?= e(base_url('panier.php')) ?>">Panier</a></li>
       </ul>
