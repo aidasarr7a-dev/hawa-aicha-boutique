@@ -28,12 +28,10 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
     <div class="col-lg-6">
       <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Nouveaux arrivages réguliers</span>
       <h1 class="mt-3 mb-3">L’élégance <span>au quotidien</span>, en gros comme au détail</h1>
-      <p class="lead text-muted mb-4">Parfums, soins de beauté, sacs, bijoux, voiles, jalabés et boubous : des produits de qualité à prix accessibles pour toute la famille.</p>
+      <p class="lead text-muted mb-4">Parfums, soins de beauté, sacs, bijoux, voiles, jalabés et décoration : des produits de qualité à prix accessibles pour toute la famille.</p>
       <div class="d-flex flex-wrap gap-2 mb-4">
-        <a href="<?= e(base_url('produits.php')) ?>" class="btn btn-rose btn-lg px-4">Découvrir nos <?= $nbProduits ?> produits</a>
-        <a href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, j\'aimerais avoir des informations.')) ?>" target="_blank" rel="noopener" class="btn btn-wa btn-lg px-4">
-          <i class="fa-brands fa-whatsapp me-1"></i> WhatsApp
-        </a>
+        <a href="<?= e(base_url('produits.php')) ?>" class="btn btn-rose btn-lg px-4">Découvrir nos produits</a>
+        <a href="<?= e(base_url(client_connecte() ? 'mon-compte.php' : 'compte.php?onglet=inscription')) ?>" class="btn btn-outline-rose btn-lg px-4"><i class="fa-regular fa-user me-1"></i> <?= client_connecte() ? 'Mon compte' : 'Créer mon compte' ?></a>
       </div>
       <div class="hero-badges">
         <span><i class="fa-solid fa-wallet"></i> Wave · Orange Money · Espèces</span>
@@ -50,13 +48,6 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
       </div>
     </div>
   </div>
-</section>
-
-<section class="bande-atouts mb-5">
-  <div><i class="fa-solid fa-star"></i><span><strong>Qualité</strong>Articles sélectionnés</span></div>
-  <div><i class="fa-solid fa-tags"></i><span><strong>Prix accessibles</strong>En FCFA, sans surprise</span></div>
-  <div><i class="fa-solid fa-boxes-stacked"></i><span><strong>Gros et détail</strong>Pour vous et les revendeuses</span></div>
-  <div><i class="fa-solid fa-truck-fast"></i><span><strong>Livraison ou retrait</strong>À domicile ou en boutique</span></div>
 </section>
 
 <?php if ($categories): ?>
@@ -114,15 +105,15 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
 </section>
 
 <section class="mb-5" id="localisation">
-  <?php bloc_localisation(); ?>
+  <?php bloc_localisation(false); ?>
 </section>
 
 <section class="cta-band text-center">
-  <h2 class="mb-2">Une question sur un produit ?</h2>
-  <p class="mb-4 opacity-75">Écrivez-nous sur WhatsApp ou suivez les nouveautés sur TikTok <?= e(TIKTOK_HANDLE) ?>.</p>
+  <h2 class="mb-2">Suivez nos nouveautés</h2>
+  <p class="mb-4 opacity-75">Nouveaux arrivages en vidéo sur TikTok et Snapchat.</p>
   <div class="d-flex flex-wrap gap-2 justify-content-center">
-    <a class="btn btn-light btn-lg px-4" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, j\'aimerais avoir des informations.')) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</a>
     <a class="btn btn-light btn-lg px-4" href="<?= e(TIKTOK_URL) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok me-1"></i> TikTok</a>
+    <a class="btn btn-light btn-lg px-4" href="<?= e(SNAPCHAT_URL) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-snapchat me-1"></i> Snapchat</a>
   </div>
 </section>
 

@@ -79,7 +79,7 @@ function lien_filtre(string $statut, string $mode): string
           <td><?= e($p['mode_paiement']) ?></td>
           <td class="text-nowrap fw-medium"><?= fcfa($p['montant']) ?></td>
           <td><?= badge_paiement($p['statut_paiement']) ?></td>
-          <td class="small"><?= e($p['reference_transaction'] ?? '—') ?></td>
+          <td class="small"><?= e($p['reference_transaction'] ?? '—') ?><?php if (!empty($p['date_declaration']) && $p['statut_paiement'] === 'en_attente'): ?><div><span class="badge rounded-pill text-bg-info">Déclaré payé</span> <?= e($p['reference_client']) ?></div><?php endif; ?></td>
           <td class="small text-nowrap"><?= $p['date_confirmation'] ? e(date('d/m/Y H:i', strtotime($p['date_confirmation']))) : '—' ?></td>
           <td class="text-end"><a class="btn btn-outline-rose btn-sm text-nowrap" href="commande.php?id=<?= (int)$p['commande_id'] ?>#paiement"><?= $p['statut_paiement'] === 'en_attente' ? 'Vérifier' : 'Détails' ?></a></td>
         </tr>

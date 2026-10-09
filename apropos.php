@@ -13,22 +13,12 @@ $categories = get_categories();
 </section>
 
 <div class="row g-4 mb-5">
-  <div class="col-lg-7">
+  <div class="col-12">
     <div class="panel h-100">
       <h2 class="section-title mb-3">Qui sommes-nous ?</h2>
       <p>Hawa Aïcha Boutique vend des produits de <strong>beauté</strong>, de <strong>parfumerie</strong>, de <strong>mode</strong> et des <strong>accessoires</strong> pour les femmes, les hommes et les familles.</p>
       <p>Notre idée est simple : permettre à chacun de se faire plaisir et de prendre soin de soi avec des articles de qualité, sans se ruiner. Les arrivages changent régulièrement, ce qui permet de découvrir souvent de nouveaux produits.</p>
       <p class="mb-0">Vous pouvez commander directement sur ce site, nous écrire sur WhatsApp ou passer nous voir à la boutique.</p>
-    </div>
-  </div>
-  <div class="col-lg-5">
-    <div class="panel h-100">
-      <h2 class="h5 mb-3">La boutique</h2>
-      <ul class="list-unstyled mb-0">
-        <li class="d-flex gap-3 mb-3"><i class="fa-solid fa-location-dot mt-1" style="color:var(--rose)"></i><span><strong>Adresse</strong><br><span class="text-muted small"><?= info_boutique(BOUTIQUE_ADRESSE) ?></span></span></li>
-        <li class="d-flex gap-3 mb-3"><i class="fa-solid fa-phone mt-1" style="color:var(--rose)"></i><span><strong>Téléphone / WhatsApp</strong><br><span class="text-muted small"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span></li>
-        <li class="d-flex gap-3"><i class="fa-solid fa-wallet mt-1" style="color:var(--rose)"></i><span><strong>Paiement</strong><br><span class="text-muted small">Wave, Orange Money ou espèces</span></span></li>
-      </ul>
     </div>
   </div>
 </div>
@@ -58,7 +48,7 @@ $categories = get_categories();
   <h2 class="mb-2">Commande en gros ou question ?</h2>
   <p class="mb-4 opacity-75">Écrivez-nous, nous vous répondons rapidement.</p>
   <div class="d-flex flex-wrap gap-2 justify-content-center">
-    <a class="btn btn-light btn-lg px-4" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, je suis intéressé(e) par une commande en gros.')) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</a>
+    <a class="btn btn-light btn-lg px-4" href="<?= e(base_url('contact.php')) ?>"><i class="fa-solid fa-envelope me-1"></i> Nous écrire</a>
     <a class="btn btn-light btn-lg px-4" href="<?= e(base_url('produits.php')) ?>">Voir les produits</a>
   </div>
 </section>

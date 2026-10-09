@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS admins (
 CREATE TABLE IF NOT EXISTS tentatives_connexion (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ip VARCHAR(45) NOT NULL,
+  espace VARCHAR(10) NOT NULL DEFAULT 'admin',
   date_tentative TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_tentative_ip_date (ip, date_tentative)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -54,10 +55,13 @@ CREATE TABLE IF NOT EXISTS clients (
   nom_complet VARCHAR(200) NOT NULL,
   telephone VARCHAR(30) NOT NULL,
   email VARCHAR(150) NULL,
+  mot_de_passe_hash VARCHAR(255) NULL,
   adresse VARCHAR(255) NULL,
   ville VARCHAR(100) NULL,
   date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_clients_telephone (telephone)
+  derniere_connexion DATETIME NULL,
+  UNIQUE KEY uq_clients_telephone (telephone),
+  UNIQUE KEY uq_clients_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS commandes (
@@ -108,6 +112,8 @@ CREATE TABLE IF NOT EXISTS paiements (
   montant INT NOT NULL DEFAULT 0,
   statut_paiement VARCHAR(20) NOT NULL DEFAULT 'en_attente',
   reference_transaction VARCHAR(100) NULL,
+  reference_client VARCHAR(100) NULL,
+  date_declaration DATETIME NULL,
   note VARCHAR(255) NULL,
   date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   date_paiement DATETIME NULL,
@@ -117,6 +123,18 @@ CREATE TABLE IF NOT EXISTS paiements (
   INDEX idx_paiements_statut (statut_paiement),
   CONSTRAINT fk_paiement_commande FOREIGN KEY (commande_id) REFERENCES commandes(id) ON DELETE CASCADE,
   CONSTRAINT fk_paiement_admin FOREIGN KEY (confirme_par) REFERENCES admins(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS messages_contact (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(150) NOT NULL,
+  telephone VARCHAR(30) NULL,
+  email VARCHAR(150) NULL,
+  sujet VARCHAR(150) NULL,
+  message TEXT NOT NULL,
+  lu TINYINT(1) NOT NULL DEFAULT 0,
+  date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_messages_lu (lu)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Administrateur de démonstration : identifiant « admin », mot de passe « HawaDemo2026! »
@@ -148,4 +166,4 @@ INSERT INTO produits (categorie_id, nom, description, prix, stock, nouveau, imag
   (3, 'Bijoux fantaisie dorés', 'Collier et bracelets fantaisie de couleur dorée.', 5000, 8, 0, 'a5c143c32c3e706fa2b0.jpg'),
   (3, 'Lunettes de soleil', 'Lunettes de soleil au style rétro.', 3000, 15, 0, '57a663074db811848997.jpg'),
   (7, 'Sandales pour femme', 'Sandales confortables pour tous les jours.', 8000, 3, 1, '8a72f390a1f279db2b22.jpg'),
-  (5, 'Grand boubou pour homme', 'Tenue traditionnelle élégante pour homme.', 15000, 4, 0, 'de52cce6d36525caa9ab.jpg');
+  (6, 'Coussins décoratifs', 'Coussins pour décorer et apporter du confort au salon ou à la chambre.', 6500, 8, 1, '1c329fda442b5e6ae8d6.jpg');

@@ -20,7 +20,7 @@ define('SITE_SLOGAN', 'L’élégance au quotidien, en gros comme au détail.');
 // Numéros de présentation du projet : à remplacer par ceux de la boutique avant la mise en ligne.
 define('WHATSAPP_NUMBER', '221785452544');
 define('CONTACT_TELEPHONE', '+221 78 545 25 44');
-define('CONTACT_EMAIL', '');          // ex : 'contact@hawaaicha.com'
+define('CONTACT_EMAIL', 'aidasarr7.a@gmail.com');
 define('BOUTIQUE_ADRESSE', 'Golf Sud, arrêt BRT de Golf Sud');
 // Position de la boutique sur la carte (arrêt « Golf Sud », Route de Niayes, d'après OpenStreetMap).
 // Pour un point plus précis : ouvrez Google Maps, appuyez longuement sur la boutique et recopiez les deux nombres.
@@ -33,6 +33,9 @@ define('ORANGE_MONEY_NUMERO', '78 545 25 44');  // numéro Orange Money qui reç
 // Réseaux sociaux
 define('TIKTOK_URL', 'https://www.tiktok.com/@hawaaicha');
 define('TIKTOK_HANDLE', '@hawaaicha');
+// Snapchat : identifiant à confirmer par la propriétaire
+define('SNAPCHAT_URL', 'https://www.snapchat.com/add/hawaaicha');
+define('SNAPCHAT_HANDLE', 'hawaaicha');
 
 // Moyens de paiement proposés au client
 define('MODES_PAIEMENT', ['Wave', 'Orange Money', 'Espèces']);

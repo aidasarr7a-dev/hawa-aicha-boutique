@@ -2,23 +2,20 @@
 require_once __DIR__ . '/includes/functions.php';
 
 $id = (int)($_GET['id'] ?? 0);
-// Seul le client qui vient de commander peut voir cette page
-if ($id <= 0 || ($_SESSION['derniere_commande'] ?? 0) !== $id) {
-    redirect(base_url('index.php'));
-}
-
+// Visible par le client qui vient de commander, le client connecté propriétaire ou l'administrateur
 $st = db()->prepare('SELECT * FROM commandes WHERE id = ?');
 $st->execute([$id]);
 $cmd = $st->fetch();
-if (!$cmd) {
+if (!$cmd || !peut_voir_commande($cmd)) {
     redirect(base_url('index.php'));
 }
 $items = db()->prepare('SELECT * FROM commande_items WHERE commande_id = ?');
 $items->execute([$id]);
 $items = $items->fetchAll();
-$sp = db()->prepare('SELECT statut_paiement FROM paiements WHERE commande_id = ?');
+$sp = db()->prepare('SELECT * FROM paiements WHERE commande_id = ?');
 $sp->execute([$id]);
-$statutPaiement = $sp->fetchColumn() ?: 'en_attente';
+$paiement = $sp->fetch() ?: ['mode_paiement' => $cmd['paiement'], 'statut_paiement' => 'en_attente', 'date_declaration' => null];
+$client = client_connecte();
 
 $lignes = [];
 foreach ($items as $i) {
@@ -55,22 +52,23 @@ require __DIR__ . '/includes/header.php';
     <div class="small text-muted mt-2"><?= e($cmd['mode_livraison']) ?> · <?= e($cmd['adresse_livraison'] ? $cmd['adresse_livraison'] . ', ' : '') ?><?= e($cmd['ville']) ?></div>
   </div>
 
-  <div class="text-start pay-info mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <strong><i class="fa-solid fa-wallet me-1"></i> Paiement : <?= e($cmd['paiement']) ?></strong>
-      <?= badge_paiement($statutPaiement) ?>
-    </div>
-    <p class="small mb-0"><?= instructions_paiement($cmd['paiement'], (int)$cmd['total'], $cmd['numero_commande']) ?></p>
+  <div class="text-start mb-4">
+    <?php bloc_payer($cmd, $paiement); ?>
   </div>
 
   <div class="d-flex flex-wrap justify-content-center gap-2">
-    <a class="btn btn-outline-rose btn-lg px-4" target="_blank" href="<?= e(base_url('recu.php?id=' . (int)$cmd['id'])) ?>">
-      <i class="fa-solid fa-print me-2"></i>Mon reçu
+    <a class="btn btn-rose btn-lg px-4" target="_blank" href="<?= e(base_url('recu.php?id=' . (int)$cmd['id'])) ?>">
+      <i class="fa-solid fa-file-invoice me-2"></i>Ma facture
     </a>
     <a class="btn btn-wa btn-lg px-4" target="_blank" rel="noopener" href="<?= e(wa_link($message)) ?>">
       <i class="fa-brands fa-whatsapp me-2"></i>Envoyer sur WhatsApp
     </a>
   </div>
+  <?php if (!$client): ?>
+    <div class="alert-compte mt-4 text-start"><i class="fa-solid fa-user-plus me-2"></i><strong>Suivez votre commande et retrouvez vos factures :</strong> <a href="<?= e(base_url('compte.php?onglet=inscription')) ?>">créez votre compte</a> avec le même numéro de téléphone.</div>
+  <?php else: ?>
+    <div class="mt-3"><a href="<?= e(base_url('mon-compte.php?commande=' . (int)$cmd['id'])) ?>">Suivre cette commande dans mon compte</a></div>
+  <?php endif; ?>
   <div class="mt-3"><a href="<?= e(base_url('produits.php')) ?>">Continuer mes achats</a></div>
 </div>
 

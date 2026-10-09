@@ -8,7 +8,11 @@ $liens = [
     'categories' => ['categories.php', 'fa-layer-group', 'Catégories'],
     'commandes'  => ['commandes.php',  'fa-receipt',     'Commandes'],
     'paiements'  => ['paiements.php',  'fa-wallet',      'Paiements'],
+    'clients'    => ['clients.php',    'fa-users',       'Clients'],
+    'messages'   => ['messages.php',   'fa-envelope',    'Messages'],
 ];
+$nbMessagesNonLus = (int)db()->query('SELECT COUNT(*) FROM messages_contact WHERE lu = 0')->fetchColumn();
+$nbPaiementsDeclares = (int)db()->query("SELECT COUNT(*) FROM paiements WHERE statut_paiement = 'en_attente' AND date_declaration IS NOT NULL")->fetchColumn();
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,16 +27,17 @@ $liens = [
   <link href="<?= e(base_url('assets/css/style.css')) ?>" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg admin-nav sticky-top">
+<nav class="navbar navbar-expand-xl admin-nav sticky-top">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
       <img src="<?= e(logo_url()) ?>" alt="" height="36"><span class="brand-text fs-5">Administration</span>
     </a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#amenu" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
     <div class="collapse navbar-collapse" id="amenu">
-      <ul class="navbar-nav me-auto gap-lg-1">
+      <ul class="navbar-nav me-auto gap-xl-1">
         <?php foreach ($liens as $k => [$href, $ico, $txt]): ?>
-          <li class="nav-item"><a class="nav-link <?= $adminPage === $k ? 'active' : '' ?>" href="<?= $href ?>"><i class="fa-solid <?= $ico ?> me-1"></i><?= $txt ?></a></li>
+          <?php $pastille = ['messages' => $nbMessagesNonLus, 'paiements' => $nbPaiementsDeclares][$k] ?? 0; ?>
+          <li class="nav-item"><a class="nav-link <?= $adminPage === $k ? 'active' : '' ?>" href="<?= $href ?>"><i class="fa-solid <?= $ico ?> me-1"></i><?= $txt ?><?php if ($pastille): ?> <span class="badge rounded-pill text-bg-danger"><?= $pastille ?></span><?php endif; ?></a></li>
         <?php endforeach; ?>
       </ul>
       <div class="d-flex flex-wrap gap-2">

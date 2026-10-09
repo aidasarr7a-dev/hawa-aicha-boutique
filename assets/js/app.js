@@ -52,6 +52,19 @@ document.addEventListener('DOMContentLoaded', function () {
     majAdresse();
   }
 
+  // Paiement : copier le numéro Wave / Orange Money
+  document.querySelectorAll('[data-copier]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var texte = btn.dataset.copier;
+      var ok = function () { btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié'; };
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(texte).then(ok, function () { window.prompt('Numéro à copier :', texte); });
+      } else {
+        window.prompt('Numéro à copier :', texte);
+      }
+    });
+  });
+
   // Disparition automatique des alertes
   document.querySelectorAll('.alert-success').forEach(function (a) {
     setTimeout(function () {

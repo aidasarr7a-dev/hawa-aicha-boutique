@@ -15,7 +15,7 @@ Palette rose : `#FDEEF3` · `#F6C9D9` · `#E895B3` · `#C5628C` · `#9F3E63` · 
 3. Ouvrez phpMyAdmin : <http://localhost/phpmyadmin>
    - **Installation neuve** (la base `hawa_aicha` n'existe pas) : onglet *Importer* → `schema.sql`.
    - **Base déjà existante** : faites d'abord un export (onglet *Exporter*), puis importez
-     les scripts du dossier `migrations/` dans l'ordre (`…_v2_…` puis `…_v3_…`). Ils ne suppriment aucune
+     les scripts du dossier `migrations/` dans l'ordre (`…_v2_…`, puis `…_v3_…`, puis `…_v4_…`). Ils ne suppriment aucune
      donnée et peuvent être relancés sans risque. **Ne réimportez pas `schema.sql` sur une base existante.**
 4. Ouvrez le site : <http://localhost/hawa-aicha-boutique/>
 
@@ -26,6 +26,7 @@ Les réglages de connexion MySQL se trouvent dans `config.php` (par défaut : `l
 | Espace | Adresse | Identifiant | Mot de passe |
 |---|---|---|---|
 | Administration | <http://localhost/hawa-aicha-boutique/admin/login.php> | `admin` | `HawaDemo2026!` |
+| Espace client | <http://localhost/hawa-aicha-boutique/compte.php> | créez un compte avec votre téléphone | mot de passe choisi (8 caractères min.) |
 
 - Le mot de passe est stocké haché (`password_hash`), jamais en clair.
 - **Changez-le dès la première connexion** : bouton « Mot de passe » de l'administration.
@@ -119,7 +120,8 @@ remplaçables depuis l'administration (Produits → modifier → Photo) :
 parfum d'intérieur `n8BjsYWTH8w`, parfum corporel `D1P-vxlB_K0`, crème solaire `Xp0bTCLD07k`,
 sac à main `jKoRZkv2o0U`, voile `65v_6djIAFs`, jalabé `BGQDXS73ktE`, encens `fHT4wSJ-M04`, lait corporel `LtGwgq7r_mc`,
 huile de soin `io6vt4rAFo0`, pochette `7VAGwA7ZpYI`, bijoux `aldDZePniqg`, lunettes `tUyg4nIQHPk`, sandales `b_k6k7McqcE`,
-grand boubou `LWG50SyyNVw`
+coussins décoratifs `vI3N350XlMI`.
+Logos de paiement : Wave (site officiel wave.com) et Orange Money (Wikimedia Commons), utilisés uniquement pour indiquer les moyens de paiement acceptés.
 (page de chaque photo : `https://unsplash.com/photos/<identifiant>`).
 
 ## 9. Tests réalisés (XAMPP, PHP 8.2, MariaDB 10.4)
@@ -131,6 +133,21 @@ trois modes de paiement, confirmation manuelle, échec, remboursement · annulat
 seule fois · reçu « en attente » puis « Payé » · accès au reçu limité · connexion, blocage après 5 échecs,
 déconnexion, protection de toutes les pages admin · ajout, modification, désactivation, suppression d'un
 produit, refus d'un faux fichier image · affichage ordinateur et téléphone (390 px).
+
+## 10. Espace client, paiements et contact (v4)
+
+- **Compte client** (`compte.php`, `mon-compte.php`) : inscription avec nom complet, téléphone, e-mail facultatif et mot de passe ;
+  connexion par téléphone ou e-mail ; suivi de chaque commande (Reçue → En préparation → Prête → Livrée), statut du paiement,
+  **facture** imprimable / PDF, modification des informations et du mot de passe. Une cliente qui avait commandé sans compte
+  retrouve ses commandes en créant un compte avec le même numéro. Commander sans compte reste possible.
+- **Paiement Wave / Orange Money** : logos officiels, montant, numéro à copier, bouton « Composer #144# » pour Orange Money,
+  puis bouton **« J'ai payé »** où la cliente saisit la référence reçue par SMS. Le paiement reste « en attente » ; l'administratrice
+  vérifie la réception puis confirme : la facture passe alors à « Payé ». Aucune API de paiement n'est utilisée.
+- **Formulaire de contact** : les messages sont enregistrés et lus dans *Administration → Messages* (réponse par e-mail ou WhatsApp).
+- **Administration** : pages *Clients* et *Messages*, alertes des paiements déclarés, **export Excel (CSV)** de toutes les commandes.
+- **Coordonnées** : e-mail `aidasarr7.a@gmail.com` ; réseaux TikTok, WhatsApp et Snapchat (`SNAPCHAT_URL` : identifiant à confirmer).
+- L'e-mail automatique (envoi de la facture par courriel) nécessite un serveur d'envoi (SMTP) non disponible sur XAMPP : la facture
+  est disponible à tout moment dans l'espace client.
 
 ## Pour aller plus loin
 

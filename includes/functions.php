@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/db.php';
 
+// Les détails techniques des erreurs ne sont affichés qu'en local (XAMPP), jamais aux visiteurs
+if (!in_array($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1', ['127.0.0.1', '::1'], true)) {
+    ini_set('display_errors', '0');
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off']);
     session_start();
@@ -109,8 +114,8 @@ function carte_lien(): string
     return 'https://www.google.com/maps/dir/?api=1&destination=' . rawurlencode(sprintf('%.5f,%.5f', BOUTIQUE_LAT, BOUTIQUE_LON));
 }
 
-/** Bloc « Nous trouver » : carte + adresse + boutons (réutilisé sur l'accueil et la page contact). */
-function bloc_localisation(): void
+/** Bloc « Nous trouver » : carte + adresse + boutons (accueil et page contact). */
+function bloc_localisation(bool $avecWhatsapp = true): void
 {
     ?>
     <div class="localisation">
@@ -122,16 +127,28 @@ function bloc_localisation(): void
         <h2 class="section-title mt-2">Venez nous rendre visite</h2>
         <ul class="list-unstyled mt-3 mb-4">
           <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-store"></i></span><span><strong class="d-block">Adresse</strong><span class="text-muted"><?= info_boutique(BOUTIQUE_ADRESSE) ?></span></span></li>
-          <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-phone"></i></span><span><strong class="d-block">Téléphone / WhatsApp</strong><span class="text-muted"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span></li>
-          <li class="d-flex gap-3"><span class="mini-ic"><i class="fa-solid fa-truck-fast"></i></span><span><strong class="d-block">Livraison ou retrait</strong><span class="text-muted">Livraison à domicile ou retrait en boutique</span></span></li>
+          <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-phone"></i></span><span><strong class="d-block">Téléphone</strong><span class="text-muted"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span></li>
+          <li class="d-flex gap-3"><span class="mini-ic"><i class="fa-solid fa-envelope"></i></span><span><strong class="d-block">E-mail</strong><span class="text-muted"><?= info_boutique(CONTACT_EMAIL) ?></span></span></li>
         </ul>
         <div class="d-flex flex-wrap gap-2">
           <a class="btn btn-rose px-4" href="<?= e(carte_lien()) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-diamond-turn-right me-1"></i> Itinéraire</a>
-          <a class="btn btn-wa px-4" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, je souhaite passer à la boutique.')) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</a>
+          <?php if ($avecWhatsapp): ?>
+            <a class="btn btn-wa px-4" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, je souhaite passer à la boutique.')) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</a>
+          <?php endif; ?>
         </div>
       </div>
     </div>
     <?php
+}
+
+/** Logo d'un mode de paiement (images officielles Wave / Orange Money, icône pour les espèces). */
+function logo_paiement(string $mode, string $classe = 'logo-pay'): string
+{
+    $logos = ['Wave' => 'assets/img/paiement/wave.png', 'Orange Money' => 'assets/img/paiement/orange-money-icone.svg'];
+    if (isset($logos[$mode])) {
+        return '<img class="' . e($classe) . '" src="' . e(base_url($logos[$mode])) . '" alt="' . e($mode) . '">';
+    }
+    return '<span class="' . e($classe) . ' logo-cash"><i class="fa-solid fa-money-bill-wave"></i></span>';
 }
 
 /** Bloc des trois modes de paiement (accueil). */
@@ -140,10 +157,10 @@ function bloc_paiements(): void
     $numeros = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO];
     ?>
     <div class="row g-3">
-      <?php foreach (MODES_PAIEMENT as $mode): [$ico, $cls, $desc] = info_paiement($mode); ?>
+      <?php foreach (MODES_PAIEMENT as $mode): [, $cls, $desc] = info_paiement($mode); ?>
         <div class="col-md-4">
           <div class="carte-paiement <?= e($cls) ?>">
-            <span class="logo-paiement"><i class="<?= e($ico) ?>"></i></span>
+            <?= logo_paiement($mode) ?>
             <div>
               <h3 class="h6 mb-1"><?= e($mode) ?></h3>
               <p class="small text-muted mb-0"><?= e($desc) ?><?php if (isset($numeros[$mode])): ?><br>Numéro : <strong class="text-nowrap"><?= info_boutique($numeros[$mode], 'communiqué après commande') ?></strong><?php endif; ?></p>
@@ -152,7 +169,7 @@ function bloc_paiements(): void
         </div>
       <?php endforeach; ?>
     </div>
-    <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-shield-heart me-1" style="color:var(--rose)"></i> Chaque paiement est vérifié par la boutique avant confirmation : vous recevez un reçu avec le statut de votre paiement.</p>
+    <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-shield-heart me-1" style="color:var(--rose)"></i> Chaque paiement est vérifié par la boutique avant confirmation : votre facture indique toujours le statut réel du paiement.</p>
     <?php
 }
 
@@ -173,13 +190,118 @@ function instructions_paiement(string $mode, int $montant, string $numeroCommand
     if (isset($comptes[$mode])) {
         $numero = trim($comptes[$mode]) !== ''
             ? '<strong class="text-nowrap">' . e($comptes[$mode]) . '</strong>'
-            : 'le numéro qui vous sera communiqué par la boutique sur WhatsApp';
+            : 'le numéro qui vous sera communiqué par la boutique';
         return 'Envoyez <strong class="text-nowrap">' . fcfa($montant) . '</strong> par <strong>' . e($mode) . '</strong> au ' . $numero
              . ', en indiquant la référence <strong>' . e($numeroCommande) . '</strong>. '
              . 'Votre paiement sera confirmé par la boutique après vérification.';
     }
     return 'Vous réglez <strong class="text-nowrap">' . fcfa($montant) . '</strong> en <strong>espèces</strong> à la livraison ou au retrait de votre commande. '
          . 'Le paiement est enregistré à la réception de l\'argent.';
+}
+
+/**
+ * Panneau « Payer ma commande » : logo, montant, numéro à copier, accès à l'application,
+ * puis formulaire « J'ai payé » où le client indique la référence de sa transaction.
+ */
+function bloc_payer(array $cmd, array $paiement): void
+{
+    $mode = $paiement['mode_paiement'];
+    $statut = $paiement['statut_paiement'];
+    $numero = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO][$mode] ?? '';
+    ?>
+    <div class="payer <?= e(info_paiement($mode)[1]) ?>">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <?= logo_paiement($mode, 'logo-pay logo-pay-lg') ?>
+        <div class="flex-grow-1">
+          <div class="small text-muted">Paiement par</div>
+          <strong class="fs-5"><?= e($mode) ?></strong>
+        </div>
+        <?= badge_paiement($statut) ?>
+      </div>
+
+      <?php if ($statut === 'en_attente' && $cmd['statut'] !== 'annulee' && $numero !== ''): ?>
+        <div class="payer-etapes">
+          <div><span>1</span> Montant à envoyer : <strong class="text-nowrap"><?= fcfa($cmd['total']) ?></strong></div>
+          <div><span>2</span> Numéro <?= e($mode) ?> : <strong class="text-nowrap"><?= e($numero) ?></strong>
+            <button type="button" class="btn btn-sm btn-outline-rose py-0 ms-1" data-copier="<?= e(preg_replace('/\D/', '', $numero)) ?>"><i class="fa-regular fa-copy"></i> Copier</button></div>
+          <div><span>3</span> Référence à indiquer : <strong><?= e($cmd['numero_commande']) ?></strong></div>
+        </div>
+        <div class="my-3">
+          <?php if ($mode === 'Orange Money'): ?>
+            <a class="btn btn-pay-om" href="tel:%23144%23"><i class="fa-solid fa-phone me-1"></i> Composer #144# (Orange Money)</a>
+          <?php else: ?>
+            <span class="small text-muted"><i class="fa-solid fa-mobile-screen me-1"></i> Ouvrez l'application Wave et envoyez le montant au numéro ci-dessus.</span>
+          <?php endif; ?>
+        </div>
+        <?php if (empty($paiement['date_declaration'])): ?>
+          <form method="post" action="<?= e(base_url('declarer_paiement.php')) ?>" class="payer-declaration">
+            <?= csrf_field() ?>
+            <input type="hidden" name="id" value="<?= (int)$cmd['id'] ?>">
+            <label class="form-label small fw-semibold" for="ref-<?= (int)$cmd['id'] ?>">Vous avez payé ? Indiquez la référence de la transaction (reçue par SMS)</label>
+            <div class="input-group">
+              <input class="form-control" id="ref-<?= (int)$cmd['id'] ?>" name="reference" maxlength="100" required placeholder="Référence du SMS <?= e($mode) ?>">
+              <button class="btn btn-rose">J'ai payé</button>
+            </div>
+          </form>
+        <?php else: ?>
+          <div class="alert alert-info rounded-4 small mb-0"><i class="fa-solid fa-hourglass-half me-1"></i> Paiement déclaré le <?= e(date('d/m/Y à H:i', strtotime($paiement['date_declaration']))) ?> (réf. <?= e($paiement['reference_client']) ?>). La boutique vérifie la réception puis confirme : votre facture passera à « Payé ».</div>
+        <?php endif; ?>
+      <?php elseif ($statut === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
+        <p class="small mb-0"><?= instructions_paiement($mode, (int)$cmd['total'], $cmd['numero_commande']) ?></p>
+      <?php elseif ($statut === 'paye'): ?>
+        <p class="small mb-0 text-success"><i class="fa-solid fa-circle-check me-1"></i> Paiement reçu et confirmé par la boutique. Merci !</p>
+      <?php endif; ?>
+    </div>
+    <?php
+}
+
+/* ---------- Espace client ---------- */
+
+/** Client connecté (ou null). */
+function client_connecte(): ?array
+{
+    static $client = false;
+    if ($client === false) {
+        $client = null;
+        if (!empty($_SESSION['client_id'])) {
+            $st = db()->prepare('SELECT * FROM clients WHERE id = ? AND mot_de_passe_hash IS NOT NULL');
+            $st->execute([(int)$_SESSION['client_id']]);
+            $client = $st->fetch() ?: null;
+            if (!$client) {
+                unset($_SESSION['client_id']);
+            }
+        }
+    }
+    return $client;
+}
+
+function require_client(): array
+{
+    $client = client_connecte();
+    if (!$client) {
+        flash('info', 'Connectez-vous à votre espace client pour continuer.');
+        redirect(base_url('compte.php?retour=' . rawurlencode(basename($_SERVER['SCRIPT_NAME']))));
+    }
+    return $client;
+}
+
+/** Le visiteur peut-il voir cette commande ? (admin, client propriétaire, ou client qui vient de commander) */
+function peut_voir_commande(array $cmd): bool
+{
+    if (!empty($_SESSION['admin_id'])) {
+        return true;
+    }
+    if ((int)($_SESSION['derniere_commande'] ?? 0) === (int)$cmd['id']) {
+        return true;
+    }
+    $client = client_connecte();
+    return $client && (int)$cmd['client_id'] === (int)$client['id'];
+}
+
+/** Numéro de téléphone normalisé : chiffres (et + initial), sans espaces. */
+function normaliser_telephone(string $tel): string
+{
+    return preg_replace('/[^\d+]/', '', $tel);
 }
 
 /** Numéro de commande lisible et unique, basé sur l'identifiant : HA-2026-00012 */
@@ -382,4 +504,21 @@ function delete_image(?string $nom): void
     if ($nom && preg_match('/^[a-f0-9]+\.(jpg|png|webp)$/', $nom)) {
         @unlink(__DIR__ . '/../uploads/' . $nom);
     }
+}
+
+/** Frise de suivi d'une commande : Nouvelle → En préparation → Prête → Livrée (ou Annulée). */
+function suivi_commande(string $statut): string
+{
+    if ($statut === 'annulee') {
+        return '<div class="alert alert-secondary rounded-4 small mb-0"><i class="fa-solid fa-ban me-1"></i> Cette commande a été annulée.</div>';
+    }
+    $etapes = ['nouvelle' => 'Reçue', 'en_preparation' => 'En préparation', 'prete' => 'Prête', 'livree' => 'Livrée / remise'];
+    $rang = array_search($statut, array_keys($etapes), true);
+    $html = '<ol class="suivi">';
+    $i = 0;
+    foreach ($etapes as $label) {
+        $html .= '<li class="' . ($i <= $rang ? 'fait' : '') . '"><span></span>' . e($label) . '</li>';
+        $i++;
+    }
+    return $html . '</ol>';
 }

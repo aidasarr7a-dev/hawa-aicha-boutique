@@ -27,7 +27,10 @@ $commandes = $st->fetchAll();
 $qs = $q !== '' ? '&q=' . rawurlencode($q) : '';
 ?>
 
-<h1 class="page-title mb-3">Commandes</h1>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="page-title mb-0">Commandes</h1>
+  <a href="export_commandes.php" class="btn btn-outline-rose btn-sm"><i class="fa-solid fa-file-excel me-1"></i>Exporter (Excel)</a>
+</div>
 
 <form method="get" class="mb-3"><div class="input-group" style="max-width:480px">
   <?php if (isset(STATUTS[$filtre])): ?><input type="hidden" name="statut" value="<?= e($filtre) ?>"><?php endif; ?>

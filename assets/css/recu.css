@@ -55,3 +55,6 @@ tfoot .total td { font-size: 1.15rem; font-weight: 700; color: var(--rose-dark);
   .recu { box-shadow: none; max-width: none; margin: 0; padding: 0; }
   th, .paiement, tfoot .total td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+.paiement .mode { display: flex; align-items: center; gap: .5rem; margin: .3rem 0; }
+.logo-pay { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; background: #fff; }
+.logo-cash { display: inline-grid; place-items: center; background: #1B8A4F; color: #fff; }

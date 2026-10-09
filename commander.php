@@ -18,6 +18,15 @@ $erreurs = [];
 $val = ['nom_complet' => '', 'telephone' => '', 'adresse_livraison' => '', 'ville' => '', 'remarque' => '',
         'paiement' => MODES_PAIEMENT[0], 'mode_livraison' => MODES_LIVRAISON[0]];
 
+// Client connecté : formulaire prérempli avec ses informations
+$client = client_connecte();
+if ($client) {
+    $val['nom_complet'] = $client['nom_complet'];
+    $val['telephone'] = $client['telephone'];
+    $val['adresse_livraison'] = (string)$client['adresse'];
+    $val['ville'] = (string)$client['ville'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
     // Jeton à usage unique : un double clic ou un renvoi du formulaire ne crée pas une deuxième commande
@@ -65,13 +74,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 $totalReel += $l['qty'] * (int)$l['p']['prix'];
             }
-            // Fiche client (une par numéro de téléphone, mise à jour à chaque commande)
-            $pdo->prepare(
-                'INSERT INTO clients (nom_complet, telephone, adresse, ville) VALUES (?, ?, ?, ?)
-                 ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), nom_complet = VALUES(nom_complet),
-                                         adresse = VALUES(adresse), ville = VALUES(ville)'
-            )->execute([$val['nom_complet'], $tel, $val['adresse_livraison'] ?: null, $val['ville']]);
-            $clientId = (int)$pdo->lastInsertId();
+            if ($client) {
+                // Client connecté : la commande est rattachée à son compte, son adresse habituelle est mémorisée
+                $clientId = (int)$client['id'];
+                if ($val['adresse_livraison'] !== '') {
+                    $pdo->prepare('UPDATE clients SET adresse = ?, ville = ? WHERE id = ?')
+                        ->execute([$val['adresse_livraison'], $val['ville'], $clientId]);
+                }
+            } else {
+                // Sans compte : fiche client par numéro de téléphone (un compte existant n'est jamais modifié)
+                $pdo->prepare(
+                    'INSERT INTO clients (nom_complet, telephone, adresse, ville) VALUES (?, ?, ?, ?)
+                     ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id),
+                         nom_complet = IF(mot_de_passe_hash IS NULL, VALUES(nom_complet), nom_complet),
+                         adresse = IF(mot_de_passe_hash IS NULL, VALUES(adresse), adresse),
+                         ville = IF(mot_de_passe_hash IS NULL, VALUES(ville), ville)'
+                )->execute([$val['nom_complet'], $tel, $val['adresse_livraison'] ?: null, $val['ville']]);
+                $clientId = (int)$pdo->lastInsertId();
+            }
 
             $ins = $pdo->prepare(
                 'INSERT INTO commandes (client_id, nom_complet, telephone, ville, adresse_livraison, remarque,
@@ -116,6 +136,9 @@ require __DIR__ . '/includes/header.php';
 ?>
 
 <h1 class="page-title mb-2">Passer la commande</h1>
+<?php if (!$client): ?>
+  <div class="alert-compte mb-3"><i class="fa-solid fa-user-circle me-2"></i>Vous avez un compte ? <a href="<?= e(base_url('compte.php?retour=commander.php')) ?>">Connectez-vous</a> pour retrouver vos commandes et factures. <span class="text-muted">Sinon, commandez directement ci-dessous.</span></div>
+<?php endif; ?>
 <div class="steps mb-4"><span>1. Panier</span><span class="on">2. Mes informations</span><span>3. Confirmation</span></div>
 
 <?php if ($erreurs): ?>
@@ -166,7 +189,7 @@ require __DIR__ . '/includes/header.php';
           <div class="col-sm-4">
             <label class="choix-carte choix-paiement <?= e($cls) ?>">
               <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
-              <span class="choix-icone"><i class="<?= e($ico) ?>"></i></span>
+              <?= logo_paiement($mode) ?>
               <span><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
             </label>
           </div>

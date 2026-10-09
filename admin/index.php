@@ -36,6 +36,13 @@ $manquants = array_keys(array_filter([
     Informations à compléter dans <code>config.php</code> : <?= e(implode(', ', $manquants)) ?>.</div>
 <?php endif; ?>
 
+<?php if ($nbPaiementsDeclares || $nbMessagesNonLus): ?>
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <?php if ($nbPaiementsDeclares): ?><a class="alerte-admin" href="paiements.php?statut=en_attente"><i class="fa-solid fa-hand-holding-dollar"></i> <?= $nbPaiementsDeclares ?> paiement(s) déclaré(s) par des clientes à vérifier</a><?php endif; ?>
+    <?php if ($nbMessagesNonLus): ?><a class="alerte-admin" href="messages.php?filtre=non_lus"><i class="fa-solid fa-envelope"></i> <?= $nbMessagesNonLus ?> nouveau(x) message(s)</a><?php endif; ?>
+  </div>
+<?php endif; ?>
+
 <div class="row g-3 mb-4">
   <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="produits.php"><div class="text-muted small">Produits</div><div class="num"><?= $nbProduits ?></div></a></div>
   <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="commandes.php"><div class="text-muted small">Commandes</div><div class="num"><?= $nbCommandes ?></div></a></div>

@@ -1,20 +1,16 @@
 <?php
 /**
- * Reçu de commande imprimable (et enregistrable en PDF depuis le navigateur).
- * Accessible à l'administrateur connecté, ou au client pour la commande qu'il vient de passer.
+ * Facture (reçu de commande) imprimable et enregistrable en PDF depuis le navigateur.
+ * Accessible à l'administrateur, au client connecté propriétaire de la commande, ou au client qui vient de commander.
  */
 require_once __DIR__ . '/includes/functions.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $estAdmin = !empty($_SESSION['admin_id']);
-if ($id <= 0 || (!$estAdmin && ($_SESSION['derniere_commande'] ?? 0) !== $id)) {
-    redirect(base_url('index.php'));
-}
-
 $st = db()->prepare('SELECT * FROM commandes WHERE id = ?');
 $st->execute([$id]);
 $cmd = $st->fetch();
-if (!$cmd) {
+if (!$cmd || !peut_voir_commande($cmd)) {
     redirect(base_url($estAdmin ? 'admin/commandes.php' : 'index.php'));
 }
 $it = db()->prepare('SELECT * FROM commande_items WHERE commande_id = ?');
@@ -38,7 +34,7 @@ $mentionPaiement = [
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Reçu <?= e($cmd['numero_commande']) ?> — <?= e(SITE_NAME) ?></title>
+  <title>Facture <?= e($cmd['numero_commande']) ?> — <?= e(SITE_NAME) ?></title>
   <link rel="icon" href="<?= e(base_url('assets/img/logo.svg')) ?>">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
@@ -47,7 +43,7 @@ $mentionPaiement = [
 <body>
 <div class="actions">
   <button type="button" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimer / Enregistrer en PDF</button>
-  <a href="<?= e($estAdmin ? base_url('admin/commande.php?id=' . $id) : base_url('index.php')) ?>">Retour</a>
+  <a href="<?= e($estAdmin ? base_url('admin/commande.php?id=' . $id) : (client_connecte() ? base_url('mon-compte.php?commande=' . $id) : base_url('index.php'))) ?>">Retour</a>
 </div>
 
 <main class="recu">
@@ -61,7 +57,7 @@ $mentionPaiement = [
       </div>
     </div>
     <div class="doc">
-      <div class="titre">Reçu de commande</div>
+      <div class="titre">Facture</div>
       <div><strong><?= e($cmd['numero_commande']) ?></strong></div>
       <div class="petit">du <?= e(date('d/m/Y à H:i', strtotime($cmd['created_at']))) ?></div>
     </div>
@@ -97,7 +93,7 @@ $mentionPaiement = [
 
   <section class="paiement <?= $estPaye ? 'ok' : 'attente' ?>">
     <div class="mention"><?= e($mentionPaiement) ?></div>
-    <div>Mode de paiement : <strong><?= e($paiement['mode_paiement']) ?></strong></div>
+    <div class="mode"><?= logo_paiement($paiement['mode_paiement'], 'logo-pay') ?> Mode de paiement : <strong><?= e($paiement['mode_paiement']) ?></strong></div>
     <?php if ($estPaye): ?>
       <div>Payé le <?= e(date('d/m/Y à H:i', strtotime($paiement['date_paiement']))) ?><?= $paiement['reference_transaction'] ? ' · Réf. ' . e($paiement['reference_transaction']) : '' ?></div>
     <?php elseif ($paiement['statut_paiement'] === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
@@ -106,7 +102,7 @@ $mentionPaiement = [
   </section>
 
   <footer class="pied">
-    Ce document est un récapitulatif de commande. Il ne constitue pas une facture fiscale.<br>
+    Facture établie à partir de votre commande enregistrée sur le site (document non fiscal).<br>
     Merci pour votre confiance · <?= e(SITE_NAME) ?>
   </footer>
 </main>

@@ -225,6 +225,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
           <dt class="col-5 text-muted fw-normal">Mode</dt><dd class="col-7"><?= e($paiement['mode_paiement']) ?></dd>
           <dt class="col-5 text-muted fw-normal">Montant</dt><dd class="col-7"><?= fcfa($paiement['montant']) ?></dd>
           <dt class="col-5 text-muted fw-normal">Statut</dt><dd class="col-7"><?= badge_paiement($statutPaiement) ?></dd>
+          <?php if (!empty($paiement['date_declaration'])): ?><dt class="col-5 text-muted fw-normal">Déclaré par la cliente</dt><dd class="col-7"><span class="badge rounded-pill text-bg-info">le <?= e(date('d/m/Y à H:i', strtotime($paiement['date_declaration']))) ?></span><br>Réf. indiquée : <strong><?= e($paiement['reference_client']) ?></strong></dd><?php endif; ?>
           <?php if ($paiement['reference_transaction']): ?><dt class="col-5 text-muted fw-normal">Référence</dt><dd class="col-7"><?= e($paiement['reference_transaction']) ?></dd><?php endif; ?>
           <?php if ($paiement['date_paiement']): ?><dt class="col-5 text-muted fw-normal">Payé le</dt><dd class="col-7"><?= e(date('d/m/Y à H:i', strtotime($paiement['date_paiement']))) ?></dd><?php endif; ?>
           <?php if ($paiement['date_confirmation']): ?><dt class="col-5 text-muted fw-normal">Confirmé le</dt><dd class="col-7"><?= e(date('d/m/Y à H:i', strtotime($paiement['date_confirmation']))) ?><?= $paiement['confirme_par_nom'] ? ' par ' . e($paiement['confirme_par_nom']) : '' ?></dd><?php endif; ?>
@@ -242,7 +243,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
             <div class="col-sm-6"><label class="form-label small mb-1" for="date_paiement">Date du paiement</label>
               <input class="form-control form-control-sm" type="datetime-local" id="date_paiement" name="date_paiement" value="<?= e(date('Y-m-d\TH:i')) ?>" max="<?= e(date('Y-m-d\TH:i', time() + 300)) ?>"></div>
             <div class="col-12"><label class="form-label small mb-1" for="reference">Référence de la transaction (facultatif)</label>
-              <input class="form-control form-control-sm" id="reference" name="reference" maxlength="100" placeholder="Ex : identifiant du message Wave / Orange Money"></div>
+              <input class="form-control form-control-sm" id="reference" name="reference" maxlength="100" value="<?= e($paiement['reference_client'] ?? '') ?>" placeholder="Ex : identifiant du message Wave / Orange Money"></div>
             <div class="col-12"><button class="btn btn-rose btn-sm"><i class="fa-solid fa-circle-check me-1"></i>Confirmer le paiement reçu</button></div>
           </form>
           <form method="post" class="d-flex flex-wrap gap-2" onsubmit="return confirm('Marquer ce paiement comme échoué / annulé ?')">
