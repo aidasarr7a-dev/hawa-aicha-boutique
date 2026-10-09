@@ -10,7 +10,7 @@ if ($filtre !== 'tous' && !isset(STATUTS_PAIEMENT[$filtre])) {
 }
 $mode = $_GET['mode'] ?? '';
 
-$sql = 'SELECT pa.*, c.numero_commande, c.prenom, c.nom, c.telephone, c.statut AS statut_commande
+$sql = 'SELECT pa.*, c.numero_commande, c.nom_complet, c.telephone, c.statut AS statut_commande
           FROM paiements pa JOIN commandes c ON c.id = pa.commande_id WHERE 1 = 1';
 $params = [];
 if ($filtre !== 'tous') {
@@ -75,7 +75,7 @@ function lien_filtre(string $statut, string $mode): string
       <?php foreach ($paiements as $p): ?>
         <tr>
           <td class="text-nowrap fw-medium"><?= e($p['numero_commande']) ?><div><?= badge_statut($p['statut_commande']) ?></div></td>
-          <td><?= e($p['prenom'] . ' ' . $p['nom']) ?><div class="small text-muted"><?= e($p['telephone']) ?></div></td>
+          <td><?= e($p['nom_complet']) ?><div class="small text-muted"><?= e($p['telephone']) ?></div></td>
           <td><?= e($p['mode_paiement']) ?></td>
           <td class="text-nowrap fw-medium"><?= fcfa($p['montant']) ?></td>
           <td><?= badge_paiement($p['statut_paiement']) ?></td>

@@ -25,9 +25,14 @@
         <h6 class="footer-title">Nous trouver</h6>
         <ul class="list-unstyled small text-muted mb-0">
           <li><i class="fa-solid fa-location-dot me-1" style="color:var(--rose)"></i> <?= info_boutique(BOUTIQUE_ADRESSE) ?></li>
+          <li><i class="fa-solid fa-map me-1" style="color:var(--rose)"></i> <a href="<?= e(carte_lien()) ?>" target="_blank" rel="noopener">Voir sur la carte</a></li>
           <li><i class="fa-solid fa-phone me-1" style="color:var(--rose)"></i> <?= info_boutique(CONTACT_TELEPHONE) ?></li>
-          <li><i class="fa-solid fa-wallet me-1" style="color:var(--rose)"></i> Wave · Orange Money · Espèces</li>
         </ul>
+        <div class="d-flex flex-wrap gap-1 mt-3">
+          <?php foreach (MODES_PAIEMENT as $mode): [$ico, $cls] = info_paiement($mode); ?>
+            <span class="pastille-paiement <?= e($cls) ?>"><i class="<?= e($ico) ?>"></i> <?= e($mode) ?></span>
+          <?php endforeach; ?>
+        </div>
       </div>
       <div class="col-md-3">
         <h6 class="footer-title">Suivez-nous</h6>

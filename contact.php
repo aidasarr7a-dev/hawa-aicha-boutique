@@ -70,4 +70,8 @@ require __DIR__ . '/includes/header.php';
   </div>
 </div>
 
+<section class="mt-5" id="localisation">
+  <?php bloc_localisation(); ?>
+</section>
+
 <?php require __DIR__ . '/includes/footer.php'; ?>

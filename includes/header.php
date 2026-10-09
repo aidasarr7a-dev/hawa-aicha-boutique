@@ -21,6 +21,13 @@ $nbPanier = cart_count();
   <link href="<?= e(base_url('assets/css/style.css')) ?>" rel="stylesheet">
 </head>
 <body>
+<div class="barre-info">
+  <div class="container d-flex justify-content-center justify-content-md-between gap-3">
+    <span class="d-none d-md-inline"><i class="fa-solid fa-location-dot me-1"></i><a href="<?= e(base_url('index.php#localisation')) ?>"><?= e(BOUTIQUE_ADRESSE) ?></a></span>
+    <span><i class="fa-solid fa-wallet me-1"></i>Wave · Orange Money · Espèces</span>
+    <span class="d-none d-sm-inline"><i class="fa-brands fa-whatsapp me-1"></i><a href="<?= e(wa_link()) ?>" target="_blank" rel="noopener"><?= info_boutique(CONTACT_TELEPHONE) ?></a></span>
+  </div>
+</div>
 <nav class="navbar navbar-expand-md site-nav sticky-top">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="<?= e(base_url('index.php')) ?>">

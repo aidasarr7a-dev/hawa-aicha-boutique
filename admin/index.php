@@ -60,7 +60,7 @@ $manquants = array_keys(array_filter([
           <?php foreach ($dernieres as $c): ?>
             <tr>
               <td class="text-nowrap"><?= e($c['numero_commande']) ?></td>
-              <td><?= e($c['prenom'] . ' ' . $c['nom']) ?><div class="small text-muted"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
+              <td><?= e($c['nom_complet']) ?><div class="small text-muted"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
               <td class="text-nowrap"><?= fcfa($c['total']) ?></td>
               <td><?= badge_statut($c['statut']) ?></td>
               <td><?= badge_paiement($c['statut_paiement']) ?></td>

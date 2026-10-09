@@ -64,11 +64,13 @@ CREATE TABLE IF NOT EXISTS commandes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   numero_commande VARCHAR(20) NULL,
   client_id INT NULL,
-  nom VARCHAR(100) NOT NULL,
-  prenom VARCHAR(100) NOT NULL,
+  nom_complet VARCHAR(200) NOT NULL DEFAULT '',
+  nom VARCHAR(100) NOT NULL DEFAULT '',
+  prenom VARCHAR(100) NOT NULL DEFAULT '',
   telephone VARCHAR(30) NOT NULL,
   ville VARCHAR(100) NOT NULL,
-  quartier VARCHAR(150) NOT NULL,
+  adresse_livraison VARCHAR(255) NULL,
+  quartier VARCHAR(150) NOT NULL DEFAULT '',
   adresse VARCHAR(255) NULL,
   remarque TEXT NULL,
   mode_livraison VARCHAR(50) NOT NULL DEFAULT 'Livraison à domicile',
@@ -128,13 +130,22 @@ INSERT INTO categories (id, nom, icone) VALUES
   (3, 'Sacs et accessoires', 'fa-bag-shopping'),
   (4, 'Mode et voiles', 'fa-person-dress'),
   (5, 'Vêtements', 'fa-shirt'),
-  (6, 'Maison', 'fa-house');
+  (6, 'Maison', 'fa-house'),
+  (7, 'Chaussures', 'fa-shoe-prints');
 
--- Les six produits de démonstration (prix de démonstration, à modifier dans l'administration)
+-- Les quatorze produits de démonstration (prix de démonstration, à modifier dans l'administration)
 INSERT INTO produits (categorie_id, nom, description, prix, stock, nouveau, image) VALUES
   (1, 'Parfum d''intérieur', 'Parfum destiné à apporter une senteur agréable à la maison.', 4000, 8, 0, 'aa6d9e308b60110b5075.jpg'),
   (1, 'Parfum corporel', 'Parfum pour une utilisation quotidienne.', 3500, 12, 1, '63ddb7d39bcb946365bb.jpg'),
   (2, 'Crème solaire', 'Produit de protection solaire pour les soins de la peau.', 5000, 15, 1, '08662ba3f88d249c97d3.jpg'),
   (3, 'Sac à main féminin', 'Sac élégant pour sorties et usage quotidien.', 9500, 5, 1, 'e10cf1b5d0e50d857246.jpg'),
   (4, 'Voile pour femme', 'Voile élégant pour compléter différentes tenues.', 6000, 10, 1, '4044a31816ba993c6f1c.jpg'),
-  (5, 'Jalabé', 'Tenue traditionnelle élégante et confortable.', 12000, 4, 0, '0f0394656b0681c5f813.jpg');
+  (5, 'Jalabé', 'Tenue traditionnelle élégante et confortable.', 12000, 4, 0, '0f0394656b0681c5f813.jpg'),
+  (1, 'Encens traditionnel', 'Encens à brûler pour parfumer agréablement la maison.', 2500, 20, 1, '242fa0978b3b994e02ed.jpg'),
+  (2, 'Lait corporel', 'Lait pour le soin quotidien du corps.', 4500, 12, 0, '99ddb9b86ebb96d8c75c.jpg'),
+  (2, 'Huile de soin', 'Huile pour le soin quotidien de la peau.', 3500, 10, 1, 'ec7fe0bba75bd9204fcd.jpg'),
+  (3, 'Pochette de soirée', 'Petite pochette élégante pour les sorties et les cérémonies.', 7500, 6, 1, 'd987633b1de1f353877d.jpg'),
+  (3, 'Bijoux fantaisie dorés', 'Collier et bracelets fantaisie de couleur dorée.', 5000, 8, 0, 'a5c143c32c3e706fa2b0.jpg'),
+  (3, 'Lunettes de soleil', 'Lunettes de soleil au style rétro.', 3000, 15, 0, '57a663074db811848997.jpg'),
+  (7, 'Sandales pour femme', 'Sandales confortables pour tous les jours.', 8000, 3, 1, '8a72f390a1f279db2b22.jpg'),
+  (5, 'Grand boubou pour homme', 'Tenue traditionnelle élégante pour homme.', 15000, 4, 0, 'de52cce6d36525caa9ab.jpg');

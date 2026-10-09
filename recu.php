@@ -70,9 +70,9 @@ $mentionPaiement = [
   <section class="blocs">
     <div>
       <h2>Client</h2>
-      <p><strong><?= e($cmd['prenom'] . ' ' . $cmd['nom']) ?></strong><br>
+      <p><strong><?= e($cmd['nom_complet']) ?></strong><br>
          Tél. : <?= e($cmd['telephone']) ?><br>
-         <?= e($cmd['quartier']) ?>, <?= e($cmd['ville']) ?><?= $cmd['adresse'] ? '<br>Repère : ' . e($cmd['adresse']) : '' ?></p>
+         <?= e($cmd['adresse_livraison'] ? $cmd['adresse_livraison'] . ', ' : '') ?><?= e($cmd['ville']) ?></p>
     </div>
     <div>
       <h2>Livraison</h2>

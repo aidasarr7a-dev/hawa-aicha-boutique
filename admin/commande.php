@@ -147,7 +147,7 @@ $tel = preg_replace('/\D/', '', $cmd['telephone']);
 if (strlen($tel) === 9) {
     $tel = '221' . $tel; // numéro sénégalais saisi sans indicatif
 }
-$waMsg = "Bonjour {$cmd['prenom']}, c'est Hawa Aïcha Boutique. Nous avons bien reçu votre commande {$cmd['numero_commande']} d'un montant de " . fcfa($cmd['total']) . '.';
+$waMsg = "Bonjour " . strtok($cmd['nom_complet'], ' ') . ", c'est Hawa Aïcha Boutique. Nous avons bien reçu votre commande {$cmd['numero_commande']} d'un montant de " . fcfa($cmd['total']) . '.';
 $statutPaiement = $paiement['statut_paiement'] ?? 'en_attente';
 $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutPaiement === 'en_attente';
 ?>
@@ -270,11 +270,10 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
     <div class="panel">
       <h2 class="h5 mb-3">Client</h2>
       <dl class="row mb-0">
-        <dt class="col-5 text-muted fw-normal">Nom</dt><dd class="col-7"><?= e($cmd['prenom'] . ' ' . $cmd['nom']) ?></dd>
+        <dt class="col-5 text-muted fw-normal">Nom</dt><dd class="col-7"><?= e($cmd['nom_complet']) ?></dd>
         <dt class="col-5 text-muted fw-normal">Téléphone</dt><dd class="col-7"><a href="tel:<?= e($cmd['telephone']) ?>"><?= e($cmd['telephone']) ?></a></dd>
-        <dt class="col-5 text-muted fw-normal">Adresse / quartier</dt><dd class="col-7"><?= e($cmd['quartier']) ?></dd>
+        <dt class="col-5 text-muted fw-normal">Adresse de livraison</dt><dd class="col-7"><?= e($cmd['adresse_livraison'] ?: '—') ?></dd>
         <dt class="col-5 text-muted fw-normal">Ville / commune</dt><dd class="col-7"><?= e($cmd['ville']) ?></dd>
-        <?php if ($cmd['adresse']): ?><dt class="col-5 text-muted fw-normal">Repère</dt><dd class="col-7"><?= e($cmd['adresse']) ?></dd><?php endif; ?>
         <dt class="col-5 text-muted fw-normal">Livraison</dt><dd class="col-7"><?= e($cmd['mode_livraison']) ?></dd>
         <dt class="col-5 text-muted fw-normal">Date</dt><dd class="col-7"><?= e(date('d/m/Y à H:i', strtotime($cmd['created_at']))) ?></dd>
         <?php if ($cmd['remarque']): ?><dt class="col-5 text-muted fw-normal">Instructions</dt><dd class="col-7"><?= nl2br(e($cmd['remarque'])) ?></dd><?php endif; ?>

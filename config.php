@@ -22,6 +22,10 @@ define('WHATSAPP_NUMBER', '221785452544');
 define('CONTACT_TELEPHONE', '+221 78 545 25 44');
 define('CONTACT_EMAIL', '');          // ex : 'contact@hawaaicha.com'
 define('BOUTIQUE_ADRESSE', 'Golf Sud, arrêt BRT de Golf Sud');
+// Position de la boutique sur la carte (arrêt « Golf Sud », Route de Niayes, d'après OpenStreetMap).
+// Pour un point plus précis : ouvrez Google Maps, appuyez longuement sur la boutique et recopiez les deux nombres.
+define('BOUTIQUE_LAT', 14.76705);
+define('BOUTIQUE_LON', -17.41415);
 define('ZONE_LIVRAISON', '');         // ex : 'Dakar et banlieue'
 define('WAVE_NUMERO', '78 545 25 44');          // numéro Wave qui reçoit les paiements
 define('ORANGE_MONEY_NUMERO', '78 545 25 44');  // numéro Orange Money qui reçoit les paiements

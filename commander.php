@@ -15,7 +15,7 @@ if (!$lignes) {
 }
 
 $erreurs = [];
-$val = ['nom' => '', 'prenom' => '', 'telephone' => '', 'ville' => '', 'quartier' => '', 'adresse' => '', 'remarque' => '',
+$val = ['nom_complet' => '', 'telephone' => '', 'adresse_livraison' => '', 'ville' => '', 'remarque' => '',
         'paiement' => MODES_PAIEMENT[0], 'mode_livraison' => MODES_LIVRAISON[0]];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -36,15 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $tel = preg_replace('/[^\d+]/', '', $val['telephone']);
 
-    if ($val['nom'] === '' || mb_strlen($val['nom']) > 100)       $erreurs[] = 'Veuillez indiquer votre nom.';
-    if ($val['prenom'] === '' || mb_strlen($val['prenom']) > 100) $erreurs[] = 'Veuillez indiquer votre prénom.';
+    $domicile = $val['mode_livraison'] === MODES_LIVRAISON[0];
+    if (mb_strlen($val['nom_complet']) < 3 || mb_strlen($val['nom_complet']) > 200) $erreurs[] = 'Veuillez indiquer votre nom complet.';
     if (strlen(preg_replace('/\D/', '', $tel)) < 8)               $erreurs[] = 'Veuillez indiquer un numéro de téléphone / WhatsApp valide.';
     if ($val['ville'] === '')                                     $erreurs[] = 'Veuillez indiquer votre ville / commune.';
-    if ($val['quartier'] === '')                                  $erreurs[] = 'Veuillez indiquer votre adresse / quartier.';
+    if ($domicile && $val['adresse_livraison'] === '')               $erreurs[] = 'Veuillez indiquer votre adresse de livraison (quartier, rue, point de repère).';
     if (!in_array($val['paiement'], MODES_PAIEMENT, true))        $erreurs[] = 'Veuillez choisir un moyen de paiement.';
     if (!in_array($val['mode_livraison'], MODES_LIVRAISON, true)) $erreurs[] = 'Veuillez choisir un mode de livraison.';
-    foreach (['adresse' => 255, 'remarque' => 1000, 'ville' => 100, 'quartier' => 150] as $champ => $max) {
-        if (mb_strlen($val[$champ]) > $max) $erreurs[] = 'Le champ « ' . $champ . ' » est trop long.';
+    foreach (['adresse_livraison' => [255, 'adresse de livraison'], 'remarque' => [1000, 'instructions'], 'ville' => [100, 'ville / commune']] as $champ => [$max, $libelle]) {
+        if (mb_strlen($val[$champ]) > $max) $erreurs[] = 'Le champ « ' . $libelle . ' » est trop long.';
     }
 
     if ($panierAjuste) {
@@ -70,17 +70,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'INSERT INTO clients (nom_complet, telephone, adresse, ville) VALUES (?, ?, ?, ?)
                  ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), nom_complet = VALUES(nom_complet),
                                          adresse = VALUES(adresse), ville = VALUES(ville)'
-            )->execute([$val['prenom'] . ' ' . $val['nom'], $tel,
-                        implode(', ', array_filter([$val['quartier'], $val['adresse']])), $val['ville']]);
+            )->execute([$val['nom_complet'], $tel, $val['adresse_livraison'] ?: null, $val['ville']]);
             $clientId = (int)$pdo->lastInsertId();
 
             $ins = $pdo->prepare(
-                'INSERT INTO commandes (client_id, nom, prenom, telephone, ville, quartier, adresse, remarque,
+                'INSERT INTO commandes (client_id, nom_complet, telephone, ville, adresse_livraison, remarque,
                                         mode_livraison, frais_livraison, paiement, total, statut)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)'
+                 VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)'
             );
-            $ins->execute([$clientId, $val['nom'], $val['prenom'], $tel, $val['ville'], $val['quartier'],
-                           $val['adresse'] ?: null, $val['remarque'] ?: null, $val['mode_livraison'],
+            $ins->execute([$clientId, $val['nom_complet'], $tel, $val['ville'],
+                           $val['adresse_livraison'] ?: null, $val['remarque'] ?: null, $val['mode_livraison'],
                            $val['paiement'], $totalReel, 'nouvelle']);
             $cmdId = (int)$pdo->lastInsertId();
             $pdo->prepare('UPDATE commandes SET numero_commande = ? WHERE id = ?')->execute([numero_commande($cmdId), $cmdId]);
@@ -133,42 +132,47 @@ require __DIR__ . '/includes/header.php';
   <input type="hidden" name="jeton" value="<?= e($_SESSION['jeton_commande']) ?>">
   <div class="col-lg-7">
     <div class="panel">
-      <h2 class="h5 mb-3">Vos informations</h2>
+      <h2 class="h5 mb-3"><span class="num-etape">1</span> Vos coordonnées</h2>
       <div class="row g-3">
-        <div class="col-sm-6"><label class="form-label" for="prenom">Prénom *</label><input class="form-control" id="prenom" name="prenom" value="<?= e($val['prenom']) ?>" required autocomplete="given-name"></div>
-        <div class="col-sm-6"><label class="form-label" for="nom">Nom *</label><input class="form-control" id="nom" name="nom" value="<?= e($val['nom']) ?>" required autocomplete="family-name"></div>
-        <div class="col-12"><label class="form-label" for="telephone">Téléphone / WhatsApp *</label><input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" placeholder="Ex : 77 000 00 00" value="<?= e($val['telephone']) ?>" required autocomplete="tel"></div>
-        <div class="col-sm-6"><label class="form-label" for="quartier">Adresse / quartier *</label><input class="form-control" id="quartier" name="quartier" value="<?= e($val['quartier']) ?>" required autocomplete="address-line1"></div>
-        <div class="col-sm-6"><label class="form-label" for="ville">Ville / commune *</label><input class="form-control" id="ville" name="ville" value="<?= e($val['ville']) ?>" required autocomplete="address-level2"></div>
-        <div class="col-12"><label class="form-label" for="adresse">Point de repère (facultatif)</label><input class="form-control" id="adresse" name="adresse" value="<?= e($val['adresse']) ?>" placeholder="Près de la mosquée, en face de la pharmacie…"></div>
-        <div class="col-12"><label class="form-label" for="remarque">Instructions de livraison (facultatif)</label><textarea class="form-control" id="remarque" name="remarque" rows="3" placeholder="Taille, couleur, heure de livraison…"><?= e($val['remarque']) ?></textarea></div>
+        <div class="col-12"><label class="form-label" for="nom_complet">Nom complet *</label><input class="form-control" id="nom_complet" name="nom_complet" value="<?= e($val['nom_complet']) ?>" required maxlength="200" autocomplete="name" placeholder="Ex : Aminata Sow"></div>
+        <div class="col-12"><label class="form-label" for="telephone">Numéro de téléphone / WhatsApp *</label><input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" placeholder="Ex : 77 000 00 00" value="<?= e($val['telephone']) ?>" required autocomplete="tel"></div>
       </div>
     </div>
 
     <div class="panel mt-4">
-      <h2 class="h5 mb-3">Livraison</h2>
-      <div class="d-grid gap-2">
-        <?php foreach (MODES_LIVRAISON as $mode): ?>
-          <label class="pay-option position-relative">
-            <input class="form-check-input position-absolute" style="left:1rem;top:1rem" type="radio" name="mode_livraison" value="<?= e($mode) ?>" <?= $val['mode_livraison'] === $mode ? 'checked' : '' ?>>
-            <?= e($mode) ?>
-          </label>
+      <h2 class="h5 mb-3"><span class="num-etape">2</span> Livraison</h2>
+      <div class="row g-2 mb-3">
+        <?php foreach (MODES_LIVRAISON as $i => $mode): ?>
+          <div class="col-sm-6">
+            <label class="choix-carte">
+              <input type="radio" name="mode_livraison" value="<?= e($mode) ?>" <?= $val['mode_livraison'] === $mode ? 'checked' : '' ?>>
+              <span class="choix-icone"><i class="fa-solid <?= $i === 0 ? 'fa-truck-fast' : 'fa-store' ?>"></i></span>
+              <span><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= $i === 0 ? 'Chez vous, frais selon la zone' : e(BOUTIQUE_ADRESSE) ?></span></span>
+            </label>
+          </div>
         <?php endforeach; ?>
       </div>
-      <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-truck-fast me-1"></i>Les frais de livraison éventuels vous sont communiqués par la boutique selon votre zone.</p>
+      <div class="row g-3">
+        <div class="col-12" data-bloc-adresse><label class="form-label" for="adresse_livraison">Adresse de livraison *</label><textarea class="form-control" id="adresse_livraison" name="adresse_livraison" rows="2" maxlength="255" autocomplete="street-address" placeholder="Quartier, rue, point de repère (ex : Golf Sud, près de la pharmacie)"><?= e($val['adresse_livraison']) ?></textarea></div>
+        <div class="col-12"><label class="form-label" for="ville">Ville / commune *</label><input class="form-control" id="ville" name="ville" value="<?= e($val['ville']) ?>" required maxlength="100" autocomplete="address-level2" placeholder="Ex : Guédiawaye"></div>
+        <div class="col-12"><label class="form-label" for="remarque">Instructions (facultatif)</label><textarea class="form-control" id="remarque" name="remarque" rows="2" placeholder="Taille, couleur, heure de livraison…"><?= e($val['remarque']) ?></textarea></div>
+      </div>
     </div>
 
     <div class="panel mt-4">
-      <h2 class="h5 mb-3">Moyen de paiement</h2>
-      <div class="d-grid gap-2">
-        <?php foreach (MODES_PAIEMENT as $i => $mode): ?>
-          <label class="pay-option position-relative">
-            <input class="form-check-input position-absolute" style="left:1rem;top:1rem" type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
-            <?= e($mode) ?>
-          </label>
+      <h2 class="h5 mb-3"><span class="num-etape">3</span> Mode de paiement</h2>
+      <div class="row g-2">
+        <?php foreach (MODES_PAIEMENT as $mode): [$ico, $cls, $desc] = info_paiement($mode); ?>
+          <div class="col-sm-4">
+            <label class="choix-carte choix-paiement <?= e($cls) ?>">
+              <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
+              <span class="choix-icone"><i class="<?= e($ico) ?>"></i></span>
+              <span><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
+            </label>
+          </div>
         <?php endforeach; ?>
       </div>
-      <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-circle-info me-1"></i>Votre paiement reste « en attente » jusqu'à sa vérification par la boutique. Les espèces sont réglées à la livraison ou au retrait.</p>
+      <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-circle-info me-1"></i>Votre paiement reste « en attente » jusqu'à sa vérification par la boutique.</p>
     </div>
   </div>
 

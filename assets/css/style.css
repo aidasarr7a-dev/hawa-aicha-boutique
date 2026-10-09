@@ -198,3 +198,75 @@ a { text-decoration: none; }
 .presentation { background: linear-gradient(135deg, #fff 55%, var(--rose-bg)); }
 .btn-rose:hover, .btn-rose:focus-visible { background: var(--rose-dark); }
 .cart-badge { background: var(--rose-dark); }
+
+/* =========================================================
+   Design v2 : barre d'info, mosaïque, univers, paiements, carte
+   ========================================================= */
+.barre-info { background: var(--rose-dark); color: #fff; font-size: .8rem; padding: .4rem 0; }
+.barre-info a { color: #fff; }
+.barre-info a:hover { color: var(--rose-soft); }
+.barre-info .a-completer { color: var(--rose-soft); }
+
+/* Bannière : mosaïque de photos */
+.hero-mosaique { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 170px); gap: .8rem; }
+.hero-mosaique .tuile { border-radius: 1.4rem; overflow: hidden; box-shadow: var(--shadow); background: var(--rose-soft); }
+.hero-mosaique .tuile img { width: 100%; height: 100%; object-fit: cover; }
+.hero-mosaique .t1 { grid-row: span 2; }
+.hero-mosaique .t4 { grid-column: 2 / span 1; }
+.hero-badges { display: flex; flex-wrap: wrap; gap: .5rem; }
+.hero-badges span { background: #fff; border-radius: 50rem; padding: .35rem .9rem; font-size: .8rem; color: var(--ink); box-shadow: var(--shadow); }
+.hero-badges i { color: var(--rose); margin-right: .3rem; }
+
+/* Bande d'atouts */
+.bande-atouts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; background: #fff; border-radius: 1.5rem; padding: 1.2rem 1.4rem; box-shadow: var(--shadow); }
+.bande-atouts > div { display: flex; gap: .8rem; align-items: center; }
+.bande-atouts i { flex: none; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--rose-bg); color: var(--rose); font-size: 1.2rem; }
+.bande-atouts strong { display: block; font-size: .92rem; }
+.bande-atouts span { font-size: .8rem; color: var(--muted); }
+.bande-atouts strong + * , .bande-atouts span strong { color: var(--ink); }
+
+/* Univers (catégories en photo) */
+.cat-photo { position: relative; display: block; aspect-ratio: 3 / 4; border-radius: 1.4rem; overflow: hidden; box-shadow: var(--shadow); background: linear-gradient(135deg, var(--rose-bg), var(--rose-soft)); }
+.cat-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+.cat-photo:hover img { transform: scale(1.06); }
+.cat-legende { position: absolute; inset: auto 0 0 0; padding: 2.5rem .9rem .9rem; color: #fff; background: linear-gradient(to top, rgba(80, 25, 50, .85), rgba(80, 25, 50, 0)); }
+.cat-legende strong { display: block; font-family: 'Playfair Display', Georgia, serif; font-size: 1.05rem; line-height: 1.2; }
+.cat-legende small { opacity: .85; }
+
+/* Modes de paiement */
+.carte-paiement { display: flex; gap: 1rem; align-items: center; background: #fff; border-radius: 1.4rem; padding: 1.2rem; box-shadow: var(--shadow); height: 100%; border-top: 4px solid var(--rose-soft); }
+.logo-paiement { flex: none; width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; font-size: 1.5rem; color: #fff; background: var(--rose); }
+.pay-wave { --pay: #1DA1E8; }
+.pay-om { --pay: #F16E00; }
+.pay-cash { --pay: #1B8A4F; }
+.carte-paiement.pay-wave, .carte-paiement.pay-om, .carte-paiement.pay-cash { border-top-color: var(--pay); }
+.carte-paiement .logo-paiement { background: var(--pay, var(--rose)); }
+.pastille-paiement { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 500; padding: .2rem .6rem; border-radius: 50rem; color: var(--pay, var(--rose-dark)); background: #fff; border: 1.5px solid var(--pay, var(--rose)); }
+
+/* Cartes de choix (livraison / paiement) dans le formulaire de commande */
+.choix-carte { position: relative; display: flex; gap: .8rem; align-items: center; height: 100%; padding: .9rem 1rem; border: 1.5px solid #f0d3e1; border-radius: 1rem; cursor: pointer; background: #fff; transition: border-color .15s, background .15s; }
+.choix-carte input { position: absolute; opacity: 0; pointer-events: none; }
+.choix-carte:has(input:checked) { border-color: var(--rose); background: var(--rose-bg); box-shadow: 0 0 0 .2rem rgba(197, 98, 140, .15); }
+.choix-carte:has(input:focus-visible) { outline: 2px solid var(--rose-dark); outline-offset: 2px; }
+.choix-icone { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--rose-bg); color: var(--rose); font-size: 1.1rem; }
+.choix-paiement .choix-icone { background: var(--pay, var(--rose)); color: #fff; }
+.num-etape { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--rose-dark); color: #fff; font-size: .85rem; margin-right: .4rem; font-family: 'Poppins', sans-serif; }
+
+/* Localisation */
+.localisation { display: grid; grid-template-columns: 1.3fr 1fr; background: #fff; border-radius: 1.8rem; overflow: hidden; box-shadow: var(--shadow); }
+.localisation .carte { min-height: 380px; background: var(--rose-bg); }
+.localisation .carte iframe { width: 100%; height: 100%; min-height: 380px; border: 0; display: block; }
+.localisation-infos { padding: 2rem; align-self: center; }
+.eyebrow-simple { display: inline-block; background: var(--rose-bg); color: var(--rose-dark); font-weight: 600; font-size: .8rem; padding: .3rem .9rem; border-radius: 50rem; }
+.mini-ic { flex: none; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--rose-bg); color: var(--rose); }
+
+@media (max-width: 991.98px) {
+  .bande-atouts { grid-template-columns: repeat(2, 1fr); }
+  .localisation { grid-template-columns: 1fr; }
+  .localisation .carte, .localisation .carte iframe { min-height: 280px; }
+}
+@media (max-width: 575.98px) {
+  .bande-atouts { grid-template-columns: 1fr 1fr; padding: 1rem; gap: .8rem; }
+  .bande-atouts i { width: 38px; height: 38px; font-size: 1rem; }
+  .localisation-infos { padding: 1.4rem; }
+}

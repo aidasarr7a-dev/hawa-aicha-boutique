@@ -15,8 +15,8 @@ Palette rose : `#FDEEF3` · `#F6C9D9` · `#E895B3` · `#C5628C` · `#9F3E63` · 
 3. Ouvrez phpMyAdmin : <http://localhost/phpmyadmin>
    - **Installation neuve** (la base `hawa_aicha` n'existe pas) : onglet *Importer* → `schema.sql`.
    - **Base déjà existante** : faites d'abord un export (onglet *Exporter*), puis importez
-     `migrations/2026-10-09_v2_cahier_des_charges.sql`. Ce script ne supprime aucune donnée
-     et peut être relancé sans risque. **Ne réimportez pas `schema.sql` sur une base existante.**
+     les scripts du dossier `migrations/` dans l'ordre (`…_v2_…` puis `…_v3_…`). Ils ne suppriment aucune
+     donnée et peuvent être relancés sans risque. **Ne réimportez pas `schema.sql` sur une base existante.**
 4. Ouvrez le site : <http://localhost/hawa-aicha-boutique/>
 
 Les réglages de connexion MySQL se trouvent dans `config.php` (par défaut : `localhost`, `root`, sans mot de passe, base `hawa_aicha`).
@@ -38,19 +38,21 @@ Les réglages de connexion MySQL se trouvent dans `config.php` (par défaut : `l
 | `WHATSAPP_NUMBER`, `CONTACT_TELEPHONE` | 78 545 25 44 — **numéro de présentation du projet** |
 | `WAVE_NUMERO`, `ORANGE_MONEY_NUMERO` | 78 545 25 44 — **numéro de présentation du projet** |
 | `BOUTIQUE_ADRESSE` | Golf Sud, arrêt BRT de Golf Sud |
+| `BOUTIQUE_LAT`, `BOUTIQUE_LON` | 14.76705, -17.41415 (arrêt « Golf Sud », Route de Niayes, d'après OpenStreetMap) — à ajuster au point exact de la boutique |
 | `CONTACT_EMAIL`, `ZONE_LIVRAISON` | vides → le site affiche « à compléter » |
-| Prix des six produits | prix de démonstration, à fixer dans l'administration |
+| Prix des 14 produits | prix de démonstration, à fixer dans l'administration |
 | Logo | provisoire (`assets/img/logo.svg`) ; déposez le vrai logo sous `assets/img/logo.png`, il sera utilisé automatiquement |
 
 Le tableau de bord de l'administration rappelle les informations encore vides.
 
 ## 4. Fonctionnalités
 
-**Site public** : accueil (slogan, bannière, présentation, produits vedettes, avantages), À propos,
+**Site public** : barre d'information (adresse, paiements, téléphone), accueil (slogan, mosaïque de photos, atouts, univers en photos, produits vedettes, présentation, **modes de paiement**, **carte de la boutique**), À propos,
 catalogue (recherche, catégories, prix min/max, disponibilité), fiche produit (photo, stock, quantité),
 panier en session (quantités, suppression, sous-totaux, total, message WhatsApp prérempli),
-commande (nom, téléphone, adresse/quartier, ville/commune, livraison, paiement, instructions),
-confirmation avec numéro de commande et consignes de paiement, reçu imprimable, contact, bouton WhatsApp.
+commande en 3 étapes (**nom complet, téléphone, adresse de livraison**, ville/commune, livraison à domicile ou retrait en boutique, paiement, instructions),
+confirmation avec numéro de commande et consignes de paiement, reçu imprimable, contact avec carte, bouton WhatsApp.
+La carte utilise OpenStreetMap (sans clé) ; le bouton « Itinéraire » ouvre Google Maps.
 
 **Commande** : prix et quantités recalculés côté serveur depuis la base, transaction SQL
 (stock décrémenté seulement s'il est suffisant), numéro unique `HA-AAAA-NNNNN`, jeton à usage unique
@@ -82,6 +84,7 @@ Le nom proposé par le cahier des charges (`hawaaicha_boutique`) n'a pas été r
 | `commandes.date_commande`, `montant_total`, `statut_commande`, `instructions` | `created_at`, `total`, `statut`, `remarque` |
 | `details_commande` (`prix_unitaire`, `sous_total`) | `commande_items` (`prix`, `sous_total` calculé) |
 | `produits.date_creation` | `produits.created_at` |
+| `clients.nom_complet`, adresse de livraison | `commandes.nom_complet`, `commandes.adresse_livraison` (les anciens champs `prenom`, `nom`, `quartier` sont conservés pour l'historique) |
 | `clients`, `paiements` | identiques |
 
 Tables : `admins`, `tentatives_connexion`, `categories`, `produits`, `clients`, `commandes`,
@@ -109,12 +112,14 @@ messages d'erreur sans détail technique.
     migrations/   scripts de mise à jour d'une base existante
     schema.sql    installation neuve        config.php    réglages
 
-## 8. Photos de démonstration
+## 8. Photos de démonstration (14 produits)
 
 Photos libres de droits issues d'[Unsplash](https://unsplash.com/license), sans marque visible,
 remplaçables depuis l'administration (Produits → modifier → Photo) :
 parfum d'intérieur `n8BjsYWTH8w`, parfum corporel `D1P-vxlB_K0`, crème solaire `Xp0bTCLD07k`,
-sac à main `jKoRZkv2o0U`, voile `65v_6djIAFs`, jalabé `BGQDXS73ktE`
+sac à main `jKoRZkv2o0U`, voile `65v_6djIAFs`, jalabé `BGQDXS73ktE`, encens `fHT4wSJ-M04`, lait corporel `LtGwgq7r_mc`,
+huile de soin `io6vt4rAFo0`, pochette `7VAGwA7ZpYI`, bijoux `aldDZePniqg`, lunettes `tUyg4nIQHPk`, sandales `b_k6k7McqcE`,
+grand boubou `LWG50SyyNVw`
 (page de chaque photo : `https://unsplash.com/photos/<identifiant>`).
 
 ## 9. Tests réalisés (XAMPP, PHP 8.2, MariaDB 10.4)

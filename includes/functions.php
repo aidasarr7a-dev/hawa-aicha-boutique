@@ -94,6 +94,78 @@ function badge_paiement(?string $statut): string
     return '<span class="badge text-bg-' . e($cls) . ' rounded-pill">' . e($label) . '</span>';
 }
 
+/** Carte de la boutique (OpenStreetMap intégré, sans clé API) et lien d'itinéraire Google Maps. */
+function carte_embed_url(): string
+{
+    $lat = (float)BOUTIQUE_LAT;
+    $lon = (float)BOUTIQUE_LON;
+    $bbox = sprintf('%.5f,%.5f,%.5f,%.5f', $lon - 0.006, $lat - 0.003, $lon + 0.006, $lat + 0.003);
+    return 'https://www.openstreetmap.org/export/embed.html?bbox=' . rawurlencode($bbox)
+         . '&layer=mapnik&marker=' . rawurlencode(sprintf('%.5f,%.5f', $lat, $lon));
+}
+
+function carte_lien(): string
+{
+    return 'https://www.google.com/maps/dir/?api=1&destination=' . rawurlencode(sprintf('%.5f,%.5f', BOUTIQUE_LAT, BOUTIQUE_LON));
+}
+
+/** Bloc « Nous trouver » : carte + adresse + boutons (réutilisé sur l'accueil et la page contact). */
+function bloc_localisation(): void
+{
+    ?>
+    <div class="localisation">
+      <div class="carte">
+        <iframe src="<?= e(carte_embed_url()) ?>" title="Carte : <?= e(BOUTIQUE_ADRESSE) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+      <div class="localisation-infos">
+        <span class="eyebrow-simple"><i class="fa-solid fa-location-dot me-1"></i> Nous trouver</span>
+        <h2 class="section-title mt-2">Venez nous rendre visite</h2>
+        <ul class="list-unstyled mt-3 mb-4">
+          <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-store"></i></span><span><strong class="d-block">Adresse</strong><span class="text-muted"><?= info_boutique(BOUTIQUE_ADRESSE) ?></span></span></li>
+          <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-phone"></i></span><span><strong class="d-block">Téléphone / WhatsApp</strong><span class="text-muted"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span></li>
+          <li class="d-flex gap-3"><span class="mini-ic"><i class="fa-solid fa-truck-fast"></i></span><span><strong class="d-block">Livraison ou retrait</strong><span class="text-muted">Livraison à domicile ou retrait en boutique</span></span></li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-rose px-4" href="<?= e(carte_lien()) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-diamond-turn-right me-1"></i> Itinéraire</a>
+          <a class="btn btn-wa px-4" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, je souhaite passer à la boutique.')) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</a>
+        </div>
+      </div>
+    </div>
+    <?php
+}
+
+/** Bloc des trois modes de paiement (accueil). */
+function bloc_paiements(): void
+{
+    $numeros = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO];
+    ?>
+    <div class="row g-3">
+      <?php foreach (MODES_PAIEMENT as $mode): [$ico, $cls, $desc] = info_paiement($mode); ?>
+        <div class="col-md-4">
+          <div class="carte-paiement <?= e($cls) ?>">
+            <span class="logo-paiement"><i class="<?= e($ico) ?>"></i></span>
+            <div>
+              <h3 class="h6 mb-1"><?= e($mode) ?></h3>
+              <p class="small text-muted mb-0"><?= e($desc) ?><?php if (isset($numeros[$mode])): ?><br>Numéro : <strong class="text-nowrap"><?= info_boutique($numeros[$mode], 'communiqué après commande') ?></strong><?php endif; ?></p>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+    <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-shield-heart me-1" style="color:var(--rose)"></i> Chaque paiement est vérifié par la boutique avant confirmation : vous recevez un reçu avec le statut de votre paiement.</p>
+    <?php
+}
+
+/** Présentation d'un mode de paiement : [icône Font Awesome, classe CSS, courte description]. */
+function info_paiement(string $mode): array
+{
+    return [
+        'Wave'         => ['fa-solid fa-water', 'pay-wave', 'Paiement mobile Wave'],
+        'Orange Money' => ['fa-solid fa-mobile-screen-button', 'pay-om', 'Paiement mobile Orange Money'],
+        'Espèces'      => ['fa-solid fa-money-bill-wave', 'pay-cash', 'À la livraison ou au retrait'],
+    ][$mode] ?? ['fa-solid fa-wallet', '', ''];
+}
+
 /** Consignes de paiement affichées au client selon le mode choisi (HTML). */
 function instructions_paiement(string $mode, int $montant, string $numeroCommande): string
 {

@@ -14,7 +14,7 @@ if (isset(STATUTS[$filtre])) {
 if ($q !== '') {
     // Recherche par numéro de commande, téléphone ou nom
     $chiffres = preg_replace('/\D/', '', $q);
-    $sql .= ' AND (c.numero_commande LIKE ? OR CONCAT(c.prenom, " ", c.nom) LIKE ?' . ($chiffres !== '' ? ' OR c.telephone LIKE ? OR c.id = ?' : '') . ')';
+    $sql .= ' AND (c.numero_commande LIKE ? OR c.nom_complet LIKE ?' . ($chiffres !== '' ? ' OR c.telephone LIKE ? OR c.id = ?' : '') . ')';
     array_push($params, '%' . $q . '%', '%' . $q . '%');
     if ($chiffres !== '') {
         array_push($params, '%' . $chiffres . '%', (int)$chiffres);
@@ -51,9 +51,9 @@ $qs = $q !== '' ? '&q=' . rawurlencode($q) : '';
       <?php foreach ($commandes as $c): ?>
         <tr>
           <td class="text-nowrap fw-medium"><?= e($c['numero_commande']) ?></td>
-          <td><?= e($c['prenom'] . ' ' . $c['nom']) ?><div class="small text-muted"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
+          <td><?= e($c['nom_complet']) ?><div class="small text-muted"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
           <td class="text-nowrap"><a href="tel:<?= e($c['telephone']) ?>"><?= e($c['telephone']) ?></a></td>
-          <td><?= e($c['quartier']) ?>, <?= e($c['ville']) ?><div class="small text-muted"><?= e($c['mode_livraison']) ?></div></td>
+          <td><?= e($c['adresse_livraison'] ? $c['adresse_livraison'] . ', ' : '') ?><?= e($c['ville']) ?><div class="small text-muted"><?= e($c['mode_livraison']) ?></div></td>
           <td class="text-nowrap fw-medium"><?= fcfa($c['total']) ?><div class="small text-muted"><?= e($c['paiement']) ?></div></td>
           <td><?= badge_statut($c['statut']) ?></td>
           <td><?= badge_paiement($c['statut_paiement']) ?></td>

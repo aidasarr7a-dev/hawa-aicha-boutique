@@ -39,6 +39,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Commande : l'adresse de livraison n'est demandée que pour la livraison à domicile
+  var blocAdresse = document.querySelector('[data-bloc-adresse]');
+  if (blocAdresse) {
+    var radios = document.querySelectorAll('input[name="mode_livraison"]');
+    var majAdresse = function () {
+      var domicile = radios[0] && radios[0].checked;
+      blocAdresse.hidden = !domicile;
+      blocAdresse.querySelector('textarea').required = domicile;
+    };
+    radios.forEach(function (r) { r.addEventListener('change', majAdresse); });
+    majAdresse();
+  }
+
   // Disparition automatique des alertes
   document.querySelectorAll('.alert-success').forEach(function (a) {
     setTimeout(function () {
