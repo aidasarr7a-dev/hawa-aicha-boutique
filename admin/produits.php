@@ -30,13 +30,24 @@ $titre = 'Produits';
 require __DIR__ . '/_header.php';
 
 $q = trim($_GET['q'] ?? '');
-$sql = 'SELECT p.*, c.nom AS categorie, c.icone FROM produits p LEFT JOIN categories c ON c.id = p.categorie_id';
+$filtreStock = $_GET['stock'] ?? '';
+$sql = 'SELECT p.*, c.nom AS categorie, c.icone FROM produits p LEFT JOIN categories c ON c.id = p.categorie_id WHERE 1 = 1';
 $params = [];
 if ($q !== '') {
-    $sql .= ' WHERE p.nom LIKE ?';
+    $sql .= ' AND p.nom LIKE ?';
     $params[] = '%' . $q . '%';
 }
-$sql .= ' ORDER BY p.id DESC';
+if ($filtreStock === 'epuise') {
+    $sql .= ' AND p.stock <= 0';
+} elseif ($filtreStock === 'faible') {
+    $sql .= ' AND p.stock <= ?';
+    $params[] = SEUIL_STOCK;
+} elseif ($filtreStock === 'masques') {
+    $sql .= ' AND p.actif = 0';
+} else {
+    $filtreStock = '';
+}
+$sql .= $filtreStock === 'faible' ? ' ORDER BY p.stock, p.nom' : ' ORDER BY p.id DESC';
 $st = db()->prepare($sql);
 $st->execute($params);
 $produits = $st->fetchAll();
@@ -48,9 +59,16 @@ $produits = $st->fetchAll();
 </div>
 
 <form method="get" class="mb-3"><div class="input-group" style="max-width:420px">
+  <?php if ($filtreStock !== ''): ?><input type="hidden" name="stock" value="<?= e($filtreStock) ?>"><?php endif; ?>
   <input type="search" name="q" value="<?= e($q) ?>" class="form-control" placeholder="Rechercher un produit…">
   <button class="btn btn-rose"><i class="fa-solid fa-magnifying-glass"></i></button>
 </div></form>
+
+<div class="chips mb-3">
+  <?php foreach (['' => 'Tous', 'faible' => 'À réapprovisionner (≤ ' . SEUIL_STOCK . ')', 'epuise' => 'Épuisés', 'masques' => 'Masqués'] as $k => $label): ?>
+    <a class="chip <?= $filtreStock === $k ? 'active' : '' ?>" href="produits.php?<?= e(http_build_query(array_filter(['stock' => $k, 'q' => $q]))) ?>"><?= e($label) ?></a>
+  <?php endforeach; ?>
+</div>
 
 <div class="panel">
 <?php if ($produits): ?>
@@ -69,6 +87,7 @@ $produits = $st->fetchAll();
               <input type="number" name="stock" min="0" value="<?= (int)$p['stock'] ?>" class="form-control form-control-sm">
               <button class="btn btn-outline-rose btn-sm" title="Enregistrer le stock"><i class="fa-solid fa-check"></i></button>
             </form>
+            <?php [$sl, $sc] = stock_info((int)$p['stock']); ?><span class="stock-badge stock-<?= e($sc) ?> d-inline-block"><?= e($sl) ?></span>
           </td>
           <td>
             <form method="post">
