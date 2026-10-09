@@ -29,6 +29,8 @@ define('BOUTIQUE_LON', -17.41415);
 define('ZONE_LIVRAISON', '');         // ex : 'Dakar et banlieue'
 define('WAVE_NUMERO', '78 545 25 44');          // numéro Wave qui reçoit les paiements
 define('ORANGE_MONEY_NUMERO', '78 545 25 44');  // numéro Orange Money qui reçoit les paiements
+// Lien de paiement Wave Business (pay.wave.com/...) : laissez vide tant que la boutique n'a pas de compte marchand Wave
+define('WAVE_LIEN_PAIEMENT', '');
 
 // Réseaux sociaux
 define('TIKTOK_URL', 'https://www.tiktok.com/@hawaaicha');

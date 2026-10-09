@@ -182,25 +182,10 @@ require __DIR__ . '/includes/header.php';
       </div>
     </div>
 
-    <div class="panel mt-4">
-      <h2 class="h5 mb-3"><span class="num-etape">3</span> Mode de paiement</h2>
-      <div class="row g-2">
-        <?php foreach (MODES_PAIEMENT as $mode): [$ico, $cls, $desc] = info_paiement($mode); ?>
-          <div class="col-sm-4">
-            <label class="choix-carte choix-paiement <?= e($cls) ?>">
-              <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
-              <?= logo_paiement($mode) ?>
-              <span><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
-            </label>
-          </div>
-        <?php endforeach; ?>
-      </div>
-      <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-circle-info me-1"></i>Votre paiement reste « en attente » jusqu'à sa vérification par la boutique.</p>
-    </div>
   </div>
 
   <div class="col-lg-5">
-    <div class="panel">
+    <div class="panel recap-commande">
       <h2 class="h5 mb-3">Votre commande</h2>
       <?php foreach ($lignes as $l): ?>
         <div class="d-flex justify-content-between gap-3 mb-2 small">
@@ -209,9 +194,47 @@ require __DIR__ . '/includes/header.php';
         </div>
       <?php endforeach; ?>
       <hr>
-      <div class="d-flex justify-content-between align-items-center mb-3"><span class="fw-medium">Total</span><span class="total-line"><?= fcfa($total) ?></span></div>
-      <p class="small text-muted">Frais de livraison communiqués selon votre zone.</p>
-      <button class="btn btn-rose btn-lg w-100" data-texte-envoi="Enregistrement…"><i class="fa-solid fa-check me-2"></i>Confirmer la commande</button>
+      <div class="d-flex justify-content-between align-items-center mb-1"><span class="fw-medium">Total</span><span class="total-line"><?= fcfa($total) ?></span></div>
+      <p class="small text-muted mb-4">Frais de livraison communiqués selon votre zone.</p>
+
+      <h3 class="h6 mb-2"><span class="num-etape">3</span> Choisissez votre paiement</h3>
+      <div class="d-grid gap-2 mb-3">
+        <?php foreach (MODES_PAIEMENT as $mode): [, $cls, $desc] = info_paiement($mode); ?>
+          <label class="choix-carte choix-paiement <?= e($cls) ?>">
+            <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
+            <?= logo_paiement($mode) ?>
+            <span class="flex-grow-1"><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
+            <i class="fa-solid fa-circle-check coche"></i>
+          </label>
+        <?php endforeach; ?>
+      </div>
+
+      <?php foreach (MODES_PAIEMENT as $mode): $numero = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO][$mode] ?? ''; ?>
+        <div class="infos-paiement <?= e(info_paiement($mode)[1]) ?>" data-infos-paiement="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? '' : 'hidden' ?>>
+          <?php if ($numero !== ''): ?>
+            <div class="small mb-2">Après avoir confirmé, envoyez <strong class="text-nowrap"><?= fcfa($total) ?></strong> par <strong><?= e($mode) ?></strong> au :</div>
+            <div class="numero-paiement">
+              <?= logo_paiement($mode) ?>
+              <strong><?= e($numero) ?></strong>
+              <button type="button" class="btn btn-sm btn-outline-rose ms-auto" data-copier="<?= e(preg_replace('/\D/', '', $numero)) ?>"><i class="fa-regular fa-copy"></i> Copier</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <?php if ($mode === 'Orange Money'): ?>
+                <a class="btn btn-pay-om btn-sm" href="tel:%23144%23"><i class="fa-solid fa-phone me-1"></i> Composer #144#</a>
+              <?php elseif ($mode === 'Wave' && WAVE_LIEN_PAIEMENT !== ''): ?>
+                <a class="btn btn-pay-wave btn-sm" href="<?= e(WAVE_LIEN_PAIEMENT) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-1"></i> Payer avec Wave</a>
+              <?php else: ?>
+                <span class="small text-muted"><i class="fa-solid fa-mobile-screen me-1"></i> Dans l'application Wave : « Envoyer », puis ce numéro.</span>
+              <?php endif; ?>
+            </div>
+            <div class="small text-muted mt-2">Vous indiquerez ensuite la référence du SMS reçu : la boutique vérifie et confirme votre paiement.</div>
+          <?php else: ?>
+            <div class="small"><i class="fa-solid fa-money-bill-wave me-1"></i> Vous payez <strong class="text-nowrap"><?= fcfa($total) ?></strong> en espèces à la livraison ou au retrait de votre commande.</div>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+
+      <button class="btn btn-rose btn-lg w-100 mt-3" data-texte-envoi="Enregistrement…"><i class="fa-solid fa-check me-2"></i>Confirmer la commande</button>
       <a href="<?= e(base_url('panier.php')) ?>" class="d-block text-center mt-3 small">Modifier mon panier</a>
     </div>
   </div>

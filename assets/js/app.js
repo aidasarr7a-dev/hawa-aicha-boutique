@@ -52,6 +52,19 @@ document.addEventListener('DOMContentLoaded', function () {
     majAdresse();
   }
 
+  // Commande : afficher les consignes du mode de paiement choisi (numéro, montant, #144#…)
+  var radiosPaiement = document.querySelectorAll('input[name="paiement"]');
+  if (radiosPaiement.length) {
+    var majPaiement = function () {
+      var choisi = document.querySelector('input[name="paiement"]:checked');
+      document.querySelectorAll('[data-infos-paiement]').forEach(function (bloc) {
+        bloc.hidden = !choisi || bloc.dataset.infosPaiement !== choisi.value;
+      });
+    };
+    radiosPaiement.forEach(function (r) { r.addEventListener('change', majPaiement); });
+    majPaiement();
+  }
+
   // Paiement : copier le numéro Wave / Orange Money
   document.querySelectorAll('[data-copier]').forEach(function (btn) {
     btn.addEventListener('click', function () {

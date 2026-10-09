@@ -300,3 +300,15 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
   .onglets a { padding: .55rem .5rem; font-size: .85rem; }
   .footer-slogan { font-size: 1.05rem; }
 }
+
+/* ---------- Choix du paiement dans le récapitulatif de commande ---------- */
+@media (min-width: 992px) { .recap-commande { position: sticky; top: 90px; } }
+.choix-paiement { border-left: 4px solid var(--pay, var(--ligne)); }
+.choix-paiement .coche { color: var(--ligne); font-size: 1.2rem; transition: color .15s; }
+.choix-paiement:has(input:checked) .coche { color: var(--pay, var(--rose-dark)); }
+.choix-paiement:has(input:checked) { background: #fff; border-color: var(--pay, var(--rose)); box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--pay, var(--rose)) 18%, transparent); }
+.infos-paiement { border-radius: 1rem; padding: .9rem 1rem; background: color-mix(in srgb, var(--pay, var(--rose)) 8%, #fff); border: 1px dashed color-mix(in srgb, var(--pay, var(--rose)) 45%, #fff); }
+.numero-paiement { display: flex; align-items: center; gap: .6rem; background: #fff; border-radius: .9rem; padding: .5rem .6rem; font-size: 1.15rem; letter-spacing: .03em; }
+.numero-paiement .logo-pay { width: 36px; height: 36px; }
+.btn-pay-wave { background: #1DC8FF; color: #0b2a3a; border: 0; border-radius: 50rem; font-weight: 600; }
+.btn-pay-wave:hover { background: #12b5ea; color: #0b2a3a; }

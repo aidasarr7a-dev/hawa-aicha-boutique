@@ -98,12 +98,6 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
   </div>
 </section>
 
-<section class="mb-5" id="paiement">
-  <h2 class="section-title">Modes de paiement</h2>
-  <p class="section-sub mb-4">Payez comme vous préférez, en toute simplicité.</p>
-  <?php bloc_paiements(); ?>
-</section>
-
 <section class="mb-5" id="localisation">
   <?php bloc_localisation(false); ?>
 </section>

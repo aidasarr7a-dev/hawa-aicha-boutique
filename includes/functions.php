@@ -229,6 +229,8 @@ function bloc_payer(array $cmd, array $paiement): void
         <div class="my-3">
           <?php if ($mode === 'Orange Money'): ?>
             <a class="btn btn-pay-om" href="tel:%23144%23"><i class="fa-solid fa-phone me-1"></i> Composer #144# (Orange Money)</a>
+          <?php elseif ($mode === 'Wave' && WAVE_LIEN_PAIEMENT !== ''): ?>
+            <a class="btn btn-pay-wave" href="<?= e(WAVE_LIEN_PAIEMENT) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-1"></i> Payer avec Wave</a>
           <?php else: ?>
             <span class="small text-muted"><i class="fa-solid fa-mobile-screen me-1"></i> Ouvrez l'application Wave et envoyez le montant au numéro ci-dessus.</span>
           <?php endif; ?>
