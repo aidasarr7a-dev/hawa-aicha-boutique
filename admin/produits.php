@@ -53,54 +53,65 @@ $st->execute($params);
 $produits = $st->fetchAll();
 ?>
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-  <h1 class="page-title mb-0">Produits <small class="text-muted fs-6">(<?= count($produits) ?>)</small></h1>
-  <a href="produit_form.php" class="btn btn-rose"><i class="fa-solid fa-plus me-1"></i>Ajouter un produit</a>
+<div class="admin-head">
+  <div>
+    <h1 class="page-title">Produits <span class="compteur-titre">(<?= count($produits) ?>)</span></h1>
+    <p class="admin-sous">Gérez le catalogue, les prix, le stock et la visibilité sur le site.</p>
+  </div>
+  <div class="admin-head-actions">
+    <a href="produit_form.php" class="btn btn-rose"><i class="fa-solid fa-plus me-1"></i>Ajouter un produit</a>
+  </div>
 </div>
 
-<form method="get" class="mb-3"><div class="input-group" style="max-width:420px">
-  <?php if ($filtreStock !== ''): ?><input type="hidden" name="stock" value="<?= e($filtreStock) ?>"><?php endif; ?>
-  <input type="search" name="q" value="<?= e($q) ?>" class="form-control" placeholder="Rechercher un produit…">
-  <button class="btn btn-rose"><i class="fa-solid fa-magnifying-glass"></i></button>
-</div></form>
-
-<div class="chips mb-3">
-  <?php foreach (['' => 'Tous', 'faible' => 'À réapprovisionner (≤ ' . SEUIL_STOCK . ')', 'epuise' => 'Épuisés', 'masques' => 'Masqués'] as $k => $label): ?>
-    <a class="chip <?= $filtreStock === $k ? 'active' : '' ?>" href="produits.php?<?= e(http_build_query(array_filter(['stock' => $k, 'q' => $q]))) ?>"><?= e($label) ?></a>
-  <?php endforeach; ?>
+<div class="admin-filtres">
+  <form method="get" class="admin-recherche" role="search">
+    <?php if ($filtreStock !== ''): ?><input type="hidden" name="stock" value="<?= e($filtreStock) ?>"><?php endif; ?>
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="search" name="q" value="<?= e($q) ?>" class="form-control" placeholder="Rechercher un produit…" aria-label="Rechercher un produit">
+    <button class="btn btn-rose btn-sm">Rechercher</button>
+  </form>
+  <div class="chips">
+    <?php foreach (['' => 'Tous', 'faible' => 'À réapprovisionner (≤ ' . SEUIL_STOCK . ')', 'epuise' => 'Épuisés', 'masques' => 'Masqués'] as $k => $label): ?>
+      <a class="chip <?= $filtreStock === $k ? 'active' : '' ?>" href="produits.php?<?= e(http_build_query(array_filter(['stock' => $k, 'q' => $q]))) ?>"><?= e($label) ?></a>
+    <?php endforeach; ?>
+  </div>
 </div>
 
-<div class="panel">
+<div class="panel panel-table">
 <?php if ($produits): ?>
   <div class="table-responsive">
-    <table class="table table-rose align-middle mb-0">
-      <thead><tr><th></th><th>Produit</th><th>Prix</th><th>Stock</th><th>État</th><th class="text-end">Actions</th></tr></thead>
+    <table class="table table-rose align-middle">
+      <thead><tr><th style="width:76px"></th><th>Produit</th><th>Prix</th><th>Stock</th><th>État</th><th class="text-end">Actions</th></tr></thead>
       <tbody>
       <?php foreach ($produits as $p): $img = product_image($p['image']); ?>
         <tr class="<?= $p['actif'] ? '' : 'opacity-50' ?>">
           <td><?php if ($img): ?><img class="admin-thumb" src="<?= e($img) ?>" alt=""><?php else: ?><span class="admin-thumb"><i class="fa-solid <?= e($p['icone'] ?? 'fa-gem') ?>"></i></span><?php endif; ?></td>
-          <td><strong><?= e($p['nom']) ?></strong><div class="small text-muted"><?= e($p['categorie'] ?? 'Sans catégorie') ?><?= $p['nouveau'] ? ' · <span style="color:var(--rose)">Nouveau</span>' : '' ?></div></td>
-          <td class="text-nowrap"><?= fcfa($p['prix']) ?></td>
+          <td style="min-width:200px"><span class="cellule-principale"><?= e($p['nom']) ?></span><div class="small text-muted"><?= e($p['categorie'] ?? 'Sans catégorie') ?><?= $p['nouveau'] ? ' · <span style="color:var(--rose)">Nouveau</span>' : '' ?></div></td>
+          <td class="text-nowrap fw-medium"><?= fcfa($p['prix']) ?></td>
           <td>
-            <form method="post" class="d-flex gap-1" style="width:120px">
-              <?= csrf_field() ?><input type="hidden" name="action" value="stock"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
-              <input type="number" name="stock" min="0" value="<?= (int)$p['stock'] ?>" class="form-control form-control-sm">
-              <button class="btn btn-outline-rose btn-sm" title="Enregistrer le stock"><i class="fa-solid fa-check"></i></button>
-            </form>
-            <?php [$sl, $sc] = stock_info((int)$p['stock']); ?><span class="stock-badge stock-<?= e($sc) ?> d-inline-block"><?= e($sl) ?></span>
+            <div class="stock-cellule">
+              <form method="post">
+                <?= csrf_field() ?><input type="hidden" name="action" value="stock"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
+                <input type="number" name="stock" min="0" value="<?= (int)$p['stock'] ?>" class="form-control form-control-sm" aria-label="Stock de <?= e($p['nom']) ?>">
+                <button class="btn btn-outline-rose btn-sm btn-ic" title="Enregistrer le stock"><i class="fa-solid fa-check"></i></button>
+              </form>
+              <?php [$sl, $sc] = stock_info((int)$p['stock']); ?><span class="stock-badge stock-<?= e($sc) ?> m-0"><?= e($sl) ?></span>
+            </div>
           </td>
           <td>
             <form method="post">
               <?= csrf_field() ?><input type="hidden" name="action" value="toggle"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
-              <button class="badge rounded-pill border-0 text-bg-<?= $p['actif'] ? 'success' : 'secondary' ?>" title="Cliquer pour changer"><?= $p['actif'] ? 'Visible' : 'Masqué' ?></button>
+              <button class="badge rounded-pill border-0 text-bg-<?= $p['actif'] ? 'success' : 'secondary' ?>" title="Cliquer pour changer"><i class="fa-solid <?= $p['actif'] ? 'fa-eye' : 'fa-eye-slash' ?> me-1"></i><?= $p['actif'] ? 'Visible' : 'Masqué' ?></button>
             </form>
           </td>
-          <td class="text-end text-nowrap">
-            <a class="btn btn-outline-rose btn-sm" href="produit_form.php?id=<?= (int)$p['id'] ?>"><i class="fa-solid fa-pen"></i></a>
-            <form method="post" class="d-inline" onsubmit="return confirm('Supprimer définitivement ce produit ?')">
-              <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
-              <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
-            </form>
+          <td class="text-end">
+            <div class="admin-actions">
+              <a class="btn btn-outline-rose btn-sm btn-ic" href="produit_form.php?id=<?= (int)$p['id'] ?>" title="Modifier"><i class="fa-solid fa-pen"></i></a>
+              <form method="post" onsubmit="return confirm('Supprimer définitivement ce produit ?')">
+                <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
+                <button class="btn btn-outline-danger btn-sm btn-ic" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
+              </form>
+            </div>
           </td>
         </tr>
       <?php endforeach; ?>
@@ -108,7 +119,7 @@ $produits = $st->fetchAll();
     </table>
   </div>
 <?php else: ?>
-  <p class="text-muted text-center mb-0 py-4">Aucun produit. <a href="produit_form.php">Ajoutez le premier !</a></p>
+  <div class="admin-vide"><i class="fa-solid fa-box-open"></i>Aucun produit. <a href="produit_form.php">Ajoutez le premier !</a></div>
 <?php endif; ?>
 </div>
 

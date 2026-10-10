@@ -68,16 +68,24 @@ $titre = $produit ? 'Modifier le produit' : 'Ajouter un produit';
 require __DIR__ . '/_header.php';
 ?>
 
-<h1 class="page-title mb-4"><?= e($titre) ?></h1>
+<div class="admin-head">
+  <div>
+    <h1 class="page-title"><?= e($titre) ?></h1>
+    <p class="admin-sous">Renseignez les informations affichées sur la fiche du produit.</p>
+  </div>
+  <div class="admin-head-actions">
+    <a href="produits.php" class="btn btn-outline-rose"><i class="fa-solid fa-arrow-left me-1"></i>Retour aux produits</a>
+  </div>
+</div>
 
 <?php if ($erreurs): ?>
-  <div class="alert alert-danger rounded-4"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
+  <div class="alert alert-danger admin-form"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
 <?php endif; ?>
 
-<form method="post" enctype="multipart/form-data" class="panel" style="max-width:820px">
+<form method="post" enctype="multipart/form-data" class="panel admin-form">
   <?= csrf_field() ?>
   <input type="hidden" name="id" value="<?= (int)$id ?>">
-  <div class="row g-3">
+  <div class="row g-3 g-lg-4">
     <div class="col-md-8"><label class="form-label" for="nom">Nom du produit</label><input class="form-control" id="nom" name="nom" value="<?= e($val['nom']) ?>" required maxlength="150"></div>
     <div class="col-md-4">
       <label class="form-label" for="categorie_id">Catégorie</label>
@@ -95,7 +103,7 @@ require __DIR__ . '/_header.php';
       <label class="form-label" for="image">Photo du produit</label>
       <?php if (!empty($val['image'])): ?>
         <div class="d-flex align-items-center gap-3 mb-2">
-          <img class="admin-thumb" style="width:80px;height:80px" src="<?= e(product_image($val['image'])) ?>" alt="">
+          <img class="admin-thumb" style="width:84px;height:84px" src="<?= e(product_image($val['image'])) ?>" alt="">
           <div class="form-check"><input class="form-check-input" type="checkbox" name="supprimer_image" id="supprimer_image"><label class="form-check-label" for="supprimer_image">Supprimer la photo actuelle</label></div>
         </div>
       <?php endif; ?>
@@ -107,7 +115,7 @@ require __DIR__ . '/_header.php';
       <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" name="actif" id="actif" <?= $val['actif'] ? 'checked' : '' ?>><label class="form-check-label" for="actif">Visible sur le site</label></div>
     </div>
   </div>
-  <div class="d-flex gap-2 mt-4">
+  <div class="admin-form-pied">
     <button class="btn btn-rose px-4"><i class="fa-solid fa-floppy-disk me-1"></i>Enregistrer</button>
     <a href="produits.php" class="btn btn-outline-rose">Annuler</a>
   </div>

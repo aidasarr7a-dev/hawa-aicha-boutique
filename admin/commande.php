@@ -152,16 +152,19 @@ $statutPaiement = $paiement['statut_paiement'] ?? 'en_attente';
 $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutPaiement === 'en_attente';
 ?>
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-  <h1 class="page-title mb-0">Commande <?= e($cmd['numero_commande']) ?></h1>
-  <div class="d-flex gap-2">
-    <a href="<?= e(base_url('recu.php?id=' . $id)) ?>" target="_blank" class="btn btn-rose btn-sm"><i class="fa-solid fa-print me-1"></i>Reçu imprimable</a>
-    <a href="commandes.php" class="btn btn-outline-rose btn-sm"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
+<div class="admin-head">
+  <div>
+    <h1 class="page-title">Commande <?= e($cmd['numero_commande']) ?></h1>
+    <p class="admin-sous">Passée le <?= e(date('d/m/Y à H:i', strtotime($cmd['created_at']))) ?></p>
+  </div>
+  <div class="admin-head-actions">
+    <a href="commandes.php" class="btn btn-outline-rose"><i class="fa-solid fa-arrow-left me-1"></i>Retour</a>
+    <a href="<?= e(base_url('recu.php?id=' . $id)) ?>" target="_blank" class="btn btn-rose"><i class="fa-solid fa-print me-1"></i>Reçu imprimable</a>
   </div>
 </div>
-<div class="d-flex flex-wrap gap-2 mb-4">
-  <span class="small text-muted">Commande :</span> <?= badge_statut($cmd['statut']) ?>
-  <span class="small text-muted ms-2">Paiement :</span> <?= badge_paiement($statutPaiement) ?>
+<div class="statuts-ligne">
+  <span>Commande <?= badge_statut($cmd['statut']) ?></span>
+  <span>Paiement <?= badge_paiement($statutPaiement) ?></span>
 </div>
 
 <div class="row g-4">
@@ -221,15 +224,15 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
       <?php if (!$paiement): ?>
         <p class="text-muted mb-0">Aucun paiement enregistré pour cette commande.</p>
       <?php else: ?>
-        <dl class="row small mb-3">
-          <dt class="col-5 text-muted fw-normal">Mode</dt><dd class="col-7"><?= e($paiement['mode_paiement']) ?></dd>
-          <dt class="col-5 text-muted fw-normal">Montant</dt><dd class="col-7"><?= fcfa($paiement['montant']) ?></dd>
-          <dt class="col-5 text-muted fw-normal">Statut</dt><dd class="col-7"><?= badge_paiement($statutPaiement) ?></dd>
-          <?php if (!empty($paiement['date_declaration'])): ?><dt class="col-5 text-muted fw-normal">Déclaré par la cliente</dt><dd class="col-7"><span class="badge rounded-pill text-bg-info">le <?= e(date('d/m/Y à H:i', strtotime($paiement['date_declaration']))) ?></span><br>Réf. indiquée : <strong><?= e($paiement['reference_client']) ?></strong></dd><?php endif; ?>
-          <?php if ($paiement['reference_transaction']): ?><dt class="col-5 text-muted fw-normal">Référence</dt><dd class="col-7"><?= e($paiement['reference_transaction']) ?></dd><?php endif; ?>
-          <?php if ($paiement['date_paiement']): ?><dt class="col-5 text-muted fw-normal">Payé le</dt><dd class="col-7"><?= e(date('d/m/Y à H:i', strtotime($paiement['date_paiement']))) ?></dd><?php endif; ?>
-          <?php if ($paiement['date_confirmation']): ?><dt class="col-5 text-muted fw-normal">Confirmé le</dt><dd class="col-7"><?= e(date('d/m/Y à H:i', strtotime($paiement['date_confirmation']))) ?><?= $paiement['confirme_par_nom'] ? ' par ' . e($paiement['confirme_par_nom']) : '' ?></dd><?php endif; ?>
-          <?php if ($paiement['note']): ?><dt class="col-5 text-muted fw-normal">Note</dt><dd class="col-7"><?= e($paiement['note']) ?></dd><?php endif; ?>
+        <dl class="admin-fiche small mb-4">
+          <div><dt>Mode</dt><dd><?= e($paiement['mode_paiement']) ?></dd></div>
+          <div><dt>Montant</dt><dd class="fw-medium"><?= fcfa($paiement['montant']) ?></dd></div>
+          <div><dt>Statut</dt><dd><?= badge_paiement($statutPaiement) ?></dd></div>
+          <?php if (!empty($paiement['date_declaration'])): ?><div><dt>Déclaré par la cliente</dt><dd><span class="badge rounded-pill text-bg-info">le <?= e(date('d/m/Y à H:i', strtotime($paiement['date_declaration']))) ?></span><br>Réf. indiquée : <strong><?= e($paiement['reference_client']) ?></strong></dd></div><?php endif; ?>
+          <?php if ($paiement['reference_transaction']): ?><div><dt>Référence</dt><dd><?= e($paiement['reference_transaction']) ?></dd></div><?php endif; ?>
+          <?php if ($paiement['date_paiement']): ?><div><dt>Payé le</dt><dd><?= e(date('d/m/Y à H:i', strtotime($paiement['date_paiement']))) ?></dd></div><?php endif; ?>
+          <?php if ($paiement['date_confirmation']): ?><div><dt>Confirmé le</dt><dd><?= e(date('d/m/Y à H:i', strtotime($paiement['date_confirmation']))) ?><?= $paiement['confirme_par_nom'] ? ' par ' . e($paiement['confirme_par_nom']) : '' ?></dd></div><?php endif; ?>
+          <?php if ($paiement['note']): ?><div><dt>Note</dt><dd><?= e($paiement['note']) ?></dd></div><?php endif; ?>
         </dl>
 
         <?php if ($statutPaiement === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
@@ -270,17 +273,17 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
   <div class="col-lg-5">
     <div class="panel">
       <h2 class="h5 mb-3">Client</h2>
-      <dl class="row mb-0">
-        <dt class="col-5 text-muted fw-normal">Nom</dt><dd class="col-7"><?= e($cmd['nom_complet']) ?></dd>
-        <dt class="col-5 text-muted fw-normal">Téléphone</dt><dd class="col-7"><a href="tel:<?= e($cmd['telephone']) ?>"><?= e($cmd['telephone']) ?></a></dd>
-        <dt class="col-5 text-muted fw-normal">Adresse de livraison</dt><dd class="col-7"><?= e($cmd['adresse_livraison'] ?: '—') ?></dd>
-        <dt class="col-5 text-muted fw-normal">Ville / commune</dt><dd class="col-7"><?= e($cmd['ville']) ?></dd>
-        <dt class="col-5 text-muted fw-normal">Livraison</dt><dd class="col-7"><?= e($cmd['mode_livraison']) ?></dd>
-        <dt class="col-5 text-muted fw-normal">Date</dt><dd class="col-7"><?= e(date('d/m/Y à H:i', strtotime($cmd['created_at']))) ?></dd>
-        <?php if ($cmd['remarque']): ?><dt class="col-5 text-muted fw-normal">Instructions</dt><dd class="col-7"><?= nl2br(e($cmd['remarque'])) ?></dd><?php endif; ?>
+      <dl class="admin-fiche">
+        <div><dt>Nom</dt><dd class="fw-medium"><?= e($cmd['nom_complet']) ?></dd></div>
+        <div><dt>Téléphone</dt><dd><a href="tel:<?= e($cmd['telephone']) ?>"><?= e($cmd['telephone']) ?></a></dd></div>
+        <div><dt>Adresse de livraison</dt><dd><?= e($cmd['adresse_livraison'] ?: '—') ?></dd></div>
+        <div><dt>Ville / commune</dt><dd><?= e($cmd['ville']) ?></dd></div>
+        <div><dt>Livraison</dt><dd><?= e($cmd['mode_livraison']) ?></dd></div>
+        <div><dt>Date</dt><dd><?= e(date('d/m/Y à H:i', strtotime($cmd['created_at']))) ?></dd></div>
+        <?php if ($cmd['remarque']): ?><div><dt>Instructions</dt><dd><?= nl2br(e($cmd['remarque'])) ?></dd></div><?php endif; ?>
       </dl>
       <?php if ($tel !== ''): ?>
-        <a class="btn btn-wa w-100 mt-3" target="_blank" rel="noopener" href="https://wa.me/<?= e($tel) ?>?text=<?= rawurlencode($waMsg) ?>"><i class="fa-brands fa-whatsapp me-1"></i>Contacter le client</a>
+        <a class="btn btn-wa w-100 mt-4" target="_blank" rel="noopener" href="https://wa.me/<?= e($tel) ?>?text=<?= rawurlencode($waMsg) ?>"><i class="fa-brands fa-whatsapp me-1"></i>Contacter le client</a>
       <?php endif; ?>
     </div>
   </div>

@@ -51,42 +51,49 @@ function icone_select(string $courant): string
 }
 ?>
 
-<h1 class="page-title mb-4">Catégories</h1>
+<div class="admin-head">
+  <div>
+    <h1 class="page-title">Catégories <span class="compteur-titre">(<?= count($cats) ?>)</span></h1>
+    <p class="admin-sous">Organisez les univers de la boutique. Modifiez un nom ou une icône puis enregistrez la ligne.</p>
+  </div>
+</div>
 
 <div class="row g-4">
   <div class="col-lg-4">
     <div class="panel">
-      <h2 class="h5 mb-3">Nouvelle catégorie</h2>
+      <h2 class="h5 mb-4">Nouvelle catégorie</h2>
       <form method="post">
         <?= csrf_field() ?><input type="hidden" name="action" value="add">
         <div class="mb-3"><label class="form-label" for="nom">Nom</label><input class="form-control" id="nom" name="nom" required maxlength="100"></div>
-        <div class="mb-3"><label class="form-label">Icône</label><?= icone_select('fa-gem') ?></div>
+        <div class="mb-4"><label class="form-label">Icône</label><?= icone_select('fa-gem') ?></div>
         <button class="btn btn-rose w-100"><i class="fa-solid fa-plus me-1"></i>Ajouter</button>
       </form>
     </div>
   </div>
   <div class="col-lg-8">
-    <div class="panel">
+    <div class="panel panel-table">
       <?php if ($cats): ?>
       <div class="table-responsive">
-        <table class="table table-rose align-middle mb-0">
-          <thead><tr><th>Catégorie</th><th>Icône</th><th>Produits</th><th class="text-end">Actions</th></tr></thead>
+        <table class="table table-rose align-middle">
+          <thead><tr><th style="width:52px"></th><th>Catégorie</th><th class="text-center">Produits</th><th class="text-end">Icône et actions</th></tr></thead>
           <tbody>
           <?php foreach ($cats as $c): $fid = 'f' . (int)$c['id']; ?>
             <tr>
-              <td><input form="<?= $fid ?>" class="form-control form-control-sm" name="nom" value="<?= e($c['nom']) ?>" required maxlength="100"></td>
-              <td><span class="me-2" style="color:var(--rose)"><i class="fa-solid <?= e($c['icone']) ?>"></i></span></td>
-              <td><?= (int)$c['nb'] ?></td>
-              <td class="text-end text-nowrap">
-                <form id="<?= $fid ?>" method="post" class="d-inline-flex gap-1 align-items-center">
-                  <?= csrf_field() ?><input type="hidden" name="action" value="edit"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
-                  <?= icone_select($c['icone']) ?>
-                  <button class="btn btn-outline-rose btn-sm" title="Enregistrer"><i class="fa-solid fa-check"></i></button>
-                </form>
-                <form method="post" class="d-inline" onsubmit="return confirm('Supprimer cette catégorie ? Ses produits seront conservés sans catégorie.')">
-                  <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
-                  <button class="btn btn-outline-danger btn-sm" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
-                </form>
+              <td><span class="stat-ic m-0" style="width:36px;height:36px;font-size:.9rem"><i class="fa-solid <?= e($c['icone']) ?>"></i></span></td>
+              <td style="min-width:180px"><input form="<?= $fid ?>" class="form-control form-control-sm" name="nom" value="<?= e($c['nom']) ?>" required maxlength="100" aria-label="Nom de la catégorie"></td>
+              <td class="text-center fw-medium"><?= (int)$c['nb'] ?></td>
+              <td class="text-end">
+                <div class="admin-actions">
+                  <form id="<?= $fid ?>" method="post">
+                    <?= csrf_field() ?><input type="hidden" name="action" value="edit"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
+                    <?= icone_select($c['icone']) ?>
+                    <button class="btn btn-outline-rose btn-sm btn-ic" title="Enregistrer"><i class="fa-solid fa-check"></i></button>
+                  </form>
+                  <form method="post" onsubmit="return confirm('Supprimer cette catégorie ? Ses produits seront conservés sans catégorie.')">
+                    <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
+                    <button class="btn btn-outline-danger btn-sm btn-ic" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -94,7 +101,7 @@ function icone_select(string $courant): string
         </table>
       </div>
       <?php else: ?>
-        <p class="text-muted text-center py-4 mb-0">Aucune catégorie pour le moment.</p>
+        <div class="admin-vide"><i class="fa-solid fa-layer-group"></i>Aucune catégorie pour le moment.</div>
       <?php endif; ?>
     </div>
   </div>

@@ -29,46 +29,97 @@ $manquants = array_keys(array_filter([
 ], fn($v) => trim($v) === ''));
 ?>
 
-<h1 class="page-title mb-4">Tableau de bord</h1>
-
-<?php if ($manquants): ?>
-  <div class="alert alert-light border rounded-4 small"><i class="fa-solid fa-circle-info me-1" style="color:var(--rose)"></i>
-    Informations à compléter dans <code>config.php</code> : <?= e(implode(', ', $manquants)) ?>.</div>
-<?php endif; ?>
+<div class="admin-head">
+  <div>
+    <h1 class="page-title">Tableau de bord</h1>
+    <p class="admin-sous">Vue d'ensemble de la boutique au <?= e(date('d/m/Y')) ?>.</p>
+  </div>
+  <div class="admin-head-actions">
+    <a href="produit_form.php" class="btn btn-rose"><i class="fa-solid fa-plus me-1"></i>Ajouter un produit</a>
+  </div>
+</div>
 
 <?php if ($nbPaiementsDeclares || $nbMessagesNonLus): ?>
-  <div class="d-flex flex-wrap gap-2 mb-3">
+  <div class="admin-alertes">
     <?php if ($nbPaiementsDeclares): ?><a class="alerte-admin" href="paiements.php?statut=en_attente"><i class="fa-solid fa-hand-holding-dollar"></i> <?= $nbPaiementsDeclares ?> paiement(s) déclaré(s) par des clientes à vérifier</a><?php endif; ?>
     <?php if ($nbMessagesNonLus): ?><a class="alerte-admin" href="messages.php?filtre=non_lus"><i class="fa-solid fa-envelope"></i> <?= $nbMessagesNonLus ?> nouveau(x) message(s)</a><?php endif; ?>
   </div>
 <?php endif; ?>
 
-<div class="row g-3 mb-4">
-  <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="produits.php"><div class="text-muted small">Produits</div><div class="num"><?= $nbProduits ?></div></a></div>
-  <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="commandes.php"><div class="text-muted small">Commandes</div><div class="num"><?= $nbCommandes ?></div></a></div>
-  <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="commandes.php?statut=nouvelle"><div class="text-muted small">Nouvelles commandes</div><div class="num"><?= $nbNouvelles ?></div></a></div>
-  <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="paiements.php?statut=en_attente"><div class="text-muted small">Paiements en attente</div><div class="num"><?= (int)$attente['nb'] ?></div><div class="small text-muted"><?= fcfa($attente['montant']) ?></div></a></div>
-  <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="produits.php?stock=epuise"><div class="text-muted small">Ruptures de stock</div><div class="num"><?= $nbRupture ?></div></a></div>
-  <div class="col-6 col-lg-4 col-xl-2"><a class="stat-card d-block text-reset" href="paiements.php?statut=paye"><div class="text-muted small">Ventes payées</div><div class="num fs-5"><?= fcfa($ventesPayees) ?></div></a></div>
+<?php if ($manquants): ?>
+  <div class="admin-info"><i class="fa-solid fa-circle-info"></i>
+    <span>Informations à compléter dans <code>config.php</code> : <?= e(implode(', ', $manquants)) ?>.</span></div>
+<?php endif; ?>
+
+<!-- Indicateurs principaux : ce qui demande une action en premier -->
+<div class="row g-3 g-lg-4 mb-3 mb-lg-4">
+  <div class="col-6 col-xl-3">
+    <a class="stat-card" href="commandes.php?statut=nouvelle">
+      <span class="stat-ic"><i class="fa-solid fa-bell"></i></span>
+      <span class="stat-label">Nouvelles commandes</span>
+      <span class="num"><?= $nbNouvelles ?></span>
+      <span class="stat-sous">à préparer</span>
+    </a>
+  </div>
+  <div class="col-6 col-xl-3">
+    <a class="stat-card" href="paiements.php?statut=en_attente">
+      <span class="stat-ic ic-alerte"><i class="fa-solid fa-hourglass-half"></i></span>
+      <span class="stat-label">Paiements en attente</span>
+      <span class="num"><?= (int)$attente['nb'] ?></span>
+      <span class="stat-sous"><?= fcfa($attente['montant']) ?></span>
+    </a>
+  </div>
+  <div class="col-6 col-xl-3">
+    <a class="stat-card" href="paiements.php?statut=paye">
+      <span class="stat-ic ic-ok"><i class="fa-solid fa-sack-dollar"></i></span>
+      <span class="stat-label">Ventes payées</span>
+      <span class="num num-montant"><?= fcfa($ventesPayees) ?></span>
+      <span class="stat-sous">paiements confirmés</span>
+    </a>
+  </div>
+  <div class="col-6 col-xl-3">
+    <a class="stat-card" href="produits.php?stock=epuise">
+      <span class="stat-ic"><i class="fa-solid fa-box-open"></i></span>
+      <span class="stat-label">Ruptures de stock</span>
+      <span class="num"><?= $nbRupture ?></span>
+      <span class="stat-sous">produit(s) épuisé(s)</span>
+    </a>
+  </div>
+</div>
+
+<!-- Indicateurs secondaires -->
+<div class="row g-3 g-lg-4 mb-4 mb-lg-5">
+  <div class="col-6 col-xl-3">
+    <a class="stat-card stat-card-secondaire" href="commandes.php">
+      <span class="stat-label">Commandes au total</span>
+      <span class="num"><?= $nbCommandes ?></span>
+    </a>
+  </div>
+  <div class="col-6 col-xl-3">
+    <a class="stat-card stat-card-secondaire" href="produits.php">
+      <span class="stat-label">Produits au catalogue</span>
+      <span class="num"><?= $nbProduits ?></span>
+    </a>
+  </div>
 </div>
 
 <div class="row g-4">
-  <div class="col-lg-8">
-    <div class="panel">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Dernières commandes</h2>
-        <a href="commandes.php" class="small">Tout voir</a>
+  <div class="col-xxl-8">
+    <div class="panel panel-table">
+      <div class="panel-entete">
+        <h2 class="h5">Dernières commandes</h2>
+        <a href="commandes.php">Tout voir <i class="fa-solid fa-arrow-right ms-1"></i></a>
       </div>
       <?php if ($dernieres): ?>
       <div class="table-responsive">
-        <table class="table table-rose align-middle mb-0">
+        <table class="table table-rose align-middle">
           <thead><tr><th>N°</th><th>Client</th><th>Total</th><th>Commande</th><th>Paiement</th><th></th></tr></thead>
           <tbody>
           <?php foreach ($dernieres as $c): ?>
             <tr>
-              <td class="text-nowrap"><?= e($c['numero_commande']) ?></td>
-              <td><?= e($c['nom_complet']) ?><div class="small text-muted"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
-              <td class="text-nowrap"><?= fcfa($c['total']) ?></td>
+              <td class="text-nowrap cellule-principale"><?= e($c['numero_commande']) ?></td>
+              <td><?= e($c['nom_complet']) ?><div class="small text-muted text-nowrap"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
+              <td class="text-nowrap fw-medium"><?= fcfa($c['total']) ?></td>
               <td><?= badge_statut($c['statut']) ?></td>
               <td><?= badge_paiement($c['statut_paiement']) ?></td>
               <td class="text-end"><a class="btn btn-outline-rose btn-sm" href="commande.php?id=<?= (int)$c['id'] ?>">Voir</a></td>
@@ -78,25 +129,28 @@ $manquants = array_keys(array_filter([
         </table>
       </div>
       <?php else: ?>
-        <p class="text-muted mb-0">Aucune commande pour le moment.</p>
+        <div class="admin-vide"><i class="fa-solid fa-receipt"></i>Aucune commande pour le moment.</div>
       <?php endif; ?>
     </div>
   </div>
-  <div class="col-lg-4">
+  <div class="col-xxl-4">
     <div class="panel">
-      <h2 class="h5 mb-3">À réapprovisionner</h2>
+      <div class="panel-entete">
+        <h2 class="h5">À réapprovisionner</h2>
+        <?php if ($faibles): ?><a href="produits.php?stock=faible">Tout voir</a><?php endif; ?>
+      </div>
       <?php if ($faibles): ?>
-        <?php foreach ($faibles as $f): ?>
-          <a href="produit_form.php?id=<?= (int)$f['id'] ?>" class="d-flex justify-content-between align-items-center text-reset py-2 border-bottom">
-            <span><?= e($f['nom']) ?></span>
-            <span class="badge rounded-pill <?= (int)$f['stock'] <= 0 ? 'text-bg-secondary' : 'text-bg-warning' ?>"><?= (int)$f['stock'] <= 0 ? 'Épuisé' : (int)$f['stock'] . ' restant(s)' ?></span>
-          </a>
-        <?php endforeach; ?>
-        <a href="produits.php?stock=faible" class="d-block small mt-2">Voir tout le stock faible</a>
+        <div class="liste-admin">
+          <?php foreach ($faibles as $f): ?>
+            <a href="produit_form.php?id=<?= (int)$f['id'] ?>">
+              <span><?= e($f['nom']) ?></span>
+              <span class="badge rounded-pill text-nowrap <?= (int)$f['stock'] <= 0 ? 'text-bg-secondary' : 'text-bg-warning' ?>"><?= (int)$f['stock'] <= 0 ? 'Épuisé' : (int)$f['stock'] . ' restant(s)' ?></span>
+            </a>
+          <?php endforeach; ?>
+        </div>
       <?php else: ?>
         <p class="text-muted mb-0">Tout est bien approvisionné 🎉</p>
       <?php endif; ?>
-      <a href="produit_form.php" class="btn btn-rose w-100 mt-3"><i class="fa-solid fa-plus me-1"></i>Ajouter un produit</a>
     </div>
   </div>
 </div>

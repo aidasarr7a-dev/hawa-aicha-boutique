@@ -2,17 +2,28 @@
 require_once __DIR__ . '/_auth.php';
 $adminPage = $adminPage ?? '';
 $titre = $titre ?? 'Administration';
-$liens = [
-    'dashboard'  => ['index.php',      'fa-chart-pie',   'Tableau de bord'],
-    'produits'   => ['produits.php',   'fa-box-open',    'Produits'],
-    'categories' => ['categories.php', 'fa-layer-group', 'Catégories'],
-    'commandes'  => ['commandes.php',  'fa-receipt',     'Commandes'],
-    'paiements'  => ['paiements.php',  'fa-wallet',      'Paiements'],
-    'clients'    => ['clients.php',    'fa-users',       'Clients'],
-    'messages'   => ['messages.php',   'fa-envelope',    'Messages'],
+// Rubriques du menu latéral, regroupées par thème : clé => [lien, icône, intitulé]
+$sections = [
+    'Boutique' => [
+        'dashboard'  => ['index.php',      'fa-chart-pie',   'Tableau de bord'],
+        'produits'   => ['produits.php',   'fa-box-open',    'Produits'],
+        'categories' => ['categories.php', 'fa-layer-group', 'Catégories'],
+    ],
+    'Ventes' => [
+        'commandes'  => ['commandes.php',  'fa-receipt',     'Commandes'],
+        'paiements'  => ['paiements.php',  'fa-wallet',      'Paiements'],
+        'clients'    => ['clients.php',    'fa-users',       'Clients'],
+    ],
+    'Échanges' => [
+        'messages'   => ['messages.php',   'fa-envelope',    'Messages'],
+    ],
+    'Mon compte' => [
+        'mdp'        => ['motdepasse.php', 'fa-key',         'Mot de passe'],
+    ],
 ];
 $nbMessagesNonLus = (int)db()->query('SELECT COUNT(*) FROM messages_contact WHERE lu = 0')->fetchColumn();
 $nbPaiementsDeclares = (int)db()->query("SELECT COUNT(*) FROM paiements WHERE statut_paiement = 'en_attente' AND date_declaration IS NOT NULL")->fetchColumn();
+$pastilles = ['messages' => $nbMessagesNonLus, 'paiements' => $nbPaiementsDeclares];
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,28 +36,41 @@ $nbPaiementsDeclares = (int)db()->query("SELECT COUNT(*) FROM paiements WHERE st
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
   <link href="<?= e(base_url('assets/css/style.css')) ?>" rel="stylesheet">
+  <link href="<?= e(base_url('assets/css/admin.css')) ?>" rel="stylesheet">
 </head>
-<body>
-<nav class="navbar navbar-expand-xl admin-nav sticky-top">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
-      <img src="<?= e(logo_url()) ?>" alt="" height="36"><span class="brand-text fs-5">Administration</span>
-    </a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#amenu" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
-    <div class="collapse navbar-collapse" id="amenu">
-      <ul class="navbar-nav me-auto gap-xl-1">
-        <?php foreach ($liens as $k => [$href, $ico, $txt]): ?>
-          <?php $pastille = ['messages' => $nbMessagesNonLus, 'paiements' => $nbPaiementsDeclares][$k] ?? 0; ?>
-          <li class="nav-item"><a class="nav-link <?= $adminPage === $k ? 'active' : '' ?>" href="<?= $href ?>"><i class="fa-solid <?= $ico ?> me-1"></i><?= $txt ?><?php if ($pastille): ?> <span class="badge rounded-pill text-bg-danger"><?= $pastille ?></span><?php endif; ?></a></li>
-        <?php endforeach; ?>
-      </ul>
-      <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-outline-rose btn-sm" href="<?= e(base_url('index.php')) ?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Voir le site</a>
-        <a class="btn btn-outline-rose btn-sm" href="motdepasse.php"><i class="fa-solid fa-key me-1"></i>Mot de passe</a>
-        <form method="post" action="logout.php" class="d-inline"><?= csrf_field() ?><button class="btn btn-rose btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i>Déconnexion</button></form>
-      </div>
+<body class="admin-body">
+<div class="admin-shell">
+  <aside class="admin-sidebar offcanvas-lg offcanvas-start" id="asidebar" tabindex="-1" aria-label="Menu de l'administration">
+    <div class="admin-brand">
+      <a class="d-flex align-items-center gap-2" href="index.php">
+        <img src="<?= e(logo_url()) ?>" alt="" height="38">
+        <span><span class="brand-text d-block">Hawa Aïcha</span><small>Administration</small></span>
+      </a>
+      <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#asidebar" aria-label="Fermer le menu"></button>
     </div>
-  </div>
-</nav>
-<main class="container py-4">
-  <?= flash_render() ?>
+    <nav class="admin-menu">
+      <?php foreach ($sections as $section => $liens): ?>
+        <div class="admin-menu-titre"><?= e($section) ?></div>
+        <ul class="list-unstyled mb-0">
+          <?php foreach ($liens as $k => [$href, $ico, $txt]): $pastille = $pastilles[$k] ?? 0; ?>
+            <li><a class="admin-menu-lien <?= $adminPage === $k ? 'active' : '' ?>" href="<?= $href ?>"<?= $adminPage === $k ? ' aria-current="page"' : '' ?>>
+              <i class="fa-solid <?= $ico ?>"></i><span><?= $txt ?></span><?php if ($pastille): ?><span class="admin-pastille"><?= $pastille ?></span><?php endif; ?>
+            </a></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endforeach; ?>
+    </nav>
+    <div class="admin-sidebar-pied">
+      <a class="admin-menu-lien" href="<?= e(base_url('index.php')) ?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Voir le site</span></a>
+      <form method="post" action="logout.php"><?= csrf_field() ?><button class="admin-menu-lien admin-deconnexion"><i class="fa-solid fa-right-from-bracket"></i><span>Déconnexion</span></button></form>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar d-lg-none">
+      <button class="admin-burger" type="button" data-bs-toggle="offcanvas" data-bs-target="#asidebar" aria-controls="asidebar" aria-label="Ouvrir le menu"><i class="fa-solid fa-bars"></i></button>
+      <a class="d-flex align-items-center gap-2" href="index.php"><img src="<?= e(logo_url()) ?>" alt="" height="30"><span class="brand-text">Administration</span></a>
+      <?php if ($nbMessagesNonLus + $nbPaiementsDeclares): ?><span class="admin-pastille ms-auto" title="Éléments à traiter"><?= $nbMessagesNonLus + $nbPaiementsDeclares ?></span><?php endif; ?>
+    </header>
+    <main class="admin-content">
+      <?= flash_render() ?>
