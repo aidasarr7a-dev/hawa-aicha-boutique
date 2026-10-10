@@ -38,12 +38,6 @@ img { max-width: 100%; }
 ::selection { background: var(--rose-soft); }
 :focus-visible { outline: 2px solid var(--rose-dark); outline-offset: 2px; }
 
-/* ---------- Barre d'information ---------- */
-.barre-info { background: var(--rose-dark); color: #fff; font-size: .78rem; padding: .45rem 0; letter-spacing: .01em; }
-.barre-info a { color: #fff; }
-.barre-info a:hover { color: var(--rose-soft); }
-.barre-info .a-completer { color: var(--rose-soft); }
-
 /* ---------- Navigation ---------- */
 .site-nav { background: rgba(255, 255, 255, .96); backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--ligne), 0 6px 20px rgba(159, 62, 99, .05); padding: .6rem 0; }
 .brand-text { color: var(--rose-dark); font-size: 1.35rem; }
@@ -313,47 +307,6 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 .btn-pay-wave { background: #1DC8FF; color: #0b2a3a; border: 0; border-radius: 50rem; font-weight: 600; }
 .btn-pay-wave:hover { background: #12b5ea; color: #0b2a3a; }
 
-/* ---------- Accueil : illustration « boutique en ligne » ---------- */
-.vitrine-en-ligne { position: relative; height: 470px; max-width: 520px; margin-inline: auto; }
-.vitrine-en-ligne .deco { position: absolute; border-radius: 50%; }
-.vitrine-en-ligne .deco-1 { width: 330px; height: 330px; left: 50%; top: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, var(--rose-soft), rgba(246, 201, 217, 0) 70%); }
-.vitrine-en-ligne .deco-2 { width: 90px; height: 90px; right: 6%; top: 4%; background: linear-gradient(135deg, var(--rose-mid), var(--rose)); opacity: .25; }
-.telephone { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-4deg); width: 232px; height: 450px; padding: 10px; border-radius: 38px; background: #2b1b23; box-shadow: 0 30px 60px rgba(70, 20, 45, .3), inset 0 0 0 2px #4a3540; }
-.tel-encoche { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 70px; height: 18px; border-radius: 12px; background: #2b1b23; z-index: 2; }
-.tel-ecran { height: 100%; border-radius: 30px; overflow: hidden; background: var(--creme); display: flex; flex-direction: column; }
-.tel-barre { display: flex; align-items: center; gap: .4rem; padding: 34px 12px 8px; background: #fff; font-family: 'Playfair Display', serif; font-weight: 700; color: var(--rose-dark); font-size: .8rem; }
-.tel-barre img { width: 22px; height: 22px; }
-.tel-barre i { margin-left: auto; color: var(--rose); }
-.tel-banniere { margin: 8px 10px; padding: 10px 12px; border-radius: 14px; background: linear-gradient(135deg, var(--rose), var(--rose-dark)); color: #fff; }
-.tel-banniere small { display: block; font-size: .55rem; text-transform: uppercase; letter-spacing: .12em; opacity: .85; }
-.tel-banniere strong { font-family: 'Playfair Display', serif; font-size: .82rem; font-style: italic; }
-.tel-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 0 10px; flex: 1; }
-.tel-produit { background: #fff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 3px 8px rgba(159, 62, 99, .08); }
-.tel-produit img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-.tel-nom { font-size: .52rem; padding: 4px 6px 0; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tel-prix { font-size: .58rem; padding: 0 6px 5px; font-weight: 600; color: var(--rose-dark); }
-.tel-bouton { margin: 8px 10px 12px; padding: 8px; border-radius: 50rem; text-align: center; background: var(--rose-dark); color: #fff; font-size: .7rem; font-weight: 600; }
-.bulle { position: absolute; display: flex; align-items: center; gap: .55rem; background: #fff; border-radius: 1rem; padding: .55rem .8rem; box-shadow: 0 14px 30px rgba(159, 62, 99, .18); font-size: .78rem; z-index: 3; animation: flotter 5s ease-in-out infinite; }
-.bulle strong { display: block; font-size: .8rem; color: var(--ink); }
-.bulle small { color: var(--muted); font-size: .7rem; }
-.bulle .logo-pay { width: 30px; height: 30px; border-radius: 8px; }
-.bulle .logo-pay + .logo-pay { margin-left: -12px; }
-.bulle-ic { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #1B8A4F; flex: none; }
-.bulle-paiement { left: 0; top: 16%; }
-.bulle-commande { right: 0; top: 46%; animation-delay: -1.6s; }
-.bulle-livraison { left: 4%; bottom: 8%; animation-delay: -3.2s; }
-.bulle-livraison .bulle-ic { background: var(--rose); }
-@keyframes flotter { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-@media (prefers-reduced-motion: reduce) { .bulle { animation: none; } }
-@media (max-width: 575.98px) {
-  .vitrine-en-ligne { height: 400px; }
-  .telephone { width: 196px; height: 382px; }
-  .bulle { font-size: .7rem; padding: .45rem .6rem; }
-  .bulle strong { font-size: .72rem; }
-  .bulle-paiement { left: -4px; top: 10%; }
-  .bulle-commande { right: -4px; }
-}
-
 /* ---------- Actions de paiement ---------- */
 .choix-carte.choisi { border-color: var(--pay, var(--rose)); background: var(--rose-bg); }
 .choix-paiement.choisi { background: #fff; }
@@ -374,4 +327,28 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
   .contact-action { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 1rem; }
   .contact-action > .d-flex.mt-3 { grid-column: 1; }
   .contact-action .qr-contact { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; flex-direction: column; text-align: center; max-width: 150px; }
+}
+
+/* ---------- Accueil : composition des univers de la boutique ---------- */
+.composition-accueil { --beige: #F3E7DF; position: relative; height: 500px; max-width: 540px; margin-inline: auto; }
+.compo-fond { position: absolute; inset: 9% 3% 5% 15%; background: linear-gradient(160deg, var(--beige), #fbf3ee); border-radius: 2.2rem; }
+.compo-cercle { position: absolute; width: 170px; height: 170px; left: -2%; top: 1%; border-radius: 50%; background: var(--rose-soft); opacity: .75; }
+.compo-photo { position: absolute; margin: 0; overflow: hidden; background: var(--rose-bg); border: 6px solid #fff; box-shadow: 0 18px 40px rgba(110, 50, 75, .16); }
+.compo-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.compo-photo:hover img { transform: scale(1.05); }
+.compo-grand { left: 5%; top: 6%; width: 46%; height: 82%; border-radius: 999px 999px 1.6rem 1.6rem; }
+.compo-haut { right: 4%; top: 2%; width: 40%; height: 40%; border-radius: 1.6rem; }
+.compo-bas { right: 9%; bottom: 2%; width: 37%; height: 41%; border-radius: 1.6rem; }
+.compo-rond { left: 39%; bottom: 3%; width: 24%; aspect-ratio: 1; border-radius: 50%; z-index: 2; }
+.compo-petit { right: 0; top: 41%; width: 21%; aspect-ratio: 1; border-radius: 1.2rem; z-index: 2; }
+.compo-grand::after { content: ''; position: absolute; inset: 10px; border: 1px solid rgba(255, 255, 255, .7); border-radius: inherit; pointer-events: none; }
+.compo-vide { position: absolute; inset: 0; display: grid; place-content: center; gap: .3rem; text-align: center; font-size: .75rem; color: var(--muted); background: repeating-linear-gradient(45deg, var(--rose-bg), var(--rose-bg) 10px, #fff 10px, #fff 20px); }
+.compo-vide i { font-size: 1.6rem; color: var(--rose-mid); }
+.compo-signature { position: absolute; left: 4%; bottom: -2%; font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.15rem; color: var(--rose-dark); opacity: .75; letter-spacing: .02em; }
+@media (max-width: 991.98px) { .composition-accueil { margin-top: 1rem; } }
+@media (max-width: 575.98px) {
+  .composition-accueil { height: 380px; }
+  .compo-cercle { width: 120px; height: 120px; }
+  .compo-photo { border-width: 4px; }
+  .compo-signature { font-size: .95rem; }
 }

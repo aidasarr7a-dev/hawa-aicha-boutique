@@ -113,6 +113,9 @@ messages d'erreur sans détail technique.
     migrations/   scripts de mise à jour d'une base existante
     schema.sql    installation neuve        config.php    réglages
 
+**Bannière de l'accueil** : composition automatique à partir des photos produits (voile, parfum, sac, bijoux, chaussures).
+Pour utiliser vos propres photos, déposez `grand.jpg`, `haut.jpg`, `bas.jpg`, `rond.jpg`, `petit.jpg` dans `assets/img/accueil/` (voir `LISEZ-MOI.txt`).
+
 ## 8. Photos de démonstration (14 produits)
 
 Photos libres de droits issues d'[Unsplash](https://unsplash.com/license), sans marque visible,

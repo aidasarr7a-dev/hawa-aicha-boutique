@@ -1,0 +1,7 @@
+Déposez ici vos propres photos pour la bannière de l'accueil :
+  grand.jpg  (grande photo en arche, format portrait)
+  haut.jpg   (en haut à droite)
+  bas.jpg    (en bas à droite)
+  rond.jpg   (petite photo ronde)
+  petit.jpg  (petite photo carrée)
+Formats acceptés : jpg, jpeg, png, webp. Sans fichier, les photos des produits sont utilisées.

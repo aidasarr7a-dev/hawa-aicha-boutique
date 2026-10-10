@@ -28,13 +28,6 @@ $liensNav = [
   <link href="<?= e(base_url('assets/css/style.css')) ?>" rel="stylesheet">
 </head>
 <body class="page-<?= e($page ?: 'autre') ?>">
-<div class="barre-info">
-  <div class="container d-flex justify-content-center justify-content-md-between gap-3">
-    <span class="d-none d-md-inline"><i class="fa-solid fa-location-dot me-1"></i><?= e(BOUTIQUE_ADRESSE) ?></span>
-    <span><i class="fa-solid fa-truck-fast me-1"></i>Livraison à domicile ou retrait en boutique</span>
-    <span class="d-none d-lg-inline"><i class="fa-solid fa-phone me-1"></i><a href="tel:<?= e(normaliser_telephone(CONTACT_TELEPHONE)) ?>"><?= info_boutique(CONTACT_TELEPHONE) ?></a></span>
-  </div>
-</div>
 <nav class="navbar navbar-expand-lg site-nav sticky-top">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="<?= e(base_url('index.php')) ?>">

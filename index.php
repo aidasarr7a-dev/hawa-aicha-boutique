@@ -39,46 +39,51 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
       </div>
     </div>
     <div class="col-lg-6">
-      <?php $vitrine = array_values(array_filter($nouveautes, fn($p) => !empty($p['image']))); ?>
-      <!-- Illustration : la boutique en ligne Hawa Aïcha sur un téléphone, avec les vrais produits -->
-      <div class="vitrine-en-ligne" aria-hidden="true">
-        <span class="deco deco-1"></span><span class="deco deco-2"></span>
-        <div class="telephone">
-          <div class="tel-encoche"></div>
-          <div class="tel-ecran">
-            <div class="tel-barre">
-              <img src="<?= e(logo_url()) ?>" alt="">
-              <span>Hawa Aïcha</span>
-              <i class="fa-solid fa-bag-shopping"></i>
-            </div>
-            <div class="tel-banniere">
-              <small>Nouveautés</small>
-              <strong>L’élégance au quotidien</strong>
-            </div>
-            <div class="tel-grille">
-              <?php for ($i = 0; $i < 4 && isset($vitrine[$i]); $i++): ?>
-                <div class="tel-produit">
-                  <img src="<?= e(product_image($vitrine[$i]['image'])) ?>" alt="">
-                  <span class="tel-nom"><?= e($vitrine[$i]['nom']) ?></span>
-                  <span class="tel-prix"><?= fcfa($vitrine[$i]['prix']) ?></span>
-                </div>
-              <?php endfor; ?>
-            </div>
-            <div class="tel-bouton"><i class="fa-solid fa-bag-shopping me-1"></i> Commander</div>
-          </div>
-        </div>
-        <div class="bulle bulle-paiement">
-          <?= logo_paiement('Wave') ?><?= logo_paiement('Orange Money') ?>
-          <span><strong>Paiement mobile</strong><small>Wave · Orange Money</small></span>
-        </div>
-        <div class="bulle bulle-commande">
-          <span class="bulle-ic"><i class="fa-solid fa-check"></i></span>
-          <span><strong>Commande confirmée</strong><small>Facture disponible</small></span>
-        </div>
-        <div class="bulle bulle-livraison">
-          <span class="bulle-ic"><i class="fa-solid fa-truck-fast"></i></span>
-          <span><strong>Livraison</strong><small>ou retrait à Golf Sud</small></span>
-        </div>
+      <?php
+      // Composition de la bannière : une photo par univers (parfums, sacs, voiles, bijoux, chaussures).
+      // Pour utiliser vos propres photos, déposez-les dans assets/img/accueil/ sous les noms
+      // grand.jpg, haut.jpg, bas.jpg, rond.jpg et petit.jpg : elles remplacent alors les photos produits.
+      $compoProduits = db()->query(
+          "SELECT p.nom, p.image, c.nom AS categorie FROM produits p LEFT JOIN categories c ON c.id = p.categorie_id
+            WHERE p.actif = 1 AND p.image IS NOT NULL ORDER BY p.nouveau DESC, p.id"
+      )->fetchAll();
+      $trouverPhoto = function (callable $filtre) use ($compoProduits): ?array {
+          foreach ($compoProduits as $p) {
+              if ($filtre($p)) return $p;
+          }
+          return null;
+      };
+      $emplacements = [
+          'grand' => $trouverPhoto(fn($p) => $p['categorie'] === 'Mode et voiles'),
+          'haut'  => $trouverPhoto(fn($p) => $p['nom'] === 'Parfum corporel') ?? $trouverPhoto(fn($p) => $p['categorie'] === 'Parfums'),
+          'bas'   => $trouverPhoto(fn($p) => str_starts_with($p['nom'], 'Sac')) ?? $trouverPhoto(fn($p) => $p['categorie'] === 'Sacs et accessoires'),
+          'rond'  => $trouverPhoto(fn($p) => str_starts_with($p['nom'], 'Bijoux')),
+          'petit' => $trouverPhoto(fn($p) => $p['categorie'] === 'Chaussures'),
+      ];
+      $photoAccueil = function (string $cle) use ($emplacements): ?array {
+          foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+              if (is_file(__DIR__ . "/assets/img/accueil/$cle.$ext")) {
+                  return ['src' => base_url("assets/img/accueil/$cle.$ext"), 'alt' => SITE_NAME];
+              }
+          }
+          $p = $emplacements[$cle];
+          return $p ? ['src' => product_image($p['image']), 'alt' => $p['nom']] : null;
+      };
+      ?>
+      <!-- Composition : les univers de la boutique (voiles, parfums, sacs, bijoux, chaussures) -->
+      <div class="composition-accueil">
+        <span class="compo-fond"></span>
+        <span class="compo-cercle"></span>
+        <?php foreach (['grand', 'haut', 'bas', 'rond', 'petit'] as $cle): $photo = $photoAccueil($cle); ?>
+          <figure class="compo-photo compo-<?= $cle ?>">
+            <?php if ($photo): ?>
+              <img src="<?= e($photo['src']) ?>" alt="<?= e($photo['alt']) ?>" <?= $cle === 'grand' ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
+            <?php else: ?>
+              <span class="compo-vide"><i class="fa-regular fa-image"></i>Votre photo</span>
+            <?php endif; ?>
+          </figure>
+        <?php endforeach; ?>
+        <span class="compo-signature">Hawa Aïcha</span>
       </div>
     </div>
   </div>
