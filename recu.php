@@ -68,7 +68,7 @@ $mentionPaiement = [
       <h2>Client</h2>
       <p><strong><?= e($cmd['nom_complet']) ?></strong><br>
          Tél. : <?= e($cmd['telephone']) ?><br>
-         <?= e($cmd['adresse_livraison'] ? $cmd['adresse_livraison'] . ', ' : '') ?><?= e($cmd['ville']) ?></p>
+         <?= e(adresse_commande($cmd)) ?></p>
     </div>
     <div>
       <h2>Livraison</h2>

@@ -352,3 +352,16 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
   .compo-photo { border-width: 4px; }
   .compo-signature { font-size: .95rem; }
 }
+
+/* ---------- Page Commande ---------- */
+.recap-ligne { display: flex; align-items: center; gap: .7rem; padding: .45rem 0; }
+.recap-img { width: 46px; height: 46px; flex: none; border-radius: .8rem; overflow: hidden; background: var(--rose-bg); display: grid; place-items: center; color: var(--rose); }
+.recap-img img { width: 100%; height: 100%; object-fit: cover; }
+.choix-vertical { flex-direction: column; justify-content: center; text-align: center; gap: .45rem; padding: 1rem .7rem; }
+.choix-vertical .logo-pay { width: 54px; height: 54px; border-radius: 14px; }
+.choix-vertical .flex-grow-1 { flex-grow: 0 !important; }
+.choix-vertical .coche { position: absolute; top: .55rem; right: .6rem; font-size: 1rem; }
+@media (max-width: 767.98px) {
+  .choix-vertical { flex-direction: row; text-align: left; justify-content: flex-start; }
+  .choix-vertical .logo-pay { width: 46px; height: 46px; }
+}

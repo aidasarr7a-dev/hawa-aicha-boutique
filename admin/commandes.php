@@ -56,7 +56,7 @@ $qs = $q !== '' ? '&q=' . rawurlencode($q) : '';
           <td class="text-nowrap fw-medium"><?= e($c['numero_commande']) ?></td>
           <td><?= e($c['nom_complet']) ?><div class="small text-muted"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
           <td class="text-nowrap"><a href="tel:<?= e($c['telephone']) ?>"><?= e($c['telephone']) ?></a></td>
-          <td><?= e($c['adresse_livraison'] ? $c['adresse_livraison'] . ', ' : '') ?><?= e($c['ville']) ?><div class="small text-muted"><?= e($c['mode_livraison']) ?></div></td>
+          <td><?= e(adresse_commande($c)) ?><div class="small text-muted"><?= e($c['mode_livraison']) ?></div></td>
           <td class="text-nowrap fw-medium"><?= fcfa($c['total']) ?><div class="small text-muted"><?= e($c['paiement']) ?></div></td>
           <td><?= badge_statut($c['statut']) ?></td>
           <td><?= badge_paiement($c['statut_paiement']) ?></td>

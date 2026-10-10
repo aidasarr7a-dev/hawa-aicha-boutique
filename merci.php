@@ -23,7 +23,7 @@ foreach ($items as $i) {
 }
 $message = "Bonjour Hawa Aïcha Boutique, je viens de passer la commande {$cmd['numero_commande']}.\n"
          . "Nom : {$cmd['nom_complet']}\n"
-         . 'Livraison : ' . ($cmd['adresse_livraison'] ? $cmd['adresse_livraison'] . ', ' : '') . $cmd['ville'] . " ({$cmd['mode_livraison']})\n"
+         . 'Livraison : ' . adresse_commande($cmd) . " ({$cmd['mode_livraison']})\n"
          . implode("\n", $lignes) . "\n"
          . 'Total : ' . fcfa($cmd['total']) . "\n"
          . "Paiement : {$cmd['paiement']}";
@@ -49,7 +49,7 @@ require __DIR__ . '/includes/header.php';
     <?php endforeach; ?>
     <hr>
     <div class="d-flex justify-content-between"><strong>Total</strong><strong class="text-nowrap total-line fs-6"><?= fcfa($cmd['total']) ?></strong></div>
-    <div class="small text-muted mt-2"><?= e($cmd['mode_livraison']) ?> · <?= e($cmd['adresse_livraison'] ? $cmd['adresse_livraison'] . ', ' : '') ?><?= e($cmd['ville']) ?></div>
+    <div class="small text-muted mt-2"><?= e($cmd['mode_livraison']) ?> · <?= e(adresse_commande($cmd)) ?></div>
   </div>
 
   <div class="text-start mb-4">

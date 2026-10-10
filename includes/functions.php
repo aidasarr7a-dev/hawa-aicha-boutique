@@ -179,7 +179,7 @@ function info_paiement(string $mode): array
     return [
         'Wave'         => ['fa-solid fa-water', 'pay-wave', 'Paiement mobile Wave'],
         'Orange Money' => ['fa-solid fa-mobile-screen-button', 'pay-om', 'Paiement mobile Orange Money'],
-        'Espèces'      => ['fa-solid fa-money-bill-wave', 'pay-cash', 'À la livraison ou au retrait'],
+        'Espèces'      => ['fa-solid fa-money-bill-wave', 'pay-cash', 'À la livraison'],
     ][$mode] ?? ['fa-solid fa-wallet', '', ''];
 }
 
@@ -532,4 +532,10 @@ function suivi_commande(string $statut): string
         $i++;
     }
     return $html . '</ol>';
+}
+
+/** Adresse de livraison affichable : « adresse, ville » sans virgule superflue si la ville est vide. */
+function adresse_commande(array $cmd): string
+{
+    return implode(', ', array_filter([trim((string)($cmd['adresse_livraison'] ?? '')), trim((string)($cmd['ville'] ?? ''))], 'strlen')) ?: '—';
 }

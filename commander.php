@@ -5,14 +5,15 @@ $panierAvant = array_map('intval', cart_get());
 [$lignes, $total] = cart_items();
 // Vrai si un article a disparu ou si une quantité a été réduite au stock disponible
 $panierAjuste = $panierAvant != array_map('intval', cart_get());
-if (!$lignes) {
+if (!$lignes && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Formulaire renvoyé après une commande réussie (double clic, retour arrière) : on réaffiche la confirmation
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_SESSION['derniere_commande'])) {
+    if (!empty($_SESSION['derniere_commande'])) {
         redirect(base_url('merci.php?id=' . (int)$_SESSION['derniere_commande']));
     }
     flash('warning', 'Votre panier est vide.');
     redirect(base_url('panier.php'));
 }
+// Panier vide en accès direct (menu « Commande ») : la page affiche un message au lieu du formulaire
 
 $erreurs = [];
 $val = ['nom_complet' => '', 'telephone' => '', 'adresse_livraison' => '', 'ville' => '', 'remarque' => '',
@@ -24,7 +25,6 @@ if ($client) {
     $val['nom_complet'] = $client['nom_complet'];
     $val['telephone'] = $client['telephone'];
     $val['adresse_livraison'] = (string)$client['adresse'];
-    $val['ville'] = (string)$client['ville'];
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,19 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     unset($_SESSION['jeton_commande']);
 
-    foreach ($val as $k => $_) {
+    // Formulaire simplifié : nom complet, numéro, adresse de livraison et mode de paiement
+    foreach (['nom_complet', 'telephone', 'adresse_livraison', 'paiement'] as $k) {
         $val[$k] = trim((string)($_POST[$k] ?? ''));
     }
     $tel = preg_replace('/[^\d+]/', '', $val['telephone']);
 
-    $domicile = $val['mode_livraison'] === MODES_LIVRAISON[0];
     if (mb_strlen($val['nom_complet']) < 3 || mb_strlen($val['nom_complet']) > 200) $erreurs[] = 'Veuillez indiquer votre nom complet.';
     if (strlen(preg_replace('/\D/', '', $tel)) < 8)               $erreurs[] = 'Veuillez indiquer un numéro de téléphone / WhatsApp valide.';
-    if ($val['ville'] === '')                                     $erreurs[] = 'Veuillez indiquer votre ville / commune.';
-    if ($domicile && $val['adresse_livraison'] === '')               $erreurs[] = 'Veuillez indiquer votre adresse de livraison (quartier, rue, point de repère).';
+    if (mb_strlen($val['adresse_livraison']) < 3)                      $erreurs[] = 'Veuillez indiquer votre adresse de livraison (quartier, ville, point de repère).';
     if (!in_array($val['paiement'], MODES_PAIEMENT, true))        $erreurs[] = 'Veuillez choisir un moyen de paiement.';
-    if (!in_array($val['mode_livraison'], MODES_LIVRAISON, true)) $erreurs[] = 'Veuillez choisir un mode de livraison.';
-    foreach (['adresse_livraison' => [255, 'adresse de livraison'], 'remarque' => [1000, 'instructions'], 'ville' => [100, 'ville / commune']] as $champ => [$max, $libelle]) {
+    foreach (['adresse_livraison' => [255, 'adresse de livraison']] as $champ => [$max, $libelle]) {
         if (mb_strlen($val[$champ]) > $max) $erreurs[] = 'Le champ « ' . $libelle . ' » est trop long.';
     }
 
@@ -78,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Client connecté : la commande est rattachée à son compte, son adresse habituelle est mémorisée
                 $clientId = (int)$client['id'];
                 if ($val['adresse_livraison'] !== '') {
-                    $pdo->prepare('UPDATE clients SET adresse = ?, ville = ? WHERE id = ?')
-                        ->execute([$val['adresse_livraison'], $val['ville'], $clientId]);
+                    $pdo->prepare('UPDATE clients SET adresse = ? WHERE id = ?')
+                        ->execute([$val['adresse_livraison'], $clientId]);
                 }
             } else {
                 // Sans compte : fiche client par numéro de téléphone (un compte existant n'est jamais modifié)
@@ -130,16 +128,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $_SESSION['jeton_commande'] = bin2hex(random_bytes(16));
 
-$page = 'panier';
-$titre = 'Passer la commande';
+$page = 'commande';
+$titre = 'Commande';
 require __DIR__ . '/includes/header.php';
 ?>
 
-<h1 class="page-title mb-2">Passer la commande</h1>
-<?php if (!$client): ?>
-  <div class="alert-compte mb-3"><i class="fa-solid fa-user-circle me-2"></i>Vous avez un compte ? <a href="<?= e(base_url('compte.php?retour=commander.php')) ?>">Connectez-vous</a> pour retrouver vos commandes et factures. <span class="text-muted">Sinon, commandez directement ci-dessous.</span></div>
-<?php endif; ?>
-<div class="steps mb-4"><span>1. Panier</span><span class="on">2. Mes informations</span><span>3. Confirmation</span></div>
+<div class="entete-page mb-4">
+  <h1 class="page-title mb-1">Commande</h1>
+  <p class="text-muted mb-0">Indiquez vos coordonnées, choisissez votre paiement et validez : c'est tout.</p>
+</div>
 
 <?php if ($erreurs): ?>
   <div class="alert alert-danger rounded-4">
@@ -148,93 +145,76 @@ require __DIR__ . '/includes/header.php';
 <?php endif; ?>
 
 <?php if (!$lignes): ?>
-  <div class="panel empty-state"><p>Votre panier est vide.</p><a href="<?= e(base_url('produits.php')) ?>" class="btn btn-rose">Voir les produits</a></div>
+  <div class="panel empty-state">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <p class="mt-3 mb-1 fw-medium">Votre panier est vide.</p>
+    <p class="text-muted mb-3">Ajoutez des produits au panier, puis revenez ici pour passer votre commande.</p>
+    <a href="<?= e(base_url('produits.php')) ?>" class="btn btn-rose">Choisir mes produits</a>
+  </div>
 <?php else: ?>
+<?php if (!$client): ?>
+  <div class="alert-compte mb-4"><i class="fa-solid fa-user-circle me-2"></i>Vous avez un compte ? <a href="<?= e(base_url('compte.php?retour=commander.php')) ?>">Connectez-vous</a> pour retrouver vos commandes et factures. <span class="text-muted">Sinon, commandez directement ci-dessous.</span></div>
+<?php endif; ?>
 <form method="post" class="row g-4" novalidate data-envoi-unique>
   <?= csrf_field() ?>
   <input type="hidden" name="jeton" value="<?= e($_SESSION['jeton_commande']) ?>">
   <div class="col-lg-7">
     <div class="panel">
-      <h2 class="h5 mb-3"><span class="num-etape">1</span> Vos coordonnées</h2>
+      <h2 class="h5 mb-3"><span class="num-etape">1</span> Vos informations</h2>
       <div class="row g-3">
         <div class="col-12"><label class="form-label" for="nom_complet">Nom complet *</label><input class="form-control" id="nom_complet" name="nom_complet" value="<?= e($val['nom_complet']) ?>" required maxlength="200" autocomplete="name" placeholder="Ex : Aminata Sow"></div>
-        <div class="col-12"><label class="form-label" for="telephone">Numéro de téléphone / WhatsApp *</label><input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" placeholder="Ex : 77 000 00 00" value="<?= e($val['telephone']) ?>" required autocomplete="tel"></div>
+        <div class="col-12"><label class="form-label" for="telephone">Numéro de téléphone *</label><input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" placeholder="Ex : 77 000 00 00" value="<?= e($val['telephone']) ?>" required autocomplete="tel"></div>
+        <div class="col-12"><label class="form-label" for="adresse_livraison">Adresse de livraison *</label><textarea class="form-control" id="adresse_livraison" name="adresse_livraison" rows="3" maxlength="255" required autocomplete="street-address" placeholder="Quartier, ville, point de repère (ex : Golf Sud, Guédiawaye, près de la pharmacie)"><?= e($val['adresse_livraison']) ?></textarea></div>
       </div>
     </div>
 
     <div class="panel mt-4">
-      <h2 class="h5 mb-3"><span class="num-etape">2</span> Livraison</h2>
+      <h2 class="h5 mb-3"><span class="num-etape">2</span> Paiement</h2>
       <div class="row g-2 mb-3">
-        <?php foreach (MODES_LIVRAISON as $i => $mode): ?>
-          <div class="col-sm-6">
-            <label class="choix-carte">
-              <input type="radio" name="mode_livraison" value="<?= e($mode) ?>" <?= $val['mode_livraison'] === $mode ? 'checked' : '' ?>>
-              <span class="choix-icone"><i class="fa-solid <?= $i === 0 ? 'fa-truck-fast' : 'fa-store' ?>"></i></span>
-              <span><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= $i === 0 ? 'Chez vous, frais selon la zone' : e(BOUTIQUE_ADRESSE) ?></span></span>
+        <?php foreach (MODES_PAIEMENT as $mode): [, $cls, $desc] = info_paiement($mode); ?>
+          <div class="col-md-4">
+            <label class="choix-carte choix-paiement choix-vertical <?= e($cls) ?>">
+              <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
+              <?= logo_paiement($mode) ?>
+              <span class="flex-grow-1"><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
+              <i class="fa-solid fa-circle-check coche"></i>
             </label>
           </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="row g-3">
-        <div class="col-12" data-bloc-adresse><label class="form-label" for="adresse_livraison">Adresse de livraison *</label><textarea class="form-control" id="adresse_livraison" name="adresse_livraison" rows="2" maxlength="255" autocomplete="street-address" placeholder="Quartier, rue, point de repère (ex : Golf Sud, près de la pharmacie)"><?= e($val['adresse_livraison']) ?></textarea></div>
-        <div class="col-12"><label class="form-label" for="ville">Ville / commune *</label><input class="form-control" id="ville" name="ville" value="<?= e($val['ville']) ?>" required maxlength="100" autocomplete="address-level2" placeholder="Ex : Guédiawaye"></div>
-        <div class="col-12"><label class="form-label" for="remarque">Instructions (facultatif)</label><textarea class="form-control" id="remarque" name="remarque" rows="2" placeholder="Taille, couleur, heure de livraison…"><?= e($val['remarque']) ?></textarea></div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="col-lg-5">
-    <div class="panel recap-commande">
-      <h2 class="h5 mb-3">Votre commande</h2>
-      <?php foreach ($lignes as $l): ?>
-        <div class="d-flex justify-content-between gap-3 mb-2 small">
-          <span><?= e($l['p']['nom']) ?> <span class="text-muted">× <?= $l['qty'] ?></span></span>
-          <span class="fw-medium text-nowrap"><?= fcfa($l['sous_total']) ?></span>
-        </div>
-      <?php endforeach; ?>
-      <hr>
-      <div class="d-flex justify-content-between align-items-center mb-1"><span class="fw-medium">Total</span><span class="total-line"><?= fcfa($total) ?></span></div>
-      <p class="small text-muted mb-4">Frais de livraison communiqués selon votre zone.</p>
-
-      <h3 class="h6 mb-2"><span class="num-etape">3</span> Choisissez votre paiement</h3>
-      <div class="d-grid gap-2 mb-3">
-        <?php foreach (MODES_PAIEMENT as $mode): [, $cls, $desc] = info_paiement($mode); ?>
-          <label class="choix-carte choix-paiement <?= e($cls) ?>">
-            <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
-            <?= logo_paiement($mode) ?>
-            <span class="flex-grow-1"><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
-            <i class="fa-solid fa-circle-check coche"></i>
-          </label>
         <?php endforeach; ?>
       </div>
 
       <?php foreach (MODES_PAIEMENT as $mode): $numero = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO][$mode] ?? ''; ?>
         <div class="infos-paiement <?= e(info_paiement($mode)[1]) ?>" data-infos-paiement="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? '' : 'hidden' ?>>
           <?php if ($numero !== ''): ?>
-            <div class="small mb-2">Après avoir confirmé, envoyez <strong class="text-nowrap"><?= fcfa($total) ?></strong> par <strong><?= e($mode) ?></strong> au :</div>
+            <div class="small mb-2">Après avoir validé, envoyez <strong class="text-nowrap"><?= fcfa($total) ?></strong> par <strong><?= e($mode) ?></strong> au :</div>
             <div class="numero-paiement">
               <?= logo_paiement($mode) ?>
               <strong><?= e($numero) ?></strong>
               <button type="button" class="btn btn-sm btn-outline-rose ms-auto" data-copier="<?= e(preg_replace('/\D/', '', $numero)) ?>"><i class="fa-regular fa-copy"></i> Copier</button>
             </div>
-            <div class="d-flex flex-wrap gap-2 mt-2">
-              <?php if ($mode === 'Orange Money'): ?>
-                <a class="btn btn-pay-om btn-sm" href="tel:%23144%23"><i class="fa-solid fa-phone me-1"></i> Composer #144#</a>
-              <?php elseif ($mode === 'Wave' && WAVE_LIEN_PAIEMENT !== ''): ?>
-                <a class="btn btn-pay-wave btn-sm" href="<?= e(WAVE_LIEN_PAIEMENT) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-1"></i> Payer avec Wave</a>
-              <?php else: ?>
-                <span class="small text-muted"><i class="fa-solid fa-mobile-screen me-1"></i> Dans l'application Wave : « Envoyer », puis ce numéro.</span>
-              <?php endif; ?>
-            </div>
-            <div class="small text-muted mt-2">Vous indiquerez ensuite la référence du SMS reçu : la boutique vérifie et confirme votre paiement.</div>
+            <div class="small text-muted mt-2">Un bouton « Payer avec <?= e($mode) ?> » vous sera proposé juste après la validation.</div>
           <?php else: ?>
-            <div class="small"><i class="fa-solid fa-money-bill-wave me-1"></i> Vous payez <strong class="text-nowrap"><?= fcfa($total) ?></strong> en espèces à la livraison ou au retrait de votre commande.</div>
+            <div class="small"><i class="fa-solid fa-money-bill-wave me-1"></i> Vous payez <strong class="text-nowrap"><?= fcfa($total) ?></strong> en espèces à la livraison.</div>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>
+    </div>
+  </div>
 
-      <button class="btn btn-rose btn-lg w-100 mt-3" id="bouton-commande" data-total="<?= e(fcfa($total)) ?>" data-texte-envoi="Enregistrement…"><i class="fa-solid fa-check me-2"></i><span>Confirmer la commande</span></button>
+  <div class="col-lg-5">
+    <div class="panel recap-commande">
+      <h2 class="h5 mb-3">Votre commande</h2>
+      <?php foreach ($lignes as $l): $img = product_image($l['p']['image']); ?>
+        <div class="recap-ligne">
+          <span class="recap-img"><?php if ($img): ?><img src="<?= e($img) ?>" alt=""><?php else: ?><i class="fa-solid <?= e($l['p']['icone'] ?? 'fa-gem') ?>"></i><?php endif; ?></span>
+          <span class="flex-grow-1 small"><?= e($l['p']['nom']) ?><br><span class="text-muted">× <?= $l['qty'] ?></span></span>
+          <span class="fw-medium text-nowrap small"><?= fcfa($l['sous_total']) ?></span>
+        </div>
+      <?php endforeach; ?>
+      <hr>
+      <div class="d-flex justify-content-between align-items-center mb-1"><span class="fw-medium">Total</span><span class="total-line"><?= fcfa($total) ?></span></div>
+      <p class="small text-muted mb-3">Frais de livraison communiqués selon votre zone.</p>
+      <button class="btn btn-rose btn-lg w-100" id="bouton-commande" data-total="<?= e(fcfa($total)) ?>" data-texte-envoi="Enregistrement…"><i class="fa-solid fa-check me-2"></i><span>Valider ma commande</span></button>
       <p class="small text-muted text-center mt-2 mb-0"><i class="fa-solid fa-lock me-1"></i>Commande enregistrée en toute sécurité</p>
       <a href="<?= e(base_url('panier.php')) ?>" class="d-block text-center mt-3 small">Modifier mon panier</a>
     </div>

@@ -26,6 +26,7 @@
         <ul class="list-unstyled mb-0">
           <li><a href="<?= e(base_url('index.php')) ?>">Accueil</a></li>
           <li><a href="<?= e(base_url('produits.php')) ?>">Produits</a></li>
+          <li><a href="<?= e(base_url('commander.php')) ?>">Commande</a></li>
           <li><a href="<?= e(base_url('apropos.php')) ?>">À propos</a></li>
           <li><a href="<?= e(base_url('contact.php')) ?>">Contact</a></li>
         </ul>
@@ -45,17 +46,11 @@
       </div>
       <div class="col-md-4 col-lg-4">
         <h6 class="footer-title">Nous contacter</h6>
-        <ul class="list-unstyled footer-contact mb-3">
+        <ul class="list-unstyled footer-contact mb-0">
           <li><i class="fa-solid fa-location-dot"></i> <a href="<?= e(carte_lien()) ?>" target="_blank" rel="noopener"><?= e(BOUTIQUE_ADRESSE) ?></a></li>
           <li><i class="fa-solid fa-phone"></i> <a href="tel:<?= e(normaliser_telephone(CONTACT_TELEPHONE)) ?>"><?= info_boutique(CONTACT_TELEPHONE) ?></a></li>
           <li><i class="fa-solid fa-envelope"></i> <a class="text-break" href="mailto:<?= e(CONTACT_EMAIL) ?>"><?= info_boutique(CONTACT_EMAIL) ?></a></li>
         </ul>
-        <h6 class="footer-title">Paiement accepté</h6>
-        <div class="d-flex flex-wrap gap-2">
-          <?php foreach (MODES_PAIEMENT as $mode): ?>
-            <span class="pastille-logo"><?= logo_paiement($mode) ?> <?= e($mode) ?></span>
-          <?php endforeach; ?>
-        </div>
       </div>
     </div>
   </div>
