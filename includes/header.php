@@ -8,7 +8,6 @@ $clientNav = client_connecte();
 $liensNav = [
     'accueil'  => ['index.php',    'Accueil'],
     'produits' => ['produits.php', 'Produits'],
-    'commande' => ['commander.php', 'Commande'],
     'apropos'  => ['apropos.php',  'À propos'],
     'contact'  => ['contact.php',  'Contact'],
 ];

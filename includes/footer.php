@@ -26,7 +26,6 @@
         <ul class="list-unstyled mb-0">
           <li><a href="<?= e(base_url('index.php')) ?>">Accueil</a></li>
           <li><a href="<?= e(base_url('produits.php')) ?>">Produits</a></li>
-          <li><a href="<?= e(base_url('commander.php')) ?>">Commande</a></li>
           <li><a href="<?= e(base_url('apropos.php')) ?>">À propos</a></li>
           <li><a href="<?= e(base_url('contact.php')) ?>">Contact</a></li>
         </ul>
