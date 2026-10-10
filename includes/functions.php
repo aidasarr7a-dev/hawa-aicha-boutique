@@ -226,13 +226,18 @@ function bloc_payer(array $cmd, array $paiement): void
             <button type="button" class="btn btn-sm btn-outline-rose py-0 ms-1" data-copier="<?= e(preg_replace('/\D/', '', $numero)) ?>"><i class="fa-regular fa-copy"></i> Copier</button></div>
           <div><span>3</span> Référence à indiquer : <strong><?= e($cmd['numero_commande']) ?></strong></div>
         </div>
-        <div class="my-3">
+        <div class="actions-paiement my-3">
           <?php if ($mode === 'Orange Money'): ?>
-            <a class="btn btn-pay-om" href="tel:%23144%23"><i class="fa-solid fa-phone me-1"></i> Composer #144# (Orange Money)</a>
+            <a class="btn btn-pay-om btn-lg w-100" href="tel:%23144%23"><i class="fa-solid fa-phone me-2"></i>Payer avec Orange Money · composer #144#</a>
+            <div class="qr-paiement" data-qr="tel:#144#" hidden>
+              <div class="qr-code"></div>
+              <small><strong>Vous êtes sur ordinateur ?</strong><br>Scannez ce code avec votre téléphone : il compose #144# pour payer avec Orange Money.</small>
+            </div>
           <?php elseif ($mode === 'Wave' && WAVE_LIEN_PAIEMENT !== ''): ?>
-            <a class="btn btn-pay-wave" href="<?= e(WAVE_LIEN_PAIEMENT) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-1"></i> Payer avec Wave</a>
+            <a class="btn btn-pay-wave btn-lg w-100" href="<?= e(WAVE_LIEN_PAIEMENT) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-2"></i>Payer avec Wave</a>
           <?php else: ?>
-            <span class="small text-muted"><i class="fa-solid fa-mobile-screen me-1"></i> Ouvrez l'application Wave et envoyez le montant au numéro ci-dessus.</span>
+            <a class="btn btn-pay-wave btn-lg w-100" href="https://www.wave.com/fr/" data-ouvrir-wave target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-2"></i>Payer avec Wave · ouvrir l'application</a>
+            <small class="d-block text-muted mt-2"><i class="fa-solid fa-circle-info me-1"></i>Dans Wave, touchez « Envoyer », collez le numéro ci-dessus puis le montant.</small>
           <?php endif; ?>
         </div>
         <?php if (empty($paiement['date_declaration'])): ?>
@@ -249,7 +254,11 @@ function bloc_payer(array $cmd, array $paiement): void
           <div class="alert alert-info rounded-4 small mb-0"><i class="fa-solid fa-hourglass-half me-1"></i> Paiement déclaré le <?= e(date('d/m/Y à H:i', strtotime($paiement['date_declaration']))) ?> (réf. <?= e($paiement['reference_client']) ?>). La boutique vérifie la réception puis confirme : votre facture passera à « Payé ».</div>
         <?php endif; ?>
       <?php elseif ($statut === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
-        <p class="small mb-0"><?= instructions_paiement($mode, (int)$cmd['total'], $cmd['numero_commande']) ?></p>
+        <div class="paiement-especes">
+          <i class="fa-solid fa-circle-check"></i>
+          <div><strong>Paiement en espèces enregistré</strong><br>
+            <span class="small"><?= instructions_paiement($mode, (int)$cmd['total'], $cmd['numero_commande']) ?> Vous n'avez rien d'autre à faire maintenant.</span></div>
+        </div>
       <?php elseif ($statut === 'paye'): ?>
         <p class="small mb-0 text-success"><i class="fa-solid fa-circle-check me-1"></i> Paiement reçu et confirmé par la boutique. Merci !</p>
       <?php endif; ?>

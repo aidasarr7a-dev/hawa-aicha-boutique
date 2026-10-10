@@ -40,25 +40,46 @@ require __DIR__ . '/includes/header.php';
 </div>
 
 <div class="row g-3 mb-4">
-  <div class="col-sm-6 col-xl-3">
-    <a class="contact-card" href="tel:<?= e(normaliser_telephone(CONTACT_TELEPHONE)) ?>">
-      <span class="ic"><i class="fa-solid fa-phone"></i></span>
-      <span><strong class="d-block">Téléphone</strong><span class="text-muted small text-nowrap"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span>
-    </a>
+  <?php
+  $telLien = normaliser_telephone(CONTACT_TELEPHONE);
+  $sujetMail = 'Contact - Hawa Aïcha Boutique';
+  ?>
+  <div class="col-lg-6">
+    <div class="contact-card contact-action">
+      <div class="d-flex align-items-center gap-3">
+        <span class="ic"><i class="fa-solid fa-phone"></i></span>
+        <span><strong class="d-block">Téléphone</strong><span class="text-muted small text-nowrap"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <a class="btn btn-rose btn-sm" href="tel:<?= e($telLien) ?>"><i class="fa-solid fa-phone me-1"></i>Appeler</a>
+        <button type="button" class="btn btn-outline-rose btn-sm" data-copier="<?= e($telLien) ?>"><i class="fa-regular fa-copy"></i> Copier</button>
+      </div>
+      <div class="qr-paiement qr-contact" data-qr="tel:<?= e($telLien) ?>" hidden>
+        <div class="qr-code"></div>
+        <small>Sur ordinateur : scannez avec votre téléphone pour appeler la boutique.</small>
+      </div>
+    </div>
   </div>
-  <div class="col-sm-6 col-xl-3">
-    <a class="contact-card" href="mailto:<?= e(CONTACT_EMAIL) ?>">
-      <span class="ic"><i class="fa-solid fa-envelope"></i></span>
-      <span class="text-break"><strong class="d-block">E-mail</strong><span class="text-muted small"><?= info_boutique(CONTACT_EMAIL) ?></span></span>
-    </a>
+  <div class="col-lg-6">
+    <div class="contact-card contact-action">
+      <div class="d-flex align-items-center gap-3 min-w-0">
+        <span class="ic"><i class="fa-solid fa-envelope"></i></span>
+        <span class="text-break"><strong class="d-block">E-mail</strong><span class="text-muted small"><?= info_boutique(CONTACT_EMAIL) ?></span></span>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <a class="btn btn-rose btn-sm" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=<?= e(rawurlencode(CONTACT_EMAIL)) ?>&amp;su=<?= e(rawurlencode($sujetMail)) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-google me-1"></i>Écrire avec Gmail</a>
+        <a class="btn btn-outline-rose btn-sm" href="mailto:<?= e(CONTACT_EMAIL) ?>?subject=<?= e(rawurlencode($sujetMail)) ?>"><i class="fa-solid fa-envelope me-1"></i>Ma messagerie</a>
+        <button type="button" class="btn btn-outline-rose btn-sm" data-copier="<?= e(CONTACT_EMAIL) ?>"><i class="fa-regular fa-copy"></i> Copier</button>
+      </div>
+    </div>
   </div>
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-lg-6">
     <a class="contact-card" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, j\'aimerais avoir des informations.')) ?>" target="_blank" rel="noopener">
       <span class="ic wa"><i class="fa-brands fa-whatsapp"></i></span>
       <span><strong class="d-block">WhatsApp</strong><span class="text-muted small">Discutons</span></span>
     </a>
   </div>
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-lg-6">
     <div class="contact-card">
       <span class="ic"><i class="fa-solid fa-hashtag"></i></span>
       <span><strong class="d-block">Réseaux</strong>

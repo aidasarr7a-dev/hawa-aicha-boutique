@@ -38,13 +38,47 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
         <span><i class="fa-solid fa-location-dot"></i> <?= e(BOUTIQUE_ADRESSE) ?></span>
       </div>
     </div>
-    <div class="col-lg-6 d-none d-md-block">
-      <div class="hero-mosaique" aria-hidden="true">
-        <?php
-        $vitrine = array_values(array_filter($nouveautes, fn($p) => !empty($p['image'])));
-        for ($i = 0; $i < 5 && isset($vitrine[$i]); $i++): ?>
-          <div class="tuile t<?= $i + 1 ?>"><img src="<?= e(product_image($vitrine[$i]['image'])) ?>" alt=""></div>
-        <?php endfor; ?>
+    <div class="col-lg-6">
+      <?php $vitrine = array_values(array_filter($nouveautes, fn($p) => !empty($p['image']))); ?>
+      <!-- Illustration : la boutique en ligne Hawa Aïcha sur un téléphone, avec les vrais produits -->
+      <div class="vitrine-en-ligne" aria-hidden="true">
+        <span class="deco deco-1"></span><span class="deco deco-2"></span>
+        <div class="telephone">
+          <div class="tel-encoche"></div>
+          <div class="tel-ecran">
+            <div class="tel-barre">
+              <img src="<?= e(logo_url()) ?>" alt="">
+              <span>Hawa Aïcha</span>
+              <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <div class="tel-banniere">
+              <small>Nouveautés</small>
+              <strong>L’élégance au quotidien</strong>
+            </div>
+            <div class="tel-grille">
+              <?php for ($i = 0; $i < 4 && isset($vitrine[$i]); $i++): ?>
+                <div class="tel-produit">
+                  <img src="<?= e(product_image($vitrine[$i]['image'])) ?>" alt="">
+                  <span class="tel-nom"><?= e($vitrine[$i]['nom']) ?></span>
+                  <span class="tel-prix"><?= fcfa($vitrine[$i]['prix']) ?></span>
+                </div>
+              <?php endfor; ?>
+            </div>
+            <div class="tel-bouton"><i class="fa-solid fa-bag-shopping me-1"></i> Commander</div>
+          </div>
+        </div>
+        <div class="bulle bulle-paiement">
+          <?= logo_paiement('Wave') ?><?= logo_paiement('Orange Money') ?>
+          <span><strong>Paiement mobile</strong><small>Wave · Orange Money</small></span>
+        </div>
+        <div class="bulle bulle-commande">
+          <span class="bulle-ic"><i class="fa-solid fa-check"></i></span>
+          <span><strong>Commande confirmée</strong><small>Facture disponible</small></span>
+        </div>
+        <div class="bulle bulle-livraison">
+          <span class="bulle-ic"><i class="fa-solid fa-truck-fast"></i></span>
+          <span><strong>Livraison</strong><small>ou retrait à Golf Sud</small></span>
+        </div>
       </div>
     </div>
   </div>

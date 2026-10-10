@@ -234,7 +234,8 @@ require __DIR__ . '/includes/header.php';
         </div>
       <?php endforeach; ?>
 
-      <button class="btn btn-rose btn-lg w-100 mt-3" data-texte-envoi="Enregistrement…"><i class="fa-solid fa-check me-2"></i>Confirmer la commande</button>
+      <button class="btn btn-rose btn-lg w-100 mt-3" id="bouton-commande" data-total="<?= e(fcfa($total)) ?>" data-texte-envoi="Enregistrement…"><i class="fa-solid fa-check me-2"></i><span>Confirmer la commande</span></button>
+      <p class="small text-muted text-center mt-2 mb-0"><i class="fa-solid fa-lock me-1"></i>Commande enregistrée en toute sécurité</p>
       <a href="<?= e(base_url('panier.php')) ?>" class="d-block text-center mt-3 small">Modifier mon panier</a>
     </div>
   </div>
