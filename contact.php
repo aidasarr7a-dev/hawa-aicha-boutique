@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/functions.php';
 
 $client = client_connecte();
-$val = ['nom' => $client['nom_complet'] ?? '', 'telephone' => $client['telephone'] ?? '', 'email' => $client['email'] ?? '', 'sujet' => '', 'message' => ''];
+$val = ['nom' => $client['nom_complet'] ?? '', 'telephone' => $client['telephone'] ?? '', 'message' => ''];
 $erreurs = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,15 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (($_POST['site_web'] ?? '') !== '') {
         redirect(base_url('contact.php'));
     }
-    if (mb_strlen($val['nom']) < 2 || mb_strlen($val['nom']) > 150)                 $erreurs[] = 'Veuillez indiquer votre nom.';
-    if ($val['telephone'] === '' && $val['email'] === '')                             $erreurs[] = 'Indiquez un téléphone ou un e-mail pour que nous puissions vous répondre.';
-    if ($val['email'] !== '' && !filter_var($val['email'], FILTER_VALIDATE_EMAIL))    $erreurs[] = 'L\'adresse e-mail n\'est pas valide.';
-    if (mb_strlen($val['telephone']) > 30 || mb_strlen($val['sujet']) > 150)          $erreurs[] = 'Un des champs est trop long.';
-    if (mb_strlen($val['message']) < 5 || mb_strlen($val['message']) > 3000)          $erreurs[] = 'Veuillez écrire votre message (3000 caractères maximum).';
+    if (mb_strlen($val['nom']) < 2 || mb_strlen($val['nom']) > 150)                          $erreurs[] = 'Veuillez indiquer votre nom.';
+    if (strlen(preg_replace('/\D/', '', $val['telephone'])) < 6 || mb_strlen($val['telephone']) > 30) $erreurs[] = 'Indiquez un numéro de téléphone valide pour que nous puissions vous répondre.';
+    if (mb_strlen($val['message']) < 5 || mb_strlen($val['message']) > 3000)                   $erreurs[] = 'Veuillez écrire votre message (3000 caractères maximum).';
 
     if (!$erreurs) {
+        // E-mail et sujet ne sont plus demandés : l'e-mail du compte client est conservé s'il est connecté.
         db()->prepare('INSERT INTO messages_contact (nom, telephone, email, sujet, message) VALUES (?, ?, ?, ?, ?)')
-            ->execute([$val['nom'], $val['telephone'] ?: null, $val['email'] ?: null, $val['sujet'] ?: null, $val['message']]);
+            ->execute([$val['nom'], $val['telephone'], $client['email'] ?? null, null, $val['message']]);
         flash('success', '<i class="fa-solid fa-circle-check me-1"></i> Merci ! Votre message a bien été envoyé à la boutique. Nous vous répondons rapidement.');
         redirect(base_url('contact.php'));
     }
@@ -31,95 +30,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $page = 'contact';
 $titre = 'Contact';
 require __DIR__ . '/includes/header.php';
+$telLien = normaliser_telephone(CONTACT_TELEPHONE);
 ?>
 
-<div class="text-center mb-4">
+<div class="text-center mb-4 mb-lg-5">
   <span class="eyebrow-simple"><i class="fa-solid fa-envelope-open-text me-1"></i> Contact</span>
-  <h1 class="page-title mt-2 mb-1">Contactez-nous</h1>
-  <p class="text-muted mb-0">Une question sur un produit, un prix, une commande en gros ? Écrivez-nous.</p>
+  <h1 class="page-title mt-2 mb-2">Contactez-nous</h1>
+  <p class="text-muted mb-0">Une question sur un produit, un prix ou une commande ? Nous sommes à votre écoute.</p>
 </div>
 
-<div class="row g-3 mb-4">
-  <?php
-  $telLien = normaliser_telephone(CONTACT_TELEPHONE);
-  $sujetMail = 'Contact - Hawa Aïcha Boutique';
-  ?>
-  <div class="col-lg-6">
-    <div class="contact-card contact-action">
-      <div class="d-flex align-items-center gap-3">
+<div class="row g-4 mb-5 justify-content-center">
+  <div class="col-lg-5 col-xl-4">
+    <div class="panel contact-joindre h-100">
+      <h2 class="h5 mb-4">Nous joindre</h2>
+
+      <a class="contact-wa" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, j\'aimerais avoir des informations.')) ?>" target="_blank" rel="noopener">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span><strong class="d-block">Écrire sur WhatsApp</strong><small>Réponse rapide</small></span>
+      </a>
+
+      <div class="contact-tel">
         <span class="ic"><i class="fa-solid fa-phone"></i></span>
-        <span><strong class="d-block">Téléphone</strong><span class="text-muted small text-nowrap"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span>
-      </div>
-      <div class="d-flex flex-wrap gap-2 mt-3">
-        <a class="btn btn-rose btn-sm" href="tel:<?= e($telLien) ?>"><i class="fa-solid fa-phone me-1"></i>Appeler</a>
-        <button type="button" class="btn btn-outline-rose btn-sm" data-copier="<?= e($telLien) ?>"><i class="fa-regular fa-copy"></i> Copier</button>
-      </div>
-      <div class="qr-paiement qr-contact" data-qr="tel:<?= e($telLien) ?>" hidden>
-        <div class="qr-code"></div>
-        <small>Sur ordinateur : scannez avec votre téléphone pour appeler la boutique.</small>
+        <span class="flex-grow-1"><small class="d-block text-muted">Téléphone</small><strong class="text-nowrap"><?= info_boutique(CONTACT_TELEPHONE) ?></strong></span>
+        <a class="btn btn-outline-rose btn-sm px-3" href="tel:<?= e($telLien) ?>"><i class="fa-solid fa-phone me-1"></i>Appeler</a>
       </div>
     </div>
   </div>
-  <div class="col-lg-6">
-    <div class="contact-card contact-action">
-      <div class="d-flex align-items-center gap-3 min-w-0">
-        <span class="ic"><i class="fa-solid fa-envelope"></i></span>
-        <span class="text-break"><strong class="d-block">E-mail</strong><span class="text-muted small"><?= info_boutique(CONTACT_EMAIL) ?></span></span>
-      </div>
-      <div class="d-flex flex-wrap gap-2 mt-3">
-        <a class="btn btn-rose btn-sm" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=<?= e(rawurlencode(CONTACT_EMAIL)) ?>&amp;su=<?= e(rawurlencode($sujetMail)) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-google me-1"></i>Écrire avec Gmail</a>
-        <a class="btn btn-outline-rose btn-sm" href="mailto:<?= e(CONTACT_EMAIL) ?>?subject=<?= e(rawurlencode($sujetMail)) ?>"><i class="fa-solid fa-envelope me-1"></i>Ma messagerie</a>
-        <button type="button" class="btn btn-outline-rose btn-sm" data-copier="<?= e(CONTACT_EMAIL) ?>"><i class="fa-regular fa-copy"></i> Copier</button>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-lg-6">
-    <a class="contact-card" href="<?= e(wa_link('Bonjour Hawa Aïcha Boutique, j\'aimerais avoir des informations.')) ?>" target="_blank" rel="noopener">
-      <span class="ic wa"><i class="fa-brands fa-whatsapp"></i></span>
-      <span><strong class="d-block">WhatsApp</strong><span class="text-muted small">Discutons</span></span>
-    </a>
-  </div>
-  <div class="col-sm-6 col-lg-6">
-    <div class="contact-card">
-      <span class="ic"><i class="fa-solid fa-hashtag"></i></span>
-      <span><strong class="d-block">Réseaux</strong>
-        <span class="d-flex gap-2 mt-1">
-          <a class="social social-sm" href="<?= e(TIKTOK_URL) ?>" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          <a class="social social-sm" href="<?= e(SNAPCHAT_URL) ?>" target="_blank" rel="noopener" aria-label="Snapchat"><i class="fa-brands fa-snapchat"></i></a>
-        </span>
-      </span>
-    </div>
-  </div>
-</div>
 
-<div class="row g-4 mb-5">
-  <div class="col-lg-7">
-    <div class="panel">
-      <h2 class="h5 mb-3">Envoyer un message</h2>
+  <div class="col-lg-7 col-xl-6">
+    <div class="panel contact-formulaire">
+      <h2 class="h5 mb-1">Envoyer un message</h2>
+      <p class="text-muted small mb-4">Nous vous rappelons ou vous répondons au numéro indiqué.</p>
       <?php if ($erreurs): ?>
         <div class="alert alert-danger rounded-4"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
       <?php endif; ?>
       <form method="post" class="row g-3" data-envoi-unique>
         <?= csrf_field() ?>
         <div class="d-none" aria-hidden="true"><label>Site web<input name="site_web" tabindex="-1" autocomplete="off"></label></div>
-        <div class="col-sm-6"><label class="form-label" for="c-nom">Votre nom *</label><input class="form-control" id="c-nom" name="nom" value="<?= e($val['nom']) ?>" required maxlength="150" autocomplete="name"></div>
-        <div class="col-sm-6"><label class="form-label" for="c-tel">Téléphone</label><input class="form-control" id="c-tel" name="telephone" type="tel" value="<?= e($val['telephone']) ?>" maxlength="30" autocomplete="tel"></div>
-        <div class="col-sm-6"><label class="form-label" for="c-email">E-mail</label><input class="form-control" id="c-email" name="email" type="email" value="<?= e($val['email']) ?>" maxlength="150" autocomplete="email"></div>
-        <div class="col-sm-6"><label class="form-label" for="c-sujet">Sujet</label><input class="form-control" id="c-sujet" name="sujet" value="<?= e($val['sujet']) ?>" maxlength="150" placeholder="Ex : commande en gros"></div>
-        <div class="col-12"><label class="form-label" for="c-message">Votre message *</label><textarea class="form-control" id="c-message" name="message" rows="5" required maxlength="3000" placeholder="Disponibilité, taille, couleur, livraison…"><?= e($val['message']) ?></textarea></div>
+        <div class="col-sm-6"><label class="form-label" for="c-nom">Votre nom</label><input class="form-control" id="c-nom" name="nom" value="<?= e($val['nom']) ?>" required maxlength="150" autocomplete="name"></div>
+        <div class="col-sm-6"><label class="form-label" for="c-tel">Téléphone</label><input class="form-control" id="c-tel" name="telephone" type="tel" value="<?= e($val['telephone']) ?>" required maxlength="30" autocomplete="tel"></div>
+        <div class="col-12"><label class="form-label" for="c-message">Votre message</label><textarea class="form-control" id="c-message" name="message" rows="5" required maxlength="3000" placeholder="Disponibilité, taille, couleur, livraison…"><?= e($val['message']) ?></textarea></div>
         <div class="col-12"><button class="btn btn-rose btn-lg px-4" data-texte-envoi="Envoi…"><i class="fa-solid fa-paper-plane me-2"></i>Envoyer le message</button></div>
       </form>
-    </div>
-  </div>
-  <div class="col-lg-5">
-    <div class="panel h-100">
-      <h2 class="h5 mb-3">Bon à savoir</h2>
-      <ul class="list-unstyled mb-0">
-        <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-truck-fast"></i></span><span><strong>Livraison</strong><br><span class="text-muted small">À domicile (frais selon la zone) ou retrait à la boutique.</span></span></li>
-        <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-wallet"></i></span><span><strong>Paiement</strong><br>
-          <span class="d-flex flex-wrap gap-2 mt-1"><?php foreach (MODES_PAIEMENT as $m): ?><span class="pastille-logo"><?= logo_paiement($m) ?> <?= e($m) ?></span><?php endforeach; ?></span></span></li>
-        <li class="d-flex gap-3"><span class="mini-ic"><i class="fa-solid fa-boxes-stacked"></i></span><span><strong>Gros et détail</strong><br><span class="text-muted small">Revendeuses : demandez nos conditions pour les commandes en quantité.</span></span></li>
-      </ul>
     </div>
   </div>
 </div>

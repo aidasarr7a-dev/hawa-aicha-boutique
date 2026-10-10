@@ -59,7 +59,7 @@ function icone_select(string $courant): string
       <h2 class="h5 mb-3">Nouvelle catégorie</h2>
       <form method="post">
         <?= csrf_field() ?><input type="hidden" name="action" value="add">
-        <div class="mb-3"><label class="form-label" for="nom">Nom *</label><input class="form-control" id="nom" name="nom" required maxlength="100"></div>
+        <div class="mb-3"><label class="form-label" for="nom">Nom</label><input class="form-control" id="nom" name="nom" required maxlength="100"></div>
         <div class="mb-3"><label class="form-label">Icône</label><?= icone_select('fa-gem') ?></div>
         <button class="btn btn-rose w-100"><i class="fa-solid fa-plus me-1"></i>Ajouter</button>
       </form>

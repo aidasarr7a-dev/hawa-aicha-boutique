@@ -162,9 +162,9 @@ require __DIR__ . '/includes/header.php';
     <div class="panel">
       <h2 class="h5 mb-3"><span class="num-etape">1</span> Vos informations</h2>
       <div class="row g-3">
-        <div class="col-12"><label class="form-label" for="nom_complet">Nom complet *</label><input class="form-control" id="nom_complet" name="nom_complet" value="<?= e($val['nom_complet']) ?>" required maxlength="200" autocomplete="name" placeholder="Ex : Aminata Sow"></div>
-        <div class="col-12"><label class="form-label" for="telephone">Numéro de téléphone *</label><input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" placeholder="Ex : 77 000 00 00" value="<?= e($val['telephone']) ?>" required autocomplete="tel"></div>
-        <div class="col-12"><label class="form-label" for="adresse_livraison">Adresse de livraison *</label><textarea class="form-control" id="adresse_livraison" name="adresse_livraison" rows="3" maxlength="255" required autocomplete="street-address" placeholder="Quartier, ville, point de repère (ex : Golf Sud, Guédiawaye, près de la pharmacie)"><?= e($val['adresse_livraison']) ?></textarea></div>
+        <div class="col-12"><label class="form-label" for="nom_complet">Nom complet</label><input class="form-control" id="nom_complet" name="nom_complet" value="<?= e($val['nom_complet']) ?>" required maxlength="200" autocomplete="name" placeholder="Ex : Aminata Sow"></div>
+        <div class="col-12"><label class="form-label" for="telephone">Numéro de téléphone</label><input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" placeholder="Ex : 77 000 00 00" value="<?= e($val['telephone']) ?>" required autocomplete="tel"></div>
+        <div class="col-12"><label class="form-label" for="adresse_livraison">Adresse de livraison</label><textarea class="form-control" id="adresse_livraison" name="adresse_livraison" rows="3" maxlength="255" required autocomplete="street-address" placeholder="Quartier, ville, point de repère (ex : Golf Sud, Guédiawaye, près de la pharmacie)"><?= e($val['adresse_livraison']) ?></textarea></div>
       </div>
     </div>
 

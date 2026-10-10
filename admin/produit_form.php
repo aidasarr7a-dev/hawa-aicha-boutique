@@ -78,7 +78,7 @@ require __DIR__ . '/_header.php';
   <?= csrf_field() ?>
   <input type="hidden" name="id" value="<?= (int)$id ?>">
   <div class="row g-3">
-    <div class="col-md-8"><label class="form-label" for="nom">Nom du produit *</label><input class="form-control" id="nom" name="nom" value="<?= e($val['nom']) ?>" required maxlength="150"></div>
+    <div class="col-md-8"><label class="form-label" for="nom">Nom du produit</label><input class="form-control" id="nom" name="nom" value="<?= e($val['nom']) ?>" required maxlength="150"></div>
     <div class="col-md-4">
       <label class="form-label" for="categorie_id">Catégorie</label>
       <select class="form-select" id="categorie_id" name="categorie_id">
@@ -89,7 +89,7 @@ require __DIR__ . '/_header.php';
       </select>
     </div>
     <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" name="description" rows="4"><?= e($val['description']) ?></textarea></div>
-    <div class="col-sm-6"><label class="form-label" for="prix">Prix (FCFA) *</label><input class="form-control" id="prix" name="prix" type="number" min="1" step="1" value="<?= e($val['prix']) ?>" required></div>
+    <div class="col-sm-6"><label class="form-label" for="prix">Prix (FCFA)</label><input class="form-control" id="prix" name="prix" type="number" min="1" step="1" value="<?= e($val['prix']) ?>" required></div>
     <div class="col-sm-6"><label class="form-label" for="stock">Stock disponible</label><input class="form-control" id="stock" name="stock" type="number" min="0" step="1" value="<?= (int)$val['stock'] ?>"></div>
     <div class="col-12">
       <label class="form-label" for="image">Photo du produit</label>

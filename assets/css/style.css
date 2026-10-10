@@ -257,6 +257,11 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 .admin-nav { background: #fff; box-shadow: 0 2px 16px rgba(159, 62, 99, .08); }
 .admin-nav .nav-link { color: var(--ink); font-weight: 500; border-radius: 50rem; padding: .45rem .8rem; font-size: .92rem; }
 .admin-nav .nav-link:hover, .admin-nav .nav-link.active { background: var(--rose-bg); color: var(--rose-dark); }
+.admin-nav #amenu { padding-top: .75rem; }
+@media (min-width: 1200px) {
+  .admin-nav .navbar-brand { margin-right: 2.25rem; }
+  .admin-nav #amenu { padding-top: 0; }
+}
 .stat-card { background: #fff; border-radius: var(--rayon); padding: 1.3rem; box-shadow: var(--shadow); height: 100%; }
 .stat-card .num { font-size: 1.8rem; font-weight: 600; color: var(--rose-dark); font-family: 'Playfair Display', serif; }
 .table-rose { --bs-table-bg: transparent; }
@@ -318,15 +323,19 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 .qr-code img, .qr-code canvas { width: 110px; height: 110px; }
 .paiement-especes { display: flex; gap: .8rem; align-items: flex-start; background: #eefaf3; border: 1px solid #bfe6cf; color: #1b5e3b; border-radius: 1rem; padding: .9rem 1rem; }
 .paiement-especes > i { font-size: 1.4rem; color: #1B8A4F; margin-top: .1rem; }
-.contact-action { flex-direction: column; align-items: stretch; align-content: center; }
-.contact-action .btn-sm { border-radius: 50rem; }
-.qr-contact { margin-top: .8rem; }
-.qr-contact .qr-code, .qr-contact .qr-code img, .qr-contact .qr-code canvas { width: 90px; height: 90px; }
 .min-w-0 { min-width: 0; }
-@media (min-width: 768px) {
-  .contact-action { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 1rem; }
-  .contact-action > .d-flex.mt-3 { grid-column: 1; }
-  .contact-action .qr-contact { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; flex-direction: column; text-align: center; max-width: 150px; }
+
+/* ---------- Page Contact ---------- */
+.contact-joindre { background: linear-gradient(160deg, #fff 45%, var(--rose-bg)); border-color: var(--ligne); }
+.contact-wa { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.25rem; border-radius: 1.2rem; background: #25d366; color: #fff; box-shadow: 0 10px 24px rgba(37, 211, 102, .3); transition: transform .15s, box-shadow .15s; }
+.contact-wa:hover, .contact-wa:focus-visible { color: #fff; transform: translateY(-2px); box-shadow: 0 14px 30px rgba(37, 211, 102, .38); }
+.contact-wa i { font-size: 2rem; }
+.contact-wa small { opacity: .9; }
+.contact-tel { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; margin-top: 1.25rem; padding: 1rem 1.1rem; border-radius: 1.2rem; background: #fff; border: 1px solid var(--ligne); }
+.contact-tel .ic { width: 44px; height: 44px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--rose-bg); color: var(--rose); }
+.contact-tel strong { color: var(--rose-dark); font-size: 1.05rem; }
+@media (min-width: 992px) {
+  .contact-formulaire { padding: 2rem; }
 }
 
 /* ---------- Accueil : composition des univers de la boutique ---------- */

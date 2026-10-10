@@ -115,7 +115,7 @@ function carte_lien(): string
 }
 
 /** Bloc « Nous trouver » : carte + adresse + boutons (accueil et page contact). */
-function bloc_localisation(bool $avecWhatsapp = true): void
+function bloc_localisation(bool $avecWhatsapp = true, bool $avecEmail = true): void
 {
     ?>
     <div class="localisation">
@@ -127,8 +127,10 @@ function bloc_localisation(bool $avecWhatsapp = true): void
         <h2 class="section-title mt-2">Venez nous rendre visite</h2>
         <ul class="list-unstyled mt-3 mb-4">
           <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-store"></i></span><span><strong class="d-block">Adresse</strong><span class="text-muted"><?= info_boutique(BOUTIQUE_ADRESSE) ?></span></span></li>
-          <li class="d-flex gap-3 mb-3"><span class="mini-ic"><i class="fa-solid fa-phone"></i></span><span><strong class="d-block">Téléphone</strong><span class="text-muted"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span></li>
-          <li class="d-flex gap-3"><span class="mini-ic"><i class="fa-solid fa-envelope"></i></span><span><strong class="d-block">E-mail</strong><span class="text-muted"><?= info_boutique(CONTACT_EMAIL) ?></span></span></li>
+          <li class="d-flex gap-3<?= $avecEmail ? ' mb-3' : '' ?>"><span class="mini-ic"><i class="fa-solid fa-phone"></i></span><span><strong class="d-block">Téléphone</strong><span class="text-muted"><?= info_boutique(CONTACT_TELEPHONE) ?></span></span></li>
+          <?php if ($avecEmail): ?>
+            <li class="d-flex gap-3"><span class="mini-ic"><i class="fa-solid fa-envelope"></i></span><span><strong class="d-block">E-mail</strong><span class="text-muted"><?= info_boutique(CONTACT_EMAIL) ?></span></span></li>
+          <?php endif; ?>
         </ul>
         <div class="d-flex flex-wrap gap-2">
           <a class="btn btn-rose px-4" href="<?= e(carte_lien()) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-diamond-turn-right me-1"></i> Itinéraire</a>

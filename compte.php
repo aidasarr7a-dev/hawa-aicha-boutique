@@ -140,16 +140,16 @@ require __DIR__ . '/includes/header.php';
         <?= csrf_field() ?>
         <input type="hidden" name="action" value="inscription">
         <input type="hidden" name="retour" value="<?= e($retour) ?>">
-        <div class="mb-3"><label class="form-label" for="nom_complet">Nom complet *</label>
+        <div class="mb-3"><label class="form-label" for="nom_complet">Nom complet</label>
           <input class="form-control" id="nom_complet" name="nom_complet" value="<?= e($val['nom_complet']) ?>" required maxlength="200" autocomplete="name"></div>
-        <div class="mb-3"><label class="form-label" for="telephone">Numéro de téléphone *</label>
+        <div class="mb-3"><label class="form-label" for="telephone">Numéro de téléphone</label>
           <input class="form-control" id="telephone" name="telephone" type="tel" inputmode="tel" value="<?= e($val['telephone']) ?>" required autocomplete="tel" placeholder="Ex : 77 000 00 00"></div>
         <div class="mb-3"><label class="form-label" for="email">E-mail (facultatif)</label>
           <input class="form-control" id="email" name="email" type="email" value="<?= e($val['email']) ?>" maxlength="150" autocomplete="email"></div>
         <div class="row g-3 mb-4">
-          <div class="col-sm-6"><label class="form-label" for="mdp">Mot de passe * <span class="text-muted small">(8 caractères min.)</span></label>
+          <div class="col-sm-6"><label class="form-label" for="mdp">Mot de passe <span class="text-muted small">(8 caractères min.)</span></label>
             <input class="form-control" id="mdp" name="mot_de_passe" type="password" required minlength="8" autocomplete="new-password"></div>
-          <div class="col-sm-6"><label class="form-label" for="confirmation">Confirmation *</label>
+          <div class="col-sm-6"><label class="form-label" for="confirmation">Confirmation</label>
             <input class="form-control" id="confirmation" name="confirmation" type="password" required minlength="8" autocomplete="new-password"></div>
         </div>
         <button class="btn btn-rose btn-lg w-100">Créer mon compte</button>

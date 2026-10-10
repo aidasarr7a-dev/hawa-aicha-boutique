@@ -29,13 +29,9 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
       <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Nouveaux arrivages réguliers</span>
       <h1 class="mt-3 mb-3">L’élégance <span>au quotidien</span>, en gros comme au détail</h1>
       <p class="lead text-muted mb-4">Parfums, soins de beauté, sacs, bijoux, voiles, jalabés et décoration : des produits de qualité à prix accessibles pour toute la famille.</p>
-      <div class="d-flex flex-wrap gap-2 mb-4">
+      <div class="d-flex flex-wrap gap-2">
         <a href="<?= e(base_url('produits.php')) ?>" class="btn btn-rose btn-lg px-4">Découvrir nos produits</a>
         <a href="<?= e(base_url(client_connecte() ? 'mon-compte.php' : 'compte.php?onglet=inscription')) ?>" class="btn btn-outline-rose btn-lg px-4"><i class="fa-regular fa-user me-1"></i> <?= client_connecte() ? 'Mon compte' : 'Créer mon compte' ?></a>
-      </div>
-      <div class="hero-badges">
-        <span><i class="fa-solid fa-wallet"></i> Wave · Orange Money · Espèces</span>
-        <span><i class="fa-solid fa-location-dot"></i> <?= e(BOUTIQUE_ADRESSE) ?></span>
       </div>
     </div>
     <div class="col-lg-6">
@@ -83,7 +79,6 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
             <?php endif; ?>
           </figure>
         <?php endforeach; ?>
-        <span class="compo-signature">Hawa Aïcha</span>
       </div>
     </div>
   </div>
@@ -138,7 +133,7 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
 </section>
 
 <section class="mb-5" id="localisation">
-  <?php bloc_localisation(false); ?>
+  <?php bloc_localisation(false, false); ?>
 </section>
 
 <section class="cta-band text-center">
