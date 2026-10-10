@@ -148,7 +148,7 @@ produit, refus d'un faux fichier image · affichage ordinateur et téléphone (3
   vérifie la réception puis confirme : la facture passe alors à « Payé ». Aucune API de paiement n'est utilisée.
 - **Formulaire de contact** : les messages sont enregistrés et lus dans *Administration → Messages* (réponse par e-mail ou WhatsApp).
 - **Administration** : pages *Clients* et *Messages*, alertes des paiements déclarés, **export Excel (CSV)** de toutes les commandes.
-- **Coordonnées** : e-mail `aidasarr7.a@gmail.com` ; réseaux TikTok, WhatsApp et Snapchat (`SNAPCHAT_URL` : identifiant à confirmer).
+- **Coordonnées** : e-mail `aidasarr7.a@gmail.com` ; réseaux TikTok, WhatsApp et Snapchat (https://snapchat.com/t/cEx5F14D).
 - L'e-mail automatique (envoi de la facture par courriel) nécessite un serveur d'envoi (SMTP) non disponible sur XAMPP : la facture
   est disponible à tout moment dans l'espace client.
 

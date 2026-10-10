@@ -35,8 +35,8 @@ define('WAVE_LIEN_PAIEMENT', '');
 // Réseaux sociaux
 define('TIKTOK_URL', 'https://www.tiktok.com/@hawaaicha');
 define('TIKTOK_HANDLE', '@hawaaicha');
-// Snapchat : identifiant à confirmer par la propriétaire
-define('SNAPCHAT_URL', 'https://www.snapchat.com/add/hawaaicha');
+// Snapchat : compte officiel de la boutique
+define('SNAPCHAT_URL', 'https://snapchat.com/t/cEx5F14D');
 define('SNAPCHAT_HANDLE', 'hawaaicha');
 
 // Moyens de paiement proposés au client
