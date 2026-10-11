@@ -136,12 +136,31 @@ $nbProduits = (int)db()->query('SELECT COUNT(*) FROM produits WHERE actif = 1')-
   <?php bloc_localisation(false, false); ?>
 </section>
 
-<section class="cta-band text-center">
-  <h2 class="mb-2">Suivez nos nouveautés</h2>
-  <p class="mb-4 opacity-75">Nouveaux arrivages en vidéo sur TikTok et Snapchat.</p>
-  <div class="d-flex flex-wrap gap-2 justify-content-center">
-    <a class="btn btn-light btn-lg px-4" href="<?= e(TIKTOK_URL) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok me-1"></i> TikTok</a>
-    <a class="btn btn-light btn-lg px-4" href="<?= e(SNAPCHAT_URL) ?>" target="_blank" rel="noopener"><i class="fa-brands fa-snapchat me-1"></i> Snapchat</a>
+<section class="reseaux" aria-labelledby="titre-reseaux">
+  <div class="row g-4 g-lg-5 align-items-center">
+    <div class="col-lg-5">
+      <span class="eyebrow-simple"><i class="fa-solid fa-heart me-1"></i> Restons connectées</span>
+      <h2 class="section-title mt-3" id="titre-reseaux">Suivez nos nouveautés</h2>
+      <p class="text-muted mb-0">Nouveaux arrivages, essayages et coups de cœur de la boutique en vidéo, chaque semaine sur TikTok et Snapchat.</p>
+    </div>
+    <div class="col-lg-7">
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <a class="carte-reseau carte-tiktok" href="<?= e(TIKTOK_URL) ?>" target="_blank" rel="noopener">
+            <span class="reseau-ic"><i class="fa-brands fa-tiktok"></i></span>
+            <span class="reseau-texte"><strong>TikTok</strong><small><?= e('@' . ltrim((string)parse_url(TIKTOK_URL, PHP_URL_PATH), '/@')) ?></small></span>
+            <span class="reseau-action">Suivre <i class="fa-solid fa-arrow-right"></i></span>
+          </a>
+        </div>
+        <div class="col-sm-6">
+          <a class="carte-reseau carte-snapchat" href="<?= e(SNAPCHAT_URL) ?>" target="_blank" rel="noopener">
+            <span class="reseau-ic"><i class="fa-brands fa-snapchat"></i></span>
+            <span class="reseau-texte"><strong>Snapchat</strong><small>Hawa Aïcha Boutique</small></span>
+            <span class="reseau-action">Ajouter <i class="fa-solid fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

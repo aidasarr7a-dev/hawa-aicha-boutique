@@ -18,7 +18,7 @@ $liensNav = [
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e($fullTitle) ?></title>
   <meta name="description" content="Hawa Aïcha Boutique : parfums, beauté, sacs, bijoux, voiles, jalabés et décoration. Des produits de qualité à prix accessibles, en gros comme au détail.">
-  <meta name="theme-color" content="#C5628C">
+  <meta name="theme-color" content="#B85158">
   <link rel="icon" href="<?= e(base_url('assets/img/logo.svg')) ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -4,6 +4,25 @@
    toutes les règles sont limitées à .admin-body pour ne rien changer au site public.
    ========================================================= */
 .admin-body {
+  /* L'administration garde sa palette d'origine, indépendante de celle du site public */
+  --rose: #C5628C;
+  --rose-dark: #9F3E63;
+  --rose-mid: #E895B3;
+  --rose-soft: #F6C9D9;
+  --rose-bg: #FDEEF3;
+  --rose-rgb: 197, 98, 140;
+  --rose-dark-rgb: 159, 62, 99;
+  --rose-mid-rgb: 232, 149, 179;
+  --rose-profond-rgb: 110, 50, 75;
+  --creme: #FFF8FA;
+  --titre: #2b1b23;
+  --muted: #6f5a64;
+  --ligne: #F3DCE6;
+  --shadow: 0 10px 30px rgba(159, 62, 99, .08);
+  --shadow-hover: 0 18px 40px rgba(159, 62, 99, .16);
+  --bs-primary: #C5628C;
+  --bs-link-color: #9F3E63;
+  --bs-link-hover-color: #C5628C;
   --admin-fond: #faf6f8;
   --admin-bord: #efe2e8;
   --admin-texte-doux: #8a7480;
