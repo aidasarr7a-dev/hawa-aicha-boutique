@@ -374,3 +374,11 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
   .choix-vertical { flex-direction: row; text-align: left; justify-content: flex-start; }
   .choix-vertical .logo-pay { width: 46px; height: 46px; }
 }
+
+/* ---------- Logo officiel de la boutique ---------- */
+.logo-site { display: block; flex: none; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #fff, 0 4px 14px rgba(159, 62, 99, .18); }
+.logo-pied { width: 72px; height: 72px; box-shadow: 0 0 0 3px rgba(255, 255, 255, .12); }
+@media (max-width: 575.98px) {
+  .logo-site { width: 44px; height: 44px; }
+  .logo-pied { width: 64px; height: 64px; }
+}

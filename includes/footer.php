@@ -15,8 +15,8 @@
   <div class="container py-5">
     <div class="row g-4">
       <div class="col-lg-4">
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <img src="<?= e(logo_url()) ?>" alt="" height="46">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <img class="logo-site logo-pied" src="<?= e(logo_url()) ?>" alt="Logo <?= e(SITE_NAME) ?>" width="72" height="72">
           <span class="lh-1"><span class="brand-text d-block">Hawa Aïcha</span><span class="brand-sous">Boutique</span></span>
         </div>
         <p class="small mb-0 footer-texte">Beauté, parfumerie, mode, accessoires et décoration pour les femmes, les hommes et toute la famille. Des produits de qualité à prix accessibles, en gros comme au détail.</p>

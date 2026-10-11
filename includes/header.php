@@ -31,7 +31,7 @@ $liensNav = [
 <nav class="navbar navbar-expand-lg site-nav sticky-top">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="<?= e(base_url('index.php')) ?>">
-      <img src="<?= e(logo_url()) ?>" alt="Logo <?= e(SITE_NAME) ?>" height="44">
+      <img class="logo-site" src="<?= e(logo_url()) ?>" alt="Logo <?= e(SITE_NAME) ?>" width="52" height="52">
       <span class="lh-1"><span class="brand-text d-block">Hawa Aïcha</span><span class="brand-sous">Boutique</span></span>
     </a>
     <div class="d-flex align-items-center gap-2 order-lg-last">
