@@ -1,20 +1,23 @@
 /* =========================================================
    Hawa Aïcha Boutique — feuille de style (design v3)
-   Palette harmonisée avec le logo : #FDF2F3 · #F7D9DB · #E8A4A8 · #B85158 · #8F3D43
+   Palette rose pastel : #F8D7E3 (boutons) · #F4B6C2 (survol) · #EFA8B8 (poudré) · #B84C6C · #86304E
    ========================================================= */
 :root {
-  /* Couleur de référence : le rose du logo (#E8A4A8, teinte 356°).
-     Toutes les nuances ci-dessous en dérivent : modifier ici suffit pour tout le site. */
+  /* Palette rose pastel, accordée au logo (#E8A4A8) sans aucune teinte orangée.
+     Modifier ces variables suffit pour tout le site. */
   --rose-logo: #E8A4A8;
-  --rose: #B85158;          /* rose soutenu : boutons, icônes, décorations (contraste 4,8 sur blanc) */
-  --rose-dark: #8F3D43;     /* rose foncé : textes, liens, survols (contraste 7,2 sur blanc) */
-  --rose-mid: #E8A4A8;      /* rose du logo */
+  --rose-pastel: #F8D7E3;   /* fond des boutons principaux */
+  --rose-saumon: #F4B6C2;   /* survol des boutons, éléments sélectionnés */
+  --rose-poudre: #EFA8B8;   /* bordures, décorations */
+  --rose: #B84C6C;          /* accents : icônes, petits textes mis en avant (contraste 4,9 sur blanc) */
+  --rose-dark: #86304E;     /* textes des boutons, liens, survols (contraste 6,2 sur le pastel) */
+  --rose-mid: #EFA8B8;      /* rose poudré */
   --rose-soft: #F7D9DB;     /* rose poudré */
   --rose-bg: #FDF2F3;       /* rose très pâle : fonds */
-  --rose-rgb: 184, 81, 88;
-  --rose-dark-rgb: 143, 61, 67;
-  --rose-mid-rgb: 232, 164, 168;
-  --rose-profond-rgb: 61, 26, 30;
+  --rose-rgb: 184, 76, 108;
+  --rose-dark-rgb: 134, 48, 78;
+  --rose-mid-rgb: 239, 168, 184;
+  --rose-profond-rgb: 60, 22, 38;
   --creme: #FEF8F9;
   --ink: #333333;
   --titre: #2D1A1C;
@@ -28,9 +31,9 @@
   --rayon: 1.4rem;
   --shadow: 0 10px 30px rgba(var(--rose-dark-rgb), .08);
   --shadow-hover: 0 18px 40px rgba(var(--rose-dark-rgb), .16);
-  --bs-primary: #B85158;
-  --bs-link-color: #8F3D43;
-  --bs-link-hover-color: #B85158;
+  --bs-primary: #B84C6C;
+  --bs-link-color: #86304E;
+  --bs-link-hover-color: #B84C6C;
 }
 
 /* ---------- Base ---------- */
@@ -58,7 +61,7 @@ img { max-width: 100%; }
 .site-nav .nav-link:hover { color: var(--rose-dark); }
 .site-nav .nav-link.active { color: var(--rose-dark); background: var(--rose-bg); }
 .btn-icone { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; height: 42px; padding: 0 .8rem; border-radius: 50rem; background: var(--rose-bg); color: var(--rose-dark); font-weight: 500; font-size: .9rem; border: 0; transition: background .2s, color .2s; }
-.btn-icone:hover, .btn-icone.active { background: var(--rose-dark); color: #fff; }
+.btn-icone:hover, .btn-icone.active { background: var(--rose-saumon); color: var(--rose-dark); }
 .cart-badge { position: absolute; top: -5px; right: -5px; min-width: 20px; height: 20px; padding: 0 5px; background: var(--rose-dark); color: #fff; font-size: .68rem; font-weight: 600; line-height: 16px; text-align: center; border-radius: 50rem; border: 2px solid #fff; }
 .navbar-toggler { color: var(--rose-dark); font-size: 1.3rem; padding: .25rem .5rem; }
 .navbar-toggler:focus { box-shadow: none; }
@@ -68,11 +71,11 @@ img { max-width: 100%; }
 
 /* ---------- Boutons ---------- */
 .btn { font-weight: 500; }
-.btn-rose { background: linear-gradient(135deg, var(--rose), var(--rose-dark)); color: #fff; border: 0; border-radius: 50rem; box-shadow: 0 8px 20px rgba(var(--rose-dark-rgb), .25); transition: transform .15s, box-shadow .15s, filter .15s; }
-.btn-rose:hover, .btn-rose:focus-visible { color: #fff; transform: translateY(-1px); box-shadow: 0 12px 26px rgba(var(--rose-dark-rgb), .32); filter: brightness(1.05); }
+.btn-rose { background: var(--rose-pastel); color: var(--rose-dark); font-weight: 600; border: 0; border-radius: 50rem; box-shadow: 0 6px 16px rgba(var(--rose-mid-rgb), .45); transition: transform .15s, box-shadow .15s, background .15s; }
+.btn-rose:hover, .btn-rose:focus-visible, .btn-rose:active { background: var(--rose-saumon) !important; color: var(--rose-dark) !important; transform: translateY(-1px); box-shadow: 0 10px 22px rgba(var(--rose-mid-rgb), .55); }
 .btn-rose:disabled { opacity: .7; transform: none; }
-.btn-outline-rose { color: var(--rose-dark); border: 1.5px solid var(--rose); border-radius: 50rem; background: #fff; }
-.btn-outline-rose:hover, .btn-outline-rose:focus-visible { background: var(--rose-dark); border-color: var(--rose-dark); color: #fff; }
+.btn-outline-rose { color: var(--rose-dark); border: 1.5px solid var(--rose-poudre); border-radius: 50rem; background: #fff; }
+.btn-outline-rose:hover, .btn-outline-rose:focus-visible, .btn-outline-rose:active { background: var(--rose-saumon) !important; border-color: var(--rose-saumon) !important; color: var(--rose-dark) !important; }
 .btn-wa { background: #25d366; color: #fff; border: 0; border-radius: 50rem; }
 .btn-wa:hover { background: #1ebe5b; color: #fff; }
 .btn-pay-om { background: #FF7900; color: #fff; border: 0; border-radius: 50rem; font-weight: 600; }
@@ -81,7 +84,7 @@ img { max-width: 100%; }
 
 /* ---------- Titres de section ---------- */
 .section-title { font-size: clamp(1.55rem, 3.4vw, 2.15rem); margin-bottom: .25rem; }
-.section-title::after { content: ''; display: block; width: 46px; height: 3px; border-radius: 3px; margin-top: .55rem; background: linear-gradient(90deg, var(--rose), var(--rose-mid)); }
+.section-title::after { content: ''; display: block; width: 46px; height: 3px; border-radius: 3px; margin-top: .55rem; background: linear-gradient(90deg, var(--rose-poudre), var(--rose-pastel)); }
 .text-center .section-title::after { margin-inline: auto; }
 .section-sub { color: var(--muted); }
 .page-title { font-size: clamp(1.75rem, 4vw, 2.4rem); }
@@ -141,8 +144,8 @@ img { max-width: 100%; }
 .chips::-webkit-scrollbar { display: none; }
 .chip { display: inline-flex; align-items: center; padding: .5rem 1.05rem; border-radius: 50rem; background: #fff; color: var(--ink); font-size: .86rem; font-weight: 500; white-space: nowrap; border: 1px solid var(--ligne); transition: .2s; }
 .chip i { color: var(--rose); }
-.chip:hover { color: var(--rose-dark); border-color: var(--rose-mid); }
-.chip.active { background: var(--rose-dark); border-color: var(--rose-dark); color: #fff; }
+.chip:hover { color: var(--rose-dark); border-color: var(--rose-poudre); background: var(--rose-pastel); }
+.chip.active { background: var(--rose-saumon); border-color: var(--rose-saumon); color: var(--rose-dark); font-weight: 600; }
 .chip.active i { color: #fff; }
 
 /* ---------- Panneaux, formulaires ---------- */
@@ -209,6 +212,7 @@ img { max-width: 100%; }
 .cta-band { background: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, .18), transparent 40%), linear-gradient(135deg, var(--rose-dark), var(--rose)); color: #fff; border-radius: 2rem; padding: 2.8rem 1.5rem; box-shadow: var(--shadow-hover); }
 .cta-band h2 { color: #fff; }
 .cta-band .btn-light { color: var(--rose-dark); font-weight: 600; }
+.cta-band .btn-light:hover { background: var(--rose-pastel); border-color: var(--rose-pastel); color: var(--rose-dark); }
 
 /* ---------- Pages À propos / Contact ---------- */
 .why-card { background: #fff; border-radius: var(--rayon); padding: 1.5rem; box-shadow: var(--shadow); height: 100%; }
@@ -223,7 +227,7 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 .compte-wrap { max-width: 520px; margin: 1rem auto 2rem; }
 .onglets { display: flex; background: #fff; border-radius: 50rem; padding: .3rem; box-shadow: var(--shadow); gap: .3rem; }
 .onglets a { flex: 1; text-align: center; padding: .6rem 1rem; border-radius: 50rem; color: var(--muted); font-weight: 500; font-size: .92rem; white-space: nowrap; }
-.onglets a.on { background: var(--rose-dark); color: #fff; }
+.onglets a.on { background: var(--rose-saumon); color: var(--rose-dark); }
 .onglets-large { max-width: 560px; }
 .compteur { display: inline-block; min-width: 22px; padding: 0 .4rem; border-radius: 50rem; background: rgba(255, 255, 255, .25); font-size: .75rem; }
 .onglets a:not(.on) .compteur { background: var(--rose-bg); color: var(--rose-dark); }
@@ -404,9 +408,9 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 .carte-snapchat .reseau-ic { background: #FFFC00; color: #fff; -webkit-text-stroke: 1.5px #000; }
 .reseau-texte strong { display: block; font-size: 1.1rem; color: var(--titre); }
 .reseau-texte small { color: var(--muted); }
-.reseau-action { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding: .45rem 1rem; border-radius: 50rem; background: var(--rose-bg); color: var(--rose-dark); font-size: .85rem; font-weight: 600; transition: background .2s, color .2s; }
+.reseau-action { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding: .45rem 1rem; border-radius: 50rem; background: var(--rose-pastel); color: var(--rose-dark); font-size: .85rem; font-weight: 600; transition: background .2s, color .2s; }
 .reseau-action i { font-size: .75rem; transition: transform .2s; }
-.carte-reseau:hover .reseau-action { background: var(--rose-dark); color: #fff; }
+.carte-reseau:hover .reseau-action { background: var(--rose-saumon); color: var(--rose-dark); }
 .carte-reseau:hover .reseau-action i { transform: translateX(3px); }
 @media (max-width: 991.98px) {
   .reseaux { padding: 2.4rem 1.75rem; }

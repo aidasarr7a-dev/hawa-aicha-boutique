@@ -62,7 +62,7 @@ if ($p['categorie_id']) {
   </div>
   <div class="col-md-6">
     <?php if ($p['categorie']): ?><div class="product-cat mb-1"><?= e($p['categorie']) ?></div><?php endif; ?>
-    <h1 class="page-title"><?= e($p['nom']) ?> <?php if ($p['nouveau']): ?><span class="badge rounded-pill bg-danger-subtle text-danger-emphasis fs-6 align-middle" style="background:var(--rose)!important;color:#fff!important">Nouveau</span><?php endif; ?></h1>
+    <h1 class="page-title"><?= e($p['nom']) ?> <?php if ($p['nouveau']): ?><span class="badge rounded-pill bg-danger-subtle text-danger-emphasis fs-6 align-middle" style="background:var(--rose-pastel)!important;color:var(--rose-dark)!important">Nouveau</span><?php endif; ?></h1>
     <div class="total-line mb-2"><?= fcfa($p['prix']) ?></div>
     <span class="stock-badge stock-<?= e($cls) ?> mb-3 d-inline-block"><?= e($label) ?><?= (int)$p['stock'] > 0 && (int)$p['stock'] <= 3 ? ' (' . (int)$p['stock'] . ')' : '' ?></span>
 

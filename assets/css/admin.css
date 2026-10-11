@@ -4,25 +4,6 @@
    toutes les règles sont limitées à .admin-body pour ne rien changer au site public.
    ========================================================= */
 .admin-body {
-  /* L'administration garde sa palette d'origine, indépendante de celle du site public */
-  --rose: #C5628C;
-  --rose-dark: #9F3E63;
-  --rose-mid: #E895B3;
-  --rose-soft: #F6C9D9;
-  --rose-bg: #FDEEF3;
-  --rose-rgb: 197, 98, 140;
-  --rose-dark-rgb: 159, 62, 99;
-  --rose-mid-rgb: 232, 149, 179;
-  --rose-profond-rgb: 110, 50, 75;
-  --creme: #FFF8FA;
-  --titre: #2b1b23;
-  --muted: #6f5a64;
-  --ligne: #F3DCE6;
-  --shadow: 0 10px 30px rgba(159, 62, 99, .08);
-  --shadow-hover: 0 18px 40px rgba(159, 62, 99, .16);
-  --bs-primary: #C5628C;
-  --bs-link-color: #9F3E63;
-  --bs-link-hover-color: #C5628C;
   --admin-fond: #faf6f8;
   --admin-bord: #efe2e8;
   --admin-texte-doux: #8a7480;
@@ -84,7 +65,7 @@
 
 /* ---------- Cartes / panneaux ---------- */
 .admin-body .panel { border: 1px solid var(--admin-bord); border-radius: 1.1rem; box-shadow: 0 1px 3px rgba(110, 50, 75, .04); padding: 1.6rem; }
-.admin-body .panel h2.h5 { font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; color: #2b1b23; }
+.admin-body .panel h2.h5 { font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; color: var(--titre); }
 .panel-entete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1.1rem; }
 .panel-entete h2 { margin: 0; }
 .panel-entete a:not(.btn) { font-size: .85rem; font-weight: 500; }
@@ -98,12 +79,12 @@
   background: #fff; box-shadow: 0 1px 3px rgba(110, 50, 75, .04); color: var(--ink);
   transition: border-color .15s, box-shadow .15s, transform .15s;
 }
-.admin-body a.stat-card:hover { border-color: var(--rose-soft); box-shadow: 0 10px 26px rgba(159, 62, 99, .09); transform: translateY(-2px); color: var(--ink); }
+.admin-body a.stat-card:hover { border-color: var(--rose-soft); box-shadow: 0 10px 26px rgba(var(--rose-dark-rgb), .09); transform: translateY(-2px); color: var(--ink); }
 .stat-ic { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: .8rem; border-radius: .8rem; background: var(--rose-bg); color: var(--rose); font-size: 1.05rem; }
 .stat-ic.ic-alerte { background: #fff3dc; color: #b26b00; }
 .stat-ic.ic-ok { background: #e6f7ee; color: #1b7a47; }
 .stat-label { color: var(--admin-texte-doux); font-size: .84rem; font-weight: 500; }
-.admin-body .stat-card .num { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 600; line-height: 1.2; color: #2b1b23; }
+.admin-body .stat-card .num { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 600; line-height: 1.2; color: var(--titre); }
 .admin-body .stat-card .num.num-montant { font-size: 1.35rem; }
 .stat-sous { color: var(--admin-texte-doux); font-size: .8rem; }
 .stat-card-secondaire { padding: 1.1rem 1.3rem; }
@@ -151,7 +132,7 @@
 .panel-table > .table-responsive { margin-top: 0; }
 .panel-table > .panel-entete + .table-responsive { margin-top: .25rem; }
 .admin-body .table-rose td .small { margin-top: .15rem; }
-.cellule-principale { font-weight: 600; color: #2b1b23; }
+.cellule-principale { font-weight: 600; color: var(--titre); }
 .admin-actions { display: inline-flex; align-items: center; justify-content: flex-end; gap: .45rem; }
 .admin-actions form { display: inline-flex; align-items: center; gap: .45rem; margin: 0; }
 .admin-vide { padding: 3rem 1.5rem; text-align: center; color: var(--admin-texte-doux); }
@@ -164,8 +145,8 @@
 .admin-body .btn { font-weight: 500; }
 .admin-body .btn-sm { padding: .42rem .9rem; font-size: .82rem; }
 .admin-body .btn-ic { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 0; border-radius: .7rem; }
-.admin-body .btn-rose { box-shadow: 0 6px 16px rgba(159, 62, 99, .18); }
-.admin-body .btn-outline-rose { border-width: 1px; border-color: var(--rose-soft); }
+.admin-body .btn-rose { box-shadow: 0 4px 12px rgba(var(--rose-mid-rgb), .4); }
+.admin-body .btn-outline-rose { border-width: 1px; border-color: var(--rose-poudre); }
 .admin-body .btn-outline-danger { border-color: #f1c6cc; color: #b02a3c; background: #fff; }
 .admin-body .btn-outline-danger:hover { background: #b02a3c; border-color: #b02a3c; color: #fff; }
 .admin-body .btn-outline-secondary { border-color: var(--admin-bord); color: var(--muted); background: #fff; }

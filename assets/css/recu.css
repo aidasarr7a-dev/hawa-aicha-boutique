@@ -1,5 +1,5 @@
 /* Hawa Aïcha Boutique — reçu imprimable (format A4) */
-:root { --rose: #C5628C; --rose-dark: #9F3E63; --rose-soft: #F6C9D9; --rose-bg: #FDEEF3; --ink: #333; --muted: #6f5a64; }
+:root { --rose: #B84C6C; --rose-dark: #86304E; --rose-soft: #F8D7E3; --rose-saumon: #F4B6C2; --rose-poudre: #EFA8B8; --rose-bg: #FDEEF3; --ink: #333; --muted: #6f5a64; }
 
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--rose-bg); color: var(--ink); font: 14px/1.5 'Poppins', system-ui, sans-serif; }
@@ -8,11 +8,11 @@ body { margin: 0; background: var(--rose-bg); color: var(--ink); font: 14px/1.5 
 .actions button, .actions a {
   font: inherit; font-weight: 500; border-radius: 50rem; padding: .55rem 1.3rem; cursor: pointer; text-decoration: none;
 }
-.actions button { background: var(--rose); color: #fff; border: 0; }
-.actions button:hover { background: var(--rose-dark); }
-.actions a { background: #fff; color: var(--rose-dark); border: 1.5px solid var(--rose); }
+.actions button { background: var(--rose-soft); color: var(--rose-dark); font-weight: 600; border: 0; }
+.actions button:hover { background: var(--rose-saumon); }
+.actions a { background: #fff; color: var(--rose-dark); border: 1.5px solid var(--rose-poudre); }
 
-.recu { background: #fff; max-width: 800px; margin: 0 auto 2rem; padding: 2.2rem; border-radius: 1rem; box-shadow: 0 8px 28px rgba(159, 62, 99, .12); }
+.recu { background: #fff; max-width: 800px; margin: 0 auto 2rem; padding: 2.2rem; border-radius: 1rem; box-shadow: 0 8px 28px rgba(134, 48, 78, .10); }
 
 .entete { display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; padding-bottom: 1.2rem; border-bottom: 3px solid var(--rose-soft); }
 .marque { display: flex; gap: .8rem; align-items: center; }
