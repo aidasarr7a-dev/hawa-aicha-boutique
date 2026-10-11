@@ -9,7 +9,7 @@ $categories = get_categories();
 <section class="hero mb-5">
   <span class="eyebrow"><i class="fa-solid fa-heart me-1"></i> Notre boutique</span>
   <h1 class="mt-3 mb-3">À propos de <span>Hawa Aïcha</span></h1>
-  <p class="lead text-muted mb-0" style="max-width:720px"><?= e(SITE_SLOGAN) ?></p>
+  <p class="slogan-apropos mb-0"><span><?= e(SITE_SLOGAN) ?></span></p>
 </section>
 
 <div class="row g-4 mb-5">
@@ -44,12 +44,31 @@ $categories = get_categories();
 </section>
 <?php endif; ?>
 
-<section class="cta-band text-center">
-  <h2 class="mb-2">Commande en gros ou question ?</h2>
-  <p class="mb-4 opacity-75">Écrivez-nous, nous vous répondons rapidement.</p>
-  <div class="d-flex flex-wrap gap-2 justify-content-center">
-    <a class="btn btn-light btn-lg px-4" href="<?= e(base_url('contact.php')) ?>"><i class="fa-solid fa-envelope me-1"></i> Nous écrire</a>
-    <a class="btn btn-light btn-lg px-4" href="<?= e(base_url('produits.php')) ?>">Voir les produits</a>
+<section class="reseaux reseaux-pastel" aria-labelledby="titre-question">
+  <div class="row g-4 g-lg-5 align-items-center">
+    <div class="col-lg-5">
+      <span class="eyebrow-simple"><i class="fa-solid fa-comments me-1"></i> À votre écoute</span>
+      <h2 class="section-title mt-3" id="titre-question">Commande en gros ou question ?</h2>
+      <p class="text-muted mb-0">Revendeuses, revendeurs ou clientes : écrivez-nous, nous vous répondons rapidement.</p>
+    </div>
+    <div class="col-lg-7">
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <a class="carte-reseau" href="<?= e(base_url('contact.php')) ?>">
+            <span class="reseau-ic ic-pastel"><i class="fa-solid fa-envelope"></i></span>
+            <span class="reseau-texte"><strong>Nous écrire</strong><small>Une question, une commande en gros</small></span>
+            <span class="reseau-action">Contact <i class="fa-solid fa-arrow-right"></i></span>
+          </a>
+        </div>
+        <div class="col-sm-6">
+          <a class="carte-reseau" href="<?= e(base_url('produits.php')) ?>">
+            <span class="reseau-ic ic-saumon"><i class="fa-solid fa-bag-shopping"></i></span>
+            <span class="reseau-texte"><strong>Voir les produits</strong><small>Tout le catalogue en FCFA</small></span>
+            <span class="reseau-action">Découvrir <i class="fa-solid fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

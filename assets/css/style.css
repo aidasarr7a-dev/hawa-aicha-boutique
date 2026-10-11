@@ -247,10 +247,12 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 
 /* ---------- Pied de page ---------- */
 .site-footer { margin-top: 4rem; background: var(--pied); color: var(--pied-texte); }
-.footer-haut { background: linear-gradient(135deg, var(--rose-dark), var(--rose)); padding: 1.4rem 0; }
-.footer-slogan { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.25rem; color: #fff; text-align: center; }
-.site-footer .brand-text { color: #fff; }
-.site-footer .brand-sous { color: var(--rose-mid); }
+.footer-haut { background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-saumon) 100%); padding: 1.5rem 0; border-top: 1px solid var(--rose-poudre); }
+.footer-slogan { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.25rem; color: var(--rose-dark); text-align: center; }
+.footer-haut .social { background: #fff; color: var(--rose-dark) !important; box-shadow: 0 4px 12px rgba(var(--rose-dark-rgb), .12); }
+.footer-haut .social:hover { background: var(--rose-dark); color: #fff !important; }
+.site-footer .brand-text { color: var(--rose-pastel); }
+.site-footer .brand-sous { color: var(--rose-saumon); }
 .footer-texte { color: var(--pied-doux); }
 .footer-title { font-family: 'Poppins', sans-serif; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; margin-bottom: .9rem; }
 .site-footer ul li { margin-bottom: .5rem; }
@@ -422,3 +424,12 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
   .reseau-texte { flex: 1; min-width: 0; }
   .reseau-action { margin-top: 0; padding: .4rem .8rem; }
 }
+
+/* ---------- Page À propos : slogan et « Commande en gros ou question ? » ---------- */
+.slogan-apropos { max-width: 720px; font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: clamp(1.15rem, 2.4vw, 1.45rem); color: var(--rose-dark); }
+.slogan-apropos span { background: linear-gradient(transparent 58%, var(--rose-saumon) 58%, var(--rose-saumon) 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 .15em; }
+.reseaux-pastel { border-color: var(--rose-poudre); background: radial-gradient(circle at 0% 100%, var(--rose-saumon), transparent 45%), linear-gradient(135deg, #fff 0%, var(--rose-pastel) 100%); }
+.reseaux-pastel .carte-reseau { border-color: var(--rose-pastel); }
+.reseaux-pastel .carte-reseau:hover { border-color: var(--rose-poudre); }
+.reseau-ic.ic-pastel { background: var(--rose-pastel); color: var(--rose-dark); }
+.reseau-ic.ic-saumon { background: var(--rose-saumon); color: var(--rose-dark); }
