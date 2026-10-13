@@ -22,39 +22,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $st->execute([$moi]);
     $hash = (string)$st->fetchColumn();
     $actuel = (string)($_POST['actuel'] ?? '');
-    $nouveau = (string)($_POST['nouveau'] ?? '');
-    $confirm = (string)($_POST['confirm'] ?? '');
 
-    // Champs du mot de passe laissés vides = mot de passe inchangé
-    $changeMdp = $nouveau !== '' || $confirm !== '';
-    if ($changeMdp) {
-        $erreurs = array_merge($erreurs, erreurs_mot_de_passe($nouveau, $confirm));
-        if (password_verify($nouveau, $hash)) {
-            $erreurs[] = 'Le nouveau mot de passe doit être différent de l\'actuel.';
-        }
-    }
-    // Les identifiants de connexion et le mot de passe ne changent qu'avec le mot de passe actuel
+    // Le nom d'utilisateur et l'e-mail (identifiants de connexion) ne changent qu'avec le mot de passe actuel
     $changeConnexion = strcasecmp($val['username'], (string)$adminConnecte['username']) !== 0
                     || strcasecmp($val['email'], (string)$adminConnecte['email']) !== 0;
-    if (($changeMdp || $changeConnexion) && !password_verify($actuel, $hash)) {
+    if ($changeConnexion && !password_verify($actuel, $hash)) {
         $erreurs[] = $actuel === ''
-            ? 'Saisissez votre mot de passe actuel pour modifier votre identifiant, votre e-mail ou votre mot de passe.'
+            ? 'Saisissez votre mot de passe actuel pour modifier votre nom d\'utilisateur ou votre e-mail.'
             : 'Le mot de passe actuel est incorrect : aucune modification n\'a été enregistrée.';
     }
 
     if (!$erreurs) {
-        $pdo = db();
-        $pdo->beginTransaction();
-        $pdo->prepare('UPDATE admins SET prenom = ?, nom = ?, username = ?, email = ?, telephone = ? WHERE id = ?')
+        db()->prepare('UPDATE admins SET prenom = ?, nom = ?, username = ?, email = ?, telephone = ? WHERE id = ?')
             ->execute([$val['prenom'], $val['nom'], $val['username'], $val['email'], $val['telephone'] ?: null, $moi]);
-        if ($changeMdp) {
-            $pdo->prepare('UPDATE admins SET password_hash = ? WHERE id = ?')->execute([password_hash($nouveau, PASSWORD_DEFAULT), $moi]);
-        }
-        $pdo->commit();
-        if ($changeMdp) {
-            session_regenerate_id(true);
-        }
-        flash('success', 'Votre profil a été enregistré' . ($changeMdp ? ', avec votre nouveau mot de passe' : '') . '.');
+        flash('success', 'Votre profil a été enregistré.');
         redirect('profil.php');
     }
 }
@@ -103,20 +84,9 @@ $nomAffiche = nom_complet_admin($adminConnecte);
       </section>
 
       <section class="profil-bloc">
-        <h2 class="h5">Connexion</h2>
-        <p class="text-muted small">Votre nom d'utilisateur et votre e-mail servent tous deux à vous connecter.</p>
         <div class="row g-3">
           <div class="col-md-6"><label class="form-label" for="username">Nom d'utilisateur</label><input class="form-control" id="username" name="username" value="<?= e($val['username']) ?>" required maxlength="50" pattern="[A-Za-z0-9._\-]{3,50}" autocomplete="username"></div>
           <div class="col-md-6"><label class="form-label" for="email">Adresse e-mail</label><input class="form-control" id="email" name="email" type="email" value="<?= e($val['email']) ?>" required maxlength="150" autocomplete="email"></div>
-        </div>
-      </section>
-
-      <section class="profil-bloc">
-        <h2 class="h5">Mot de passe</h2>
-        <p class="text-muted small">Laissez ces deux champs vides pour garder votre mot de passe actuel. Sinon : <?= MDP_LONGUEUR_MIN ?> caractères minimum, avec au moins une lettre et un chiffre.</p>
-        <div class="row g-3">
-          <div class="col-md-6"><label class="form-label" for="nouveau">Nouveau mot de passe</label><?= champ_mot_de_passe('nouveau', 'nouveau', 'new-password', false, 'minlength="' . MDP_LONGUEUR_MIN . '"') ?></div>
-          <div class="col-md-6"><label class="form-label" for="confirm">Confirmation</label><?= champ_mot_de_passe('confirm', 'confirm', 'new-password') ?></div>
         </div>
       </section>
 
@@ -126,7 +96,7 @@ $nomAffiche = nom_complet_admin($adminConnecte);
             <label class="form-label" for="actuel">Mot de passe actuel</label>
             <?= champ_mot_de_passe('actuel', 'actuel', 'current-password') ?>
           </div>
-          <div class="col-md-6"><p class="text-muted small mb-md-2 mb-0">Obligatoire uniquement pour changer d'identifiant, d'e-mail ou de mot de passe.</p></div>
+          <div class="col-md-6"><p class="text-muted small mb-md-2 mb-0">Obligatoire uniquement pour changer de nom d'utilisateur ou d'e-mail.</p></div>
         </div>
       </section>
 
