@@ -89,7 +89,7 @@ function icone_select(string $courant): string
                     <?= icone_select($c['icone']) ?>
                     <button class="btn btn-outline-rose btn-sm btn-ic" title="Enregistrer"><i class="fa-solid fa-check"></i></button>
                   </form>
-                  <form method="post" onsubmit="return confirm('Supprimer cette catégorie ? Ses produits seront conservés sans catégorie.')">
+                  <form method="post" data-confirm-titre="Supprimer la catégorie ?" data-confirm="Ses produits seront conservés, sans catégorie. Cette action est définitive." data-confirm-ok="Supprimer">
                     <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
                     <button class="btn btn-outline-danger btn-sm btn-ic" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
                   </form>

@@ -36,10 +36,6 @@ require __DIR__ . '/_header.php';
   </div>
 </div>
 
-<?php if ($erreurs): ?>
-  <div class="alert alert-danger admin-form-etroit"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
-<?php endif; ?>
-
 <form method="post" class="panel admin-form-etroit">
   <?= csrf_field() ?>
   <div class="mb-3"><label class="form-label" for="actuel">Mot de passe actuel</label><input class="form-control" id="actuel" name="actuel" type="password" required autocomplete="current-password"></div>

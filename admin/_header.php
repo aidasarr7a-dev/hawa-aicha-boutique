@@ -73,4 +73,29 @@ $pastilles = ['messages' => $nbMessagesNonLus, 'paiements' => $nbPaiementsDeclar
       <?php if ($nbMessagesNonLus + $nbPaiementsDeclares): ?><span class="admin-pastille ms-auto" title="Éléments à traiter"><?= $nbMessagesNonLus + $nbPaiementsDeclares ?></span><?php endif; ?>
     </header>
     <main class="admin-content">
-      <?= flash_render() ?>
+      <?php
+      // Notifications « Toast » : messages flash de la session + erreurs de validation de la page ($erreurs)
+      $toasts = $_SESSION['flash'] ?? [];
+      unset($_SESSION['flash']);
+      foreach (($erreurs ?? []) as $er) {
+          $toasts[] = ['danger', e($er)];
+      }
+      $typesToast = [
+          'success' => ['fa-circle-check',         'Succès'],
+          'danger'  => ['fa-circle-exclamation',   'Erreur'],
+          'warning' => ['fa-triangle-exclamation', 'Attention'],
+          'info'    => ['fa-circle-info',          'Information'],
+      ];
+      ?>
+      <div class="toast-container admin-toasts" id="admin-toasts" aria-live="polite" aria-atomic="false">
+        <?php foreach ($toasts as [$type, $msg]): [$ico, $libelle] = $typesToast[$type] ?? $typesToast['info']; ?>
+          <div class="toast admin-toast toast-<?= e($type) ?>" role="<?= $type === 'danger' ? 'alert' : 'status' ?>" data-bs-delay="<?= $type === 'danger' ? 8000 : 5000 ?>">
+            <div class="admin-toast-corps">
+              <span class="admin-toast-ic"><i class="fa-solid <?= $ico ?>"></i></span>
+              <div class="flex-grow-1 min-w-0"><strong class="d-block"><?= $libelle ?></strong><div class="admin-toast-msg"><?= $msg ?></div></div>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fermer"></button>
+            </div>
+            <span class="admin-toast-temps"></span>
+          </div>
+        <?php endforeach; ?>
+      </div>

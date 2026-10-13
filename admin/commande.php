@@ -201,18 +201,18 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
       <?php if ($cmd['statut'] === 'annulee'): ?>
         <p class="text-muted mb-0">Cette commande est annulée : son stock a été remis à jour.</p>
       <?php else: ?>
-        <form method="post" class="d-flex flex-wrap gap-2">
+        <form method="post" class="d-flex flex-wrap gap-2" data-confirm-si-champ="statut" data-confirm-si-valeur="annulee" data-confirm-titre="Annuler cette commande ?" data-confirm="Les articles seront remis en stock. Une commande annulée ne peut plus être modifiée." data-confirm-ok="Annuler la commande">
           <?= csrf_field() ?><input type="hidden" name="action" value="statut"><input type="hidden" name="id" value="<?= (int)$id ?>">
           <select name="statut" class="form-select" style="max-width:260px">
             <?php foreach (STATUTS as $k => [$label]): if ($k === 'annulee' && $cmd['statut'] === 'livree') continue; ?>
               <option value="<?= e($k) ?>" <?= $cmd['statut'] === $k ? 'selected' : '' ?>><?= e($label) ?></option>
             <?php endforeach; ?>
           </select>
-          <button class="btn btn-rose" onclick="return this.form.statut.value !== 'annulee' || confirm('Annuler cette commande ? Les articles seront remis en stock.')">Mettre à jour</button>
+          <button class="btn btn-rose">Mettre à jour</button>
         </form>
       <?php endif; ?>
       <?php if ($cmd['statut'] === 'annulee'): ?>
-        <form method="post" class="mt-3" onsubmit="return confirm('Supprimer définitivement cette commande annulée ?')">
+        <form method="post" class="mt-3" data-confirm-titre="Supprimer la commande ?" data-confirm="La commande <?= e($cmd['numero_commande']) ?> (annulée) sera supprimée définitivement." data-confirm-ok="Supprimer">
           <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$id ?>">
           <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash-can me-1"></i>Supprimer la commande</button>
         </form>
@@ -237,7 +237,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
 
         <?php if ($statutPaiement === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
           <div class="alert alert-warning rounded-4 small py-2">Ne confirmez qu'après avoir <strong>vérifié la réception réelle</strong> de l'argent (message Wave / Orange Money reçu, ou espèces remises).</div>
-          <form method="post" class="row g-2 mb-3" onsubmit="return confirm('Confirmer que <?= e(fcfa($cmd['total'])) ?> ont bien été reçus ?')">
+          <form method="post" class="row g-2 mb-3" data-confirm-type="rose" data-confirm-titre="Confirmer le paiement ?" data-confirm="Confirmez-vous avoir réellement reçu <?= e(fcfa($cmd['total'])) ?> pour cette commande ?" data-confirm-ok="Oui, paiement reçu">
             <?= csrf_field() ?><input type="hidden" name="action" value="paiement_confirmer"><input type="hidden" name="id" value="<?= (int)$id ?>">
             <div class="col-sm-6"><label class="form-label small mb-1" for="mode_paiement">Mode utilisé</label>
               <select class="form-select form-select-sm" id="mode_paiement" name="mode_paiement">
@@ -249,7 +249,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
               <input class="form-control form-control-sm" id="reference" name="reference" maxlength="100" value="<?= e($paiement['reference_client'] ?? '') ?>" placeholder="Ex : identifiant du message Wave / Orange Money"></div>
             <div class="col-12"><button class="btn btn-rose btn-sm"><i class="fa-solid fa-circle-check me-1"></i>Confirmer le paiement reçu</button></div>
           </form>
-          <form method="post" class="d-flex flex-wrap gap-2" onsubmit="return confirm('Marquer ce paiement comme échoué / annulé ?')">
+          <form method="post" class="d-flex flex-wrap gap-2" data-confirm-titre="Paiement échoué ?" data-confirm="Le paiement sera marqué « Échec / annulé »." data-confirm-ok="Marquer échoué">
             <?= csrf_field() ?><input type="hidden" name="action" value="paiement_echec"><input type="hidden" name="id" value="<?= (int)$id ?>">
             <input class="form-control form-control-sm" style="max-width:260px" name="note" maxlength="255" placeholder="Motif (facultatif)">
             <button class="btn btn-outline-danger btn-sm">Échec / annulé</button>
@@ -260,7 +260,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
             <button class="btn btn-outline-rose btn-sm">Remettre « en attente »</button>
           </form>
         <?php elseif ($statutPaiement === 'paye'): ?>
-          <form method="post" class="d-flex flex-wrap gap-2" onsubmit="return confirm('Confirmer que l\'argent a RÉELLEMENT été rendu à la cliente ?')">
+          <form method="post" class="d-flex flex-wrap gap-2" data-confirm-titre="Marquer comme remboursé ?" data-confirm="Confirmez-vous que l'argent a réellement été rendu à la cliente ?" data-confirm-ok="Oui, remboursé">
             <?= csrf_field() ?><input type="hidden" name="action" value="paiement_rembourser"><input type="hidden" name="id" value="<?= (int)$id ?>">
             <input class="form-control form-control-sm" style="max-width:260px" name="note" maxlength="255" placeholder="Détail du remboursement (facultatif)">
             <button class="btn btn-outline-secondary btn-sm">Marquer « Remboursé »</button>

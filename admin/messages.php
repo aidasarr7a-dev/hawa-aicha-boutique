@@ -7,6 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     if ($action === 'lu' && $id > 0) {
         db()->prepare('UPDATE messages_contact SET lu = 1 - lu WHERE id = ?')->execute([$id]);
+        $st = db()->prepare('SELECT lu FROM messages_contact WHERE id = ?');
+        $st->execute([$id]);
+        flash('success', (int)$st->fetchColumn() === 1 ? 'Message marqué comme lu.' : 'Message marqué comme non lu.');
     } elseif ($action === 'supprimer' && $id > 0) {
         db()->prepare('DELETE FROM messages_contact WHERE id = ?')->execute([$id]);
         flash('success', 'Message supprimé.');
@@ -55,7 +58,7 @@ $messages = db()->query('SELECT * FROM messages_contact' . ($filtre ? ' WHERE lu
             <?php endif; ?>
             <form method="post"><?= csrf_field() ?><input type="hidden" name="action" value="lu"><input type="hidden" name="id" value="<?= (int)$m['id'] ?>"><input type="hidden" name="filtre" value="<?= e($filtre) ?>">
               <button class="btn btn-outline-rose btn-sm btn-ic" title="<?= $m['lu'] ? 'Marquer non lu' : 'Marquer lu' ?>"><i class="fa-solid <?= $m['lu'] ? 'fa-envelope' : 'fa-envelope-open' ?>"></i></button></form>
-            <form method="post" onsubmit="return confirm('Supprimer ce message ?')"><?= csrf_field() ?><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="<?= (int)$m['id'] ?>">
+            <form method="post" data-confirm-titre="Supprimer ce message ?" data-confirm="Le message de <?= e($m['nom']) ?> sera supprimé définitivement." data-confirm-ok="Supprimer"><?= csrf_field() ?><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="<?= (int)$m['id'] ?>">
               <button class="btn btn-outline-danger btn-sm btn-ic" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button></form>
           </div>
         </div>

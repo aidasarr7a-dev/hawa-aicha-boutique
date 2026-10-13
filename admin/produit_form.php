@@ -78,10 +78,6 @@ require __DIR__ . '/_header.php';
   </div>
 </div>
 
-<?php if ($erreurs): ?>
-  <div class="alert alert-danger admin-form"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
-<?php endif; ?>
-
 <form method="post" enctype="multipart/form-data" class="panel admin-form">
   <?= csrf_field() ?>
   <input type="hidden" name="id" value="<?= (int)$id ?>">
