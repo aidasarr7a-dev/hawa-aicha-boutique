@@ -1,1 +1,13 @@
+config.php
 config.local.php
+.env
+.env.*
+!.env.example
+ 
+/config.php
+
+/schema.sql
+
+/Includes-ancien-a-supprimer/
+/Includes-bloque-3-a-supprimer/
+/Includes-bloque-a-supprimer/
