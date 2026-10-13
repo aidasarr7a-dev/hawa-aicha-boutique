@@ -465,3 +465,9 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 @media (prefers-reduced-motion: reduce) {
   .site-toast.showing, .site-toast.show { animation: none; }
 }
+
+/* ---------- Moyen de paiement « En cours » (visible, non sélectionnable) ---------- */
+.choix-en-cours { position: relative; cursor: not-allowed; background: #faf7f8 !important; border-color: var(--ligne) !important; box-shadow: none !important; }
+.choix-en-cours .logo-pay, .choix-en-cours strong { filter: grayscale(.85); opacity: .55; }
+.choix-en-cours input { pointer-events: none; }
+.badge-en-cours { position: absolute; top: .5rem; right: .5rem; padding: .2rem .6rem; border-radius: 50rem; background: var(--rose-pastel); color: var(--rose-dark); font-size: .68rem; font-weight: 600; letter-spacing: .02em; }

@@ -50,6 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen(preg_replace('/\D/', '', $tel)) < 8)               $erreurs[] = 'Veuillez indiquer un numéro de téléphone / WhatsApp valide.';
     if (mb_strlen($val['adresse_livraison']) < 3)                      $erreurs[] = 'Veuillez indiquer votre adresse de livraison (quartier, ville, point de repère).';
     if (!in_array($val['paiement'], MODES_PAIEMENT, true))        $erreurs[] = 'Veuillez choisir un moyen de paiement.';
+    // Un mode « en cours » est refusé côté serveur, même si le formulaire a été modifié
+    elseif (in_array($val['paiement'], MODES_PAIEMENT_EN_COURS, true)) $erreurs[] = 'Le paiement par ' . $val['paiement'] . ' est en cours de mise en place. Merci de choisir un autre moyen de paiement.';
     foreach (['adresse_livraison' => [255, 'adresse de livraison']] as $champ => [$max, $libelle]) {
         if (mb_strlen($val[$champ]) > $max) $erreurs[] = 'Le champ « ' . $libelle . ' » est trop long.';
     }
@@ -165,19 +167,20 @@ require __DIR__ . '/includes/header.php';
     <div class="panel mt-4">
       <h2 class="h5 mb-3"><span class="num-etape">2</span> Paiement</h2>
       <div class="row g-2 mb-3">
-        <?php foreach (MODES_PAIEMENT as $mode): [, $cls, $desc] = info_paiement($mode); ?>
+        <?php foreach (MODES_PAIEMENT as $mode): [, $cls, $desc] = info_paiement($mode); $enCours = in_array($mode, MODES_PAIEMENT_EN_COURS, true); ?>
           <div class="col-md-4">
-            <label class="choix-carte choix-paiement choix-vertical <?= e($cls) ?>">
-              <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? 'checked' : '' ?>>
+            <label class="choix-carte choix-paiement choix-vertical <?= e($cls) ?><?= $enCours ? ' choix-en-cours' : '' ?>"<?= $enCours ? ' aria-disabled="true" title="Bientôt disponible"' : '' ?>>
+              <input type="radio" name="paiement" value="<?= e($mode) ?>" <?= $enCours ? 'disabled' : ($val['paiement'] === $mode ? 'checked' : '') ?>>
+              <?php if ($enCours): ?><span class="badge-en-cours">En cours</span><?php endif; ?>
               <?= logo_paiement($mode) ?>
-              <span class="flex-grow-1"><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= e($desc) ?></span></span>
-              <i class="fa-solid fa-circle-check coche"></i>
+              <span class="flex-grow-1"><strong class="d-block"><?= e($mode) ?></strong><span class="small text-muted"><?= $enCours ? 'Bientôt disponible' : e($desc) ?></span></span>
+              <?php if (!$enCours): ?><i class="fa-solid fa-circle-check coche"></i><?php endif; ?>
             </label>
           </div>
         <?php endforeach; ?>
       </div>
 
-      <?php foreach (MODES_PAIEMENT as $mode): $numero = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO][$mode] ?? ''; ?>
+      <?php foreach (array_diff(MODES_PAIEMENT, MODES_PAIEMENT_EN_COURS) as $mode): $numero =['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO][$mode] ?? ''; ?>
         <div class="infos-paiement <?= e(info_paiement($mode)[1]) ?>" data-infos-paiement="<?= e($mode) ?>" <?= $val['paiement'] === $mode ? '' : 'hidden' ?>>
           <?php if ($numero !== ''): ?>
             <div class="small mb-2">Après avoir validé, envoyez <strong class="text-nowrap"><?= fcfa($total) ?></strong> par <strong><?= e($mode) ?></strong> au :</div>

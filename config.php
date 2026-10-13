@@ -42,6 +42,9 @@ define('SNAPCHAT_HANDLE', 'hawaaicha');
 
 // Moyens de paiement proposés au client
 define('MODES_PAIEMENT', ['Wave', 'Orange Money', 'Espèces']);
+// Moyens de paiement en cours de mise en place : affichés « En cours », mais impossibles à choisir.
+// Retirez un mode de cette liste pour le réactiver (ex : [] pour tout réactiver).
+define('MODES_PAIEMENT_EN_COURS', ['Orange Money']);
 
 // Modes de livraison proposés au client
 define('MODES_LIVRAISON', ['Livraison à domicile', 'Retrait en boutique']);
