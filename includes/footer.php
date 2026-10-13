@@ -37,8 +37,8 @@
             <li><a href="<?= e(base_url('mon-compte.php')) ?>">Mes commandes</a></li>
             <li><a href="<?= e(base_url('mon-compte.php?onglet=infos')) ?>">Mes informations</a></li>
           <?php else: ?>
-            <li><a href="<?= e(base_url('compte.php')) ?>">Se connecter</a></li>
-            <li><a href="<?= e(base_url('compte.php?onglet=inscription')) ?>">Créer un compte</a></li>
+            <li><a href="<?= e(base_url('connexion.php')) ?>">Se connecter</a></li>
+            <li><a href="<?= e(base_url('inscription.php')) ?>">Créer un compte</a></li>
           <?php endif; ?>
           <li><a href="<?= e(base_url('panier.php')) ?>">Mon panier</a></li>
         </ul>

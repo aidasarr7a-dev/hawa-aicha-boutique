@@ -65,7 +65,7 @@ require __DIR__ . '/includes/header.php';
     </a>
   </div>
   <?php if (!$client): ?>
-    <div class="alert-compte mt-4 text-start"><i class="fa-solid fa-user-plus me-2"></i><strong>Suivez votre commande et retrouvez vos factures :</strong> <a href="<?= e(base_url('compte.php?onglet=inscription')) ?>">créez votre compte</a> avec le même numéro de téléphone.</div>
+    <div class="alert-compte mt-4 text-start"><i class="fa-solid fa-user-plus me-2"></i><strong>Suivez votre commande et retrouvez vos factures :</strong> <a href="<?= e(base_url('inscription.php')) ?>">créez votre compte</a> avec le même numéro de téléphone.</div>
   <?php else: ?>
     <div class="mt-3"><a href="<?= e(base_url('mon-compte.php?commande=' . (int)$cmd['id'])) ?>">Suivre cette commande dans mon compte</a></div>
   <?php endif; ?>

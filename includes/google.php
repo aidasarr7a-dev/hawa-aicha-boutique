@@ -19,26 +19,34 @@ function google_actif(): bool
     return trim(GOOGLE_CLIENT_ID) !== '' && trim(GOOGLE_CLIENT_SECRET) !== '';
 }
 
-/** Adresse de retour déclarée chez Google : doit être identique à celle enregistrée dans la console Google. */
-function google_url_retour(): string
+/** Pages qui reçoivent la réponse de Google (« URI de redirection autorisés » de la console Google). */
+const GOOGLE_PAGES_RETOUR = ['connexion' => 'connexion.php', 'inscription' => 'inscription.php'];
+
+/**
+ * Adresse complète d'une page de retour (connexion.php ou inscription.php) :
+ * doit être identique, caractère pour caractère, à celle enregistrée dans la console Google.
+ */
+function google_url_retour(string $depuis = 'connexion'): string
 {
     $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (int)($_SERVER['SERVER_PORT'] ?? 80) === 443;
     $hote = preg_replace('/[^A-Za-z0-9.\-:]/', '', (string)($_SERVER['HTTP_HOST'] ?? 'localhost'));
-    return ($https ? 'https' : 'http') . '://' . $hote . base_url('google-retour.php');
+    return ($https ? 'https' : 'http') . '://' . $hote . base_url(GOOGLE_PAGES_RETOUR[$depuis] ?? GOOGLE_PAGES_RETOUR['connexion']);
 }
 
 /** Prépare la redirection vers Google et mémorise state / nonce / page de retour en session. */
-function google_url_connexion(string $retour): string
+function google_url_connexion(string $retour, string $depuis = 'connexion'): string
 {
+    $depuis = isset(GOOGLE_PAGES_RETOUR[$depuis]) ? $depuis : 'connexion';
     $_SESSION['google_oauth'] = [
-        'state'  => bin2hex(random_bytes(16)),
-        'nonce'  => bin2hex(random_bytes(16)),
-        'retour' => $retour,
-        'debut'  => time(),
+        'state'        => bin2hex(random_bytes(16)),
+        'nonce'        => bin2hex(random_bytes(16)),
+        'retour'       => $retour,
+        'redirect_uri' => google_url_retour($depuis),   // la même adresse doit être renvoyée lors de l'échange du code
+        'debut'        => time(),
     ];
     return GOOGLE_URL_AUTORISATION . '?' . http_build_query([
         'client_id'     => GOOGLE_CLIENT_ID,
-        'redirect_uri'  => google_url_retour(),
+        'redirect_uri'  => $_SESSION['google_oauth']['redirect_uri'],
         'response_type' => 'code',
         'scope'         => 'openid email profile',
         'state'         => $_SESSION['google_oauth']['state'],
@@ -77,7 +85,7 @@ function google_profil_depuis_retour(array $get): array
             'code'          => (string)$get['code'],
             'client_id'     => GOOGLE_CLIENT_ID,
             'client_secret' => GOOGLE_CLIENT_SECRET,
-            'redirect_uri'  => google_url_retour(),
+            'redirect_uri'  => $attente['redirect_uri'] ?? google_url_retour(),
             'grant_type'    => 'authorization_code',
         ]),
         CURLOPT_RETURNTRANSFER => true,
@@ -128,4 +136,60 @@ function google_ouvrir_session_client(int $id): void
 function google_retour_sur(string $retour): string
 {
     return preg_match('/^[a-z_-]+\.php(\?[\w=&%.+-]*)?$/i', $retour) ? $retour : 'mon-compte.php';
+}
+
+/** Vrai si la requête actuelle est une réponse de Google (code ou erreur, avec « state »). */
+function google_est_un_retour(array $get): bool
+{
+    return isset($get['state']) && (isset($get['code']) || isset($get['error']));
+}
+
+/**
+ * Traite la réponse de Google puis redirige (ne revient jamais) :
+ *  - compte déjà lié à ce Google → connexion ;
+ *  - compte existant avec la même adresse e-mail (vérifiée par Google) → liaison puis connexion ;
+ *  - sinon → dernière étape : le numéro de téléphone (identifiant des commandes de la boutique).
+ */
+function google_traiter_retour(array $get): void
+{
+    if (!google_actif()) {
+        redirect(base_url('connexion.php'));
+    }
+    try {
+        $profil = google_profil_depuis_retour($get);
+    } catch (RuntimeException $e) {
+        flash('danger', e($e->getMessage()));
+        redirect(base_url('connexion.php'));
+    }
+
+    $pdo = db();
+    $retour = google_retour_sur($profil['retour']);
+
+    // 1. Compte déjà lié à ce compte Google
+    $st = $pdo->prepare('SELECT * FROM clients WHERE google_id = ?');
+    $st->execute([$profil['sub']]);
+    $client = $st->fetch();
+
+    // 2. Compte existant avec la même adresse e-mail : on le lie à Google
+    if (!$client) {
+        $st = $pdo->prepare('SELECT * FROM clients WHERE email = ? AND google_id IS NULL');
+        $st->execute([$profil['email']]);
+        $client = $st->fetch();
+        if ($client) {
+            // Une fiche « sans compte » devient un vrai compte ; un compte avec mot de passe le garde
+            $hash = $client['mot_de_passe_hash'] ?: password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
+            $pdo->prepare('UPDATE clients SET google_id = ?, mot_de_passe_hash = ? WHERE id = ?')
+                ->execute([$profil['sub'], $hash, $client['id']]);
+        }
+    }
+
+    if ($client) {
+        google_ouvrir_session_client((int)$client['id']);
+        flash('success', 'Bienvenue ' . e(strtok($client['nom_complet'], ' ')) . ' ! Vous êtes connecté(e) avec Google.');
+        redirect(base_url($retour));
+    }
+
+    // 3. Nouveau client : il ne reste que le numéro de téléphone à demander
+    $_SESSION['google_inscription'] = $profil + ['debut' => time()];
+    redirect(base_url('google-terminer.php'));
 }

@@ -21,6 +21,6 @@ define('MAIL_NOM_EXPEDITEUR', 'Hawa Aïcha Boutique');
 define('FACTURE_CLE_SECRETE', '');
 
 // Connexion avec Google : identifiants OAuth créés sur https://console.cloud.google.com/apis/credentials
-// (type « Application Web », URI de redirection autorisée : <adresse du site>/google-retour.php)
+// (type « Application Web », URI de redirection autorisés : <adresse du site>/connexion.php et <adresse du site>/inscription.php)
 define('GOOGLE_CLIENT_ID', '');
 define('GOOGLE_CLIENT_SECRET', '');

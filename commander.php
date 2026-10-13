@@ -149,7 +149,7 @@ require __DIR__ . '/includes/header.php';
   </div>
 <?php else: ?>
 <?php if (!$client): ?>
-  <div class="alert-compte mb-4"><i class="fa-solid fa-user-circle me-2"></i>Vous avez un compte ? <a href="<?= e(base_url('compte.php?retour=commander.php')) ?>">Connectez-vous</a> pour retrouver vos commandes et factures. <span class="text-muted">Sinon, commandez directement ci-dessous.</span></div>
+  <div class="alert-compte mb-4"><i class="fa-solid fa-user-circle me-2"></i>Vous avez un compte ? <a href="<?= e(base_url('connexion.php?retour=commander.php')) ?>">Connectez-vous</a> pour retrouver vos commandes et factures. <span class="text-muted">Sinon, commandez directement ci-dessous.</span></div>
 <?php endif; ?>
 <form method="post" class="row g-4" novalidate data-envoi-unique>
   <?= csrf_field() ?>

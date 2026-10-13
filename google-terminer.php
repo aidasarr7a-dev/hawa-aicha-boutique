@@ -94,7 +94,7 @@ require __DIR__ . '/includes/header.php';
       <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-circle-info me-1"></i>Vous avez déjà commandé sans compte avec ce numéro ? Vos commandes et factures apparaîtront automatiquement dans votre espace.</p>
     </form>
   </div>
-  <p class="text-center small mt-3"><a href="<?= e(base_url('compte.php')) ?>">Annuler et revenir à la connexion</a></p>
+  <p class="text-center small mt-3"><a href="<?= e(base_url('connexion.php')) ?>">Annuler et revenir à la connexion</a></p>
 </div>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>

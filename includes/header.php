@@ -35,7 +35,7 @@ $liensNav = [
       <span class="lh-1"><span class="brand-text d-block">Hawa Aïcha</span><span class="brand-sous">Boutique</span></span>
     </a>
     <div class="d-flex align-items-center gap-2 order-lg-last">
-      <a class="btn-icone" href="<?= e(base_url($clientNav ? 'mon-compte.php' : 'compte.php')) ?>" aria-label="<?= $clientNav ? 'Mon compte' : 'Se connecter' ?>" title="<?= $clientNav ? 'Mon compte' : 'Se connecter' ?>">
+      <a class="btn-icone" href="<?= e(base_url($clientNav ? 'mon-compte.php' : 'connexion.php')) ?>" aria-label="<?= $clientNav ? 'Mon compte' : 'Se connecter' ?>" title="<?= $clientNav ? 'Mon compte' : 'Se connecter' ?>">
         <i class="fa-regular fa-user"></i><span class="d-none d-xl-inline ms-1"><?= $clientNav ? e(strtok($clientNav['nom_complet'], ' ')) : 'Se connecter' ?></span>
       </a>
       <a class="btn-icone btn-panier position-relative <?= $page === 'panier' ? 'active' : '' ?>" href="<?= e(base_url('panier.php')) ?>" aria-label="Panier" title="Panier">
@@ -51,7 +51,7 @@ $liensNav = [
         <?php foreach ($liensNav as $k => [$href, $label]): ?>
           <li class="nav-item"><a class="nav-link <?= $page === $k ? 'active' : '' ?>" href="<?= e(base_url($href)) ?>"><?= e($label) ?></a></li>
         <?php endforeach; ?>
-        <li class="nav-item d-lg-none"><a class="nav-link <?= $page === 'compte' ? 'active' : '' ?>" href="<?= e(base_url($clientNav ? 'mon-compte.php' : 'compte.php')) ?>"><?= $clientNav ? 'Mon compte' : 'Se connecter / Créer un compte' ?></a></li>
+        <li class="nav-item d-lg-none"><a class="nav-link <?= $page === 'compte' ? 'active' : '' ?>" href="<?= e(base_url($clientNav ? 'mon-compte.php' : 'connexion.php')) ?>"><?= $clientNav ? 'Mon compte' : 'Se connecter / Créer un compte' ?></a></li>
       </ul>
     </div>
   </div>
