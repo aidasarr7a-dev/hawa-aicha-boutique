@@ -109,7 +109,7 @@ function modale_compte(string $mode, array $val, ?array $cible): string
     $id = $ajout ? 'modale-ajout' : 'modale-modif';
     ob_start(); ?>
     <div class="modal fade" id="<?= $id ?>" tabindex="-1" aria-labelledby="<?= $id ?>-titre" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg modal-fullscreen-sm-down">
         <form method="post" class="modal-content admin-modale" autocomplete="off">
           <?= csrf_field() ?>
           <input type="hidden" name="action" value="<?= $ajout ? 'ajouter' : 'modifier' ?>">
@@ -176,12 +176,12 @@ $comptes = $pdo->query("SELECT id, username, prenom, nom, email, telephone, role
 
 <div class="panel panel-table">
   <div class="table-responsive">
-    <table class="table table-rose align-middle">
+    <table class="table table-rose align-middle table-admins">
       <thead><tr><th>Compte</th><th>Contact</th><th>Rôle</th><th>Statut</th><th>Dernière connexion</th><th class="text-end">Actions</th></tr></thead>
       <tbody>
       <?php foreach ($comptes as $c): $estMoi = (int)$c['id'] === $moi; [$rl, $ri] = ROLES_ADMIN[$c['role']] ?? [$c['role'], 'fa-user']; $nc = nom_complet_admin($c); ?>
         <tr class="<?= $c['actif'] ? '' : 'opacity-50' ?>">
-          <td style="min-width:200px">
+          <td class="cel-compte" style="min-width:200px">
             <div class="d-flex align-items-center gap-3">
               <span class="admin-connecte-avatar"><?= e(mb_strtoupper(mb_substr($nc, 0, 1))) ?></span>
               <div class="min-w-0">
@@ -190,11 +190,11 @@ $comptes = $pdo->query("SELECT id, username, prenom, nom, email, telephone, role
               </div>
             </div>
           </td>
-          <td class="small" style="min-width:170px"><?= $c['email'] ? '<a href="mailto:' . e($c['email']) . '">' . e($c['email']) . '</a>' : '—' ?><?= $c['telephone'] ? '<div><a href="tel:' . e($c['telephone']) . '">' . e($c['telephone']) . '</a></div>' : '' ?></td>
-          <td class="text-nowrap"><span class="badge rounded-pill role-<?= e($c['role']) ?>"><i class="fa-solid <?= $ri ?> me-1"></i><?= e($rl) ?></span></td>
-          <td><?= $c['actif'] ? '<span class="badge rounded-pill text-bg-success">Actif</span>' : '<span class="badge rounded-pill text-bg-secondary">Désactivé</span>' ?></td>
-          <td class="small text-nowrap"><?= $c['derniere_connexion'] ? e(date('d/m/Y H:i', strtotime($c['derniere_connexion']))) : 'Jamais' ?></td>
-          <td class="text-end">
+          <td class="small cel-contact" data-label="Contact" style="min-width:170px"><?= $c['email'] ? '<a href="mailto:' . e($c['email']) . '">' . e($c['email']) . '</a>' : '—' ?><?= $c['telephone'] ? '<div><a href="tel:' . e($c['telephone']) . '">' . e($c['telephone']) . '</a></div>' : '' ?></td>
+          <td class="text-nowrap" data-label="Rôle"><span class="badge rounded-pill role-<?= e($c['role']) ?>"><i class="fa-solid <?= $ri ?> me-1"></i><?= e($rl) ?></span></td>
+          <td data-label="Statut"><?= $c['actif'] ? '<span class="badge rounded-pill text-bg-success">Actif</span>' : '<span class="badge rounded-pill text-bg-secondary">Désactivé</span>' ?></td>
+          <td class="small text-nowrap" data-label="Dernière connexion"><?= $c['derniere_connexion'] ? e(date('d/m/Y H:i', strtotime($c['derniere_connexion']))) : 'Jamais' ?></td>
+          <td class="text-end cel-actions">
             <div class="admin-actions">
               <?php if ($estMoi): ?>
                 <a class="btn btn-outline-rose btn-sm text-nowrap" href="profil.php"><i class="fa-solid fa-user-pen me-1"></i>Mon profil</a>

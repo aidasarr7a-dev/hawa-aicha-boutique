@@ -306,3 +306,32 @@
   .profil-form .admin-form-pied { padding: 1.1rem; }
   .admin-modale .modal-header, .admin-modale .modal-body, .admin-modale .modal-footer { padding-left: 1.1rem; padding-right: 1.1rem; }
 }
+
+/* ---------- Administrateurs : le tableau devient une liste de cartes sur tablette et téléphone ---------- */
+@media (max-width: 991.98px) {
+  .table-admins thead { display: none; }
+  .table-admins, .table-admins tbody, .table-admins tr, .table-admins td { display: block; width: 100%; }
+  .table-admins tr {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem 1rem;
+    padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--admin-bord);
+  }
+  .table-admins tbody tr:last-child { border-bottom: 0; }
+  .panel-table .table-admins td, .panel-table .table-admins td:first-child, .panel-table .table-admins td:last-child {
+    padding: 0; border: 0; min-width: 0 !important; white-space: normal; background: none !important;
+  }
+  .table-admins td[data-label]::before {
+    content: attr(data-label); display: block; margin-bottom: .3rem;
+    font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--admin-texte-doux);
+  }
+  .table-admins .cel-compte { grid-column: 1 / -1; }
+  .table-admins .cel-contact { grid-column: 1 / -1; word-break: break-word; }
+  .table-admins .cel-actions { grid-column: 1 / -1; padding-top: .9rem !important; border-top: 1px dashed var(--admin-bord) !important; text-align: left !important; }
+  .table-admins .cel-actions .admin-actions { justify-content: flex-start; flex-wrap: wrap; }
+}
+@media (max-width: 575.98px) {
+  .table-admins tr { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 1.1rem; }
+  .table-admins td[data-label="Rôle"] { grid-column: 1 / -1; }
+  .table-admins .badge { white-space: normal; text-align: left; }
+  .table-admins .cel-actions .btn-ic { width: 40px; height: 40px; }
+  .admin-modale.modal-content { border-radius: 0; }
+}
