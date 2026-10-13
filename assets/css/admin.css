@@ -335,3 +335,32 @@
   .table-admins .cel-actions .btn-ic { width: 40px; height: 40px; }
   .admin-modale.modal-content { border-radius: 0; }
 }
+
+/* ---------- Menu latéral compact : tout le menu tient à l'écran sans faire défiler (ordinateur) ---------- */
+@media (min-width: 992px) {
+  .admin-brand { padding: .85rem 1.2rem .75rem; }
+  .admin-brand img { height: 32px; width: auto; }
+  .admin-brand .brand-text { font-size: 1.05rem; }
+  .admin-menu { padding: .5rem .8rem; }
+  .admin-menu-titre { margin: .65rem .75rem .2rem; font-size: .64rem; }
+  .admin-menu-titre:first-child { margin-top: .15rem; }
+  .admin-menu-lien { padding: .46rem .8rem; margin-bottom: .1rem; font-size: .9rem; }
+  .admin-sidebar-pied { padding: .55rem .8rem .7rem; display: grid; grid-template-columns: 1fr 1fr; gap: .15rem .3rem; }
+  .admin-sidebar-pied .admin-connecte { grid-column: 1 / -1; padding: .3rem .4rem .55rem; margin-bottom: .2rem; }
+  .admin-sidebar-pied .admin-menu-lien { padding: .45rem .5rem; gap: .45rem; font-size: .84rem; margin: 0; white-space: nowrap; }
+  .admin-sidebar-pied .admin-menu-lien i { width: 16px; }
+  .admin-sidebar-pied form { margin: 0; }
+}
+/* Écrans peu hauts (portables) : encore un peu plus serré */
+@media (min-width: 992px) and (max-height: 760px) {
+  .admin-brand { padding-top: .6rem; padding-bottom: .55rem; }
+  .admin-menu-titre { margin-top: .45rem; margin-bottom: .1rem; }
+  .admin-menu-lien { padding-top: .36rem; padding-bottom: .36rem; }
+  .admin-connecte-avatar { width: 30px; height: 30px; font-size: .9rem; }
+}
+/* Très petits écrans : les titres de rubriques deviennent de simples séparateurs */
+@media (min-width: 992px) and (max-height: 660px) {
+  .admin-menu-titre { height: 1px; margin: .35rem .75rem; overflow: hidden; color: transparent; background: var(--admin-bord); }
+  .admin-menu-titre:first-child { display: none; }
+  .admin-menu-lien { padding-top: .32rem; padding-bottom: .32rem; }
+}
