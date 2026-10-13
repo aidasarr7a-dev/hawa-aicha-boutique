@@ -11,8 +11,11 @@ CREATE TABLE IF NOT EXISTS admins (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
   nom VARCHAR(100) NOT NULL DEFAULT 'Administrateur',
-  email VARCHAR(150) NULL,
+  email VARCHAR(150) NULL UNIQUE,
+  role ENUM('principal', 'employe') NOT NULL DEFAULT 'employe',
+  actif TINYINT(1) NOT NULL DEFAULT 1,
   password_hash VARCHAR(255) NOT NULL,
+  derniere_connexion DATETIME NULL,
   date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -139,8 +142,8 @@ CREATE TABLE IF NOT EXISTS messages_contact (
 
 -- Administrateur de démonstration : identifiant « admin », mot de passe « HawaDemo2026! »
 -- ⚠ À changer dès la première connexion (menu « Mot de passe »).
-INSERT INTO admins (username, nom, password_hash) VALUES
-  ('admin', 'Administrateur', '$2y$10$z5JFCbnxchAcr38xpBNUueShi5wP.QGjsiRREr2PTyl3QCKaAzqvW');
+INSERT INTO admins (username, nom, role, password_hash) VALUES
+  ('admin', 'Administrateur', 'principal', '$2y$10$z5JFCbnxchAcr38xpBNUueShi5wP.QGjsiRREr2PTyl3QCKaAzqvW');
 
 INSERT INTO categories (id, nom, icone) VALUES
   (1, 'Parfums', 'fa-spray-can-sparkles'),

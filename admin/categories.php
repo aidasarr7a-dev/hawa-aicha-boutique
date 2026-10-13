@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flash('success', 'Catégorie modifiée.');
         }
     } elseif ($action === 'delete' && $id > 0) {
+        exiger_principal('categories.php', 'Seul l\'administrateur principal peut supprimer une catégorie.');
         $pdo->prepare('UPDATE produits SET categorie_id = NULL WHERE categorie_id = ?')->execute([$id]);
         $pdo->prepare('DELETE FROM categories WHERE id = ?')->execute([$id]);
         flash('success', 'Catégorie supprimée. Ses produits sont conservés (sans catégorie).');
@@ -89,10 +90,12 @@ function icone_select(string $courant): string
                     <?= icone_select($c['icone']) ?>
                     <button class="btn btn-outline-rose btn-sm btn-ic" title="Enregistrer"><i class="fa-solid fa-check"></i></button>
                   </form>
+                  <?php if (est_principal()): ?>
                   <form method="post" data-confirm-titre="Supprimer la catégorie ?" data-confirm="Ses produits seront conservés, sans catégorie. Cette action est définitive." data-confirm-ok="Supprimer">
                     <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
                     <button class="btn btn-outline-danger btn-sm btn-ic" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
                   </form>
+                  <?php endif; ?>
                 </div>
               </td>
             </tr>

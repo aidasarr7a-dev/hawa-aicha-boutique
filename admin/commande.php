@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flash('danger', 'Impossible de modifier le statut.');
         }
     } elseif ($action === 'frais') {
+        exiger_principal($retour, 'Seul l\'administrateur principal peut modifier les montants d\'une commande.');
         $frais = max(0, (int)preg_replace('/\D/', '', (string)($_POST['frais_livraison'] ?? '0')));
         if (in_array($cmd['statut'], ['annulee', 'livree'], true) || ($paiement && $paiement['statut_paiement'] !== 'en_attente')) {
             flash('warning', 'Les frais ne peuvent être modifiés que pour une commande en cours dont le paiement est en attente.');
@@ -90,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flash('success', 'Frais de livraison enregistrés · nouveau total : ' . fcfa($sousTotal + $frais) . '.');
         }
     } elseif (str_starts_with($action, 'paiement_') && $paiement) {
+        exiger_principal($retour, 'Seul l\'administrateur principal peut modifier les informations de paiement.');
         $actuel = $paiement['statut_paiement'];
         if ($action === 'paiement_confirmer' && $actuel === 'en_attente') {
             $mode = $_POST['mode_paiement'] ?? $paiement['mode_paiement'];
@@ -128,6 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flash('warning', 'Cette action n\'est pas possible pour le statut de paiement actuel.');
         }
     } elseif ($action === 'delete') {
+        exiger_principal($retour, 'Seul l\'administrateur principal peut supprimer une commande.');
         if ($cmd['statut'] !== 'annulee') {
             flash('warning', 'Seule une commande annulée peut être supprimée (les commandes livrées sont conservées pour l\'historique des ventes).');
         } else {
@@ -186,7 +189,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
           </tfoot>
         </table>
       </div>
-      <?php if ($modifiable): ?>
+      <?php if ($modifiable && est_principal()): ?>
         <form method="post" class="d-flex flex-wrap align-items-end gap-2 mt-3">
           <?= csrf_field() ?><input type="hidden" name="action" value="frais"><input type="hidden" name="id" value="<?= (int)$id ?>">
           <div><label class="form-label small mb-1" for="frais_livraison">Frais de livraison (FCFA)</label>
@@ -211,7 +214,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
           <button class="btn btn-rose">Mettre à jour</button>
         </form>
       <?php endif; ?>
-      <?php if ($cmd['statut'] === 'annulee'): ?>
+      <?php if ($cmd['statut'] === 'annulee' && est_principal()): ?>
         <form method="post" class="mt-3" data-confirm-titre="Supprimer la commande ?" data-confirm="La commande <?= e($cmd['numero_commande']) ?> (annulée) sera supprimée définitivement." data-confirm-ok="Supprimer">
           <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$id ?>">
           <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash-can me-1"></i>Supprimer la commande</button>
@@ -235,7 +238,9 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
           <?php if ($paiement['note']): ?><div><dt>Note</dt><dd><?= e($paiement['note']) ?></dd></div><?php endif; ?>
         </dl>
 
-        <?php if ($statutPaiement === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
+        <?php if (!est_principal()): ?>
+          <p class="admin-info mb-0"><i class="fa-solid fa-lock"></i><span>Consultation seule : la confirmation, l'échec et le remboursement des paiements sont réservés à l'administrateur principal.</span></p>
+        <?php elseif ($statutPaiement === 'en_attente' && $cmd['statut'] !== 'annulee'): ?>
           <div class="alert alert-warning rounded-4 small py-2">Ne confirmez qu'après avoir <strong>vérifié la réception réelle</strong> de l'argent (message Wave / Orange Money reçu, ou espèces remises).</div>
           <form method="post" class="row g-2 mb-3" data-confirm-type="rose" data-confirm-titre="Confirmer le paiement ?" data-confirm="Confirmez-vous avoir réellement reçu <?= e(fcfa($cmd['total'])) ?> pour cette commande ?" data-confirm-ok="Oui, paiement reçu">
             <?= csrf_field() ?><input type="hidden" name="action" value="paiement_confirmer"><input type="hidden" name="id" value="<?= (int)$id ?>">

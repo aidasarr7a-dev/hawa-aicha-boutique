@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo = db();
 
     if ($action === 'delete' && $id > 0) {
+        exiger_principal('produits.php', 'Seul l\'administrateur principal peut supprimer un produit.');
         $st = $pdo->prepare('SELECT image FROM produits WHERE id = ?');
         $st->execute([$id]);
         $img = $st->fetchColumn();
@@ -107,10 +108,12 @@ $produits = $st->fetchAll();
           <td class="text-end">
             <div class="admin-actions">
               <a class="btn btn-outline-rose btn-sm btn-ic" href="produit_form.php?id=<?= (int)$p['id'] ?>" title="Modifier"><i class="fa-solid fa-pen"></i></a>
+              <?php if (est_principal()): ?>
               <form method="post" data-confirm-titre="Supprimer ce produit ?" data-confirm="« <?= e($p['nom']) ?> » sera retiré définitivement du catalogue, avec sa photo." data-confirm-ok="Supprimer">
                 <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
                 <button class="btn btn-outline-danger btn-sm btn-ic" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
               </form>
+              <?php endif; ?>
             </div>
           </td>
         </tr>

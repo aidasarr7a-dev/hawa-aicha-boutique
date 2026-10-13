@@ -26,15 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st->execute([$user, $user]);
         $admin = $st->fetch();
 
-        if ($admin && password_verify($pass, $admin['password_hash'])) {
+        $motDePasseOk = $admin && password_verify($pass, $admin['password_hash']);
+        if ($motDePasseOk && !(int)$admin['actif']) {
+            // Mot de passe correct mais compte désactivé par l'administrateur principal
+            $erreur = 'Ce compte est désactivé. Contactez l\'administrateur principal de la boutique.';
+        } elseif ($motDePasseOk) {
             $pdo->prepare('DELETE FROM tentatives_connexion WHERE ip = ?')->execute([$ip]);
+            $pdo->prepare('UPDATE admins SET derniere_connexion = NOW() WHERE id = ?')->execute([$admin['id']]);
             session_regenerate_id(true);
             $_SESSION['admin_id'] = (int)$admin['id'];
             $_SESSION['admin_nom'] = $admin['nom'] ?: $admin['username'];
+            $_SESSION['admin_role'] = $admin['role'];
             redirect('index.php');
         }
-        $pdo->prepare('INSERT INTO tentatives_connexion (ip) VALUES (?)')->execute([$ip]);
-        $erreur = 'Identifiant ou mot de passe incorrect.';
+        if ($erreur === '') {
+            $pdo->prepare('INSERT INTO tentatives_connexion (ip) VALUES (?)')->execute([$ip]);
+            $erreur = 'Identifiant ou mot de passe incorrect.';
+        }
     }
 }
 ?><!DOCTYPE html>
@@ -60,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <p class="text-muted small"><?= e(SITE_NAME) ?></p>
     </div>
     <div class="panel">
+      <?= flash_render() ?>
       <?php if ($erreur): ?><div class="alert alert-danger rounded-4 py-2"><?= e($erreur) ?></div><?php endif; ?>
       <form method="post">
         <?= csrf_field() ?>

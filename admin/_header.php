@@ -18,9 +18,13 @@ $sections = [
         'messages'   => ['messages.php',   'fa-envelope',    'Messages'],
     ],
     'Mon compte' => [
-        'mdp'        => ['motdepasse.php', 'fa-key',         'Mot de passe'],
+        'profil'     => ['profil.php',     'fa-user-gear',   'Mon profil'],
     ],
 ];
+// Gestion des comptes : rubrique visible uniquement pour l'administrateur principal (la page vérifie aussi le rôle)
+if (est_principal()) {
+    $sections['Mon compte']['admins'] = ['administrateurs.php', 'fa-users-gear', 'Administrateurs'];
+}
 $nbMessagesNonLus = (int)db()->query('SELECT COUNT(*) FROM messages_contact WHERE lu = 0')->fetchColumn();
 $nbPaiementsDeclares = (int)db()->query("SELECT COUNT(*) FROM paiements WHERE statut_paiement = 'en_attente' AND date_declaration IS NOT NULL")->fetchColumn();
 $pastilles = ['messages' => $nbMessagesNonLus, 'paiements' => $nbPaiementsDeclares];
@@ -61,6 +65,10 @@ $pastilles = ['messages' => $nbMessagesNonLus, 'paiements' => $nbPaiementsDeclar
       <?php endforeach; ?>
     </nav>
     <div class="admin-sidebar-pied">
+      <a class="admin-connecte" href="profil.php" title="Mon profil">
+        <span class="admin-connecte-avatar"><?= e(mb_strtoupper(mb_substr($_SESSION['admin_nom'] ?? 'A', 0, 1))) ?></span>
+        <span class="min-w-0"><strong class="d-block text-truncate"><?= e($_SESSION['admin_nom'] ?? '') ?></strong><small><?= e(ROLES_ADMIN[$adminConnecte['role']][0] ?? '') ?></small></span>
+      </a>
       <a class="admin-menu-lien" href="<?= e(base_url('index.php')) ?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Voir le site</span></a>
       <form method="post" action="logout.php"><?= csrf_field() ?><button class="admin-menu-lien admin-deconnexion"><i class="fa-solid fa-right-from-bracket"></i><span>Déconnexion</span></button></form>
     </div>

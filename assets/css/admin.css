@@ -264,3 +264,16 @@
 .admin-body .btn-danger-doux { background: #C0392B; color: #fff; border: 0; box-shadow: 0 6px 16px rgba(192, 57, 43, .22); }
 .admin-body .btn-danger-doux:hover, .admin-body .btn-danger-doux:focus-visible { background: #A93226; color: #fff; }
 .admin-body .modal-backdrop { --bs-backdrop-opacity: .35; }
+
+/* ---------- Comptes administrateurs ---------- */
+.admin-body .badge.role-principal { background: var(--rose-saumon); color: var(--rose-dark); }
+.admin-body .badge.role-employe { background: #fff; color: var(--muted); border: 1px solid var(--admin-bord); }
+.profil-carte { text-align: center; }
+.profil-avatar, .admin-connecte-avatar { display: grid; place-items: center; flex: none; border-radius: 50%; background: var(--rose-pastel); color: var(--rose-dark); font-family: 'Playfair Display', serif; font-weight: 700; }
+.profil-avatar { width: 76px; height: 76px; margin: .25rem auto 1rem; font-size: 1.9rem; box-shadow: 0 0 0 5px var(--rose-bg); }
+.admin-connecte { display: flex; align-items: center; gap: .7rem; padding: .6rem .8rem .9rem; margin-bottom: .5rem; border-bottom: 1px solid var(--admin-bord); color: var(--ink); }
+.admin-connecte:hover { color: var(--rose-dark); }
+.admin-connecte-avatar { width: 36px; height: 36px; font-size: 1rem; }
+.admin-connecte strong { font-size: .88rem; font-weight: 600; }
+.admin-connecte small { color: var(--admin-texte-doux); font-size: .75rem; }
+.panel p.admin-info { margin-bottom: 0; }
