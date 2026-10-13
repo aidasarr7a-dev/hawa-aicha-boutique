@@ -6,6 +6,11 @@ Options -Indexes
   Require all denied
 </FilesMatch>
 
+# Configuration (dont la configuration privée : mot de passe e-mail, clé secrète) : jamais servie au public
+<FilesMatch "^config(\.local)?(\.exemple)?\.php$">
+  Require all denied
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^(migrations|\.git)(/|$) - [F,L]

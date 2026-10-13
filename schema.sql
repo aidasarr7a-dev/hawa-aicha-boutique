@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS commandes (
   nom VARCHAR(100) NOT NULL DEFAULT '',
   prenom VARCHAR(100) NOT NULL DEFAULT '',
   telephone VARCHAR(30) NOT NULL,
+  email VARCHAR(150) NULL,
+  facture_envoyee_le DATETIME NULL,
   ville VARCHAR(100) NOT NULL,
   adresse_livraison VARCHAR(255) NULL,
   quartier VARCHAR(150) NOT NULL DEFAULT '',

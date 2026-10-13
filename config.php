@@ -52,6 +52,19 @@ define('MODES_LIVRAISON', ['Livraison à domicile', 'Retrait en boutique']);
 // Seuil d'alerte « à réapprovisionner »
 define('SEUIL_STOCK', 3);
 
+// --- Envoi des factures par e-mail ---
+// Les réglages secrets (mot de passe d'application Gmail, clé de signature des liens) sont dans
+// config.local.php : ce fichier n'est pas enregistré dans Git (modèle : config.local.exemple.php).
+if (is_file(__DIR__ . '/config.local.php')) {
+    require __DIR__ . '/config.local.php';
+}
+defined('MAIL_SMTP_HOTE')        || define('MAIL_SMTP_HOTE', 'smtp.gmail.com');
+defined('MAIL_SMTP_PORT')        || define('MAIL_SMTP_PORT', 587);
+defined('MAIL_UTILISATEUR')      || define('MAIL_UTILISATEUR', '');   // adresse Gmail qui envoie
+defined('MAIL_MOT_DE_PASSE')     || define('MAIL_MOT_DE_PASSE', '');  // mot de passe d'application Gmail (16 lettres)
+defined('MAIL_NOM_EXPEDITEUR')   || define('MAIL_NOM_EXPEDITEUR', 'Hawa Aïcha Boutique');
+defined('FACTURE_CLE_SECRETE')   || define('FACTURE_CLE_SECRETE', '');  // signe les liens « voir ma facture » des e-mails
+
 // --- Détection automatique du dossier du site (ne pas modifier en général) ---
 $__root = realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '';
 $__dir  = realpath(__DIR__) ?: __DIR__;
