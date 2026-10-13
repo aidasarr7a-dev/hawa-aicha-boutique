@@ -277,3 +277,32 @@
 .admin-connecte strong { font-size: .88rem; font-weight: 600; }
 .admin-connecte small { color: var(--admin-texte-doux); font-size: .75rem; }
 .panel p.admin-info { margin-bottom: 0; }
+
+/* ---------- Fenêtres de formulaire (administrateurs) ---------- */
+.admin-modale { border: 0; border-radius: 1.4rem; box-shadow: 0 24px 60px rgba(var(--rose-profond-rgb), .22); }
+.admin-modale .modal-header { padding: 1.4rem 1.6rem 1.1rem; border-bottom: 1px solid var(--admin-bord); align-items: flex-start; }
+.admin-modale .modal-title { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.1rem; color: var(--titre); margin-bottom: .15rem; }
+.admin-modale .modal-body { padding: 1.4rem 1.6rem; }
+.admin-modale .modal-footer { padding: 1rem 1.6rem 1.4rem; border-top: 1px solid var(--admin-bord); gap: .5rem; }
+.admin-modale-ic { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--rose-pastel); color: var(--rose-dark); font-size: 1.05rem; }
+
+/* ---------- Champ mot de passe avec bouton « afficher » ---------- */
+.champ-mdp .form-control { border-right: 0; }
+.admin-body .champ-mdp .form-control { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.btn-voir-mdp { border: 1px solid #e8d7df; border-left: 0; border-radius: 0 .75rem .75rem 0 !important; background: #fff; color: var(--admin-texte-doux); padding: 0 .9rem; }
+.btn-voir-mdp:hover, .btn-voir-mdp:focus-visible { color: var(--rose-dark); background: var(--rose-bg); }
+.champ-mdp .form-control:focus + .btn-voir-mdp { border-color: var(--rose); }
+
+/* ---------- Formulaire « Mon profil » ---------- */
+.admin-body .panel.profil-form { padding: 0; overflow: hidden; }
+.profil-bloc { padding: 1.5rem 1.75rem; border-bottom: 1px solid var(--admin-bord); }
+.profil-bloc h2 { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+.profil-bloc h2 i { display: grid; place-items: center; width: 32px; height: 32px; border-radius: .6rem; background: var(--rose-pastel); color: var(--rose-dark); font-size: .85rem; }
+.profil-bloc h2 + p { margin-top: -.4rem; }
+.profil-confirmation { background: var(--rose-bg); }
+.profil-form .admin-form-pied { margin: 0; padding: 1.25rem 1.75rem 1.5rem; border-top: 0; }
+@media (max-width: 575.98px) {
+  .profil-bloc { padding: 1.25rem 1.1rem; }
+  .profil-form .admin-form-pied { padding: 1.1rem; }
+  .admin-modale .modal-header, .admin-modale .modal-body, .admin-modale .modal-footer { padding-left: 1.1rem; padding-right: 1.1rem; }
+}

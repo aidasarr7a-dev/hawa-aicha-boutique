@@ -117,7 +117,35 @@
     demanderConfirmation(form, ev.submitter || null);
   });
 
+  // Bouton « afficher / masquer » des champs mot de passe
+  document.addEventListener('click', function (ev) {
+    var bouton = ev.target.closest('[data-voir-mdp]');
+    if (!bouton) return;
+    var champ = document.getElementById(bouton.dataset.voirMdp);
+    if (!champ) return;
+    var visible = champ.type === 'password';
+    champ.type = visible ? 'text' : 'password';
+    bouton.querySelector('i').className = visible ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+    var libelle = visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe';
+    bouton.setAttribute('aria-label', libelle);
+    bouton.title = libelle;
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('#admin-toasts .toast').forEach(montrer);
+
+    // Fenêtre à rouvrir automatiquement (modification demandée ou formulaire renvoyé avec des erreurs)
+    var aOuvrir = document.querySelector('[data-ouvrir-modale]');
+    if (aOuvrir) {
+      var modaleAuto = document.querySelector(aOuvrir.dataset.ouvrirModale);
+      if (modaleAuto) bootstrap.Modal.getOrCreateInstance(modaleAuto).show();
+    }
+    // Fermer la fenêtre de modification retire « ?modifier=… » de l'adresse
+    var modif = document.getElementById('modale-modif');
+    if (modif && window.history.replaceState) {
+      modif.addEventListener('hidden.bs.modal', function () {
+        window.history.replaceState(null, '', window.location.pathname);
+      });
+    }
   });
 })();

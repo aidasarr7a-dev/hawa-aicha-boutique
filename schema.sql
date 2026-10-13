@@ -10,8 +10,10 @@ USE hawa_aicha;
 CREATE TABLE IF NOT EXISTS admins (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  prenom VARCHAR(100) NULL,
   nom VARCHAR(100) NOT NULL DEFAULT 'Administrateur',
   email VARCHAR(150) NULL UNIQUE,
+  telephone VARCHAR(30) NULL,
   role ENUM('principal', 'employe') NOT NULL DEFAULT 'employe',
   actif TINYINT(1) NOT NULL DEFAULT 1,
   password_hash VARCHAR(255) NOT NULL,

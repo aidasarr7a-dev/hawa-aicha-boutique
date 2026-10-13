@@ -12,7 +12,7 @@ function require_admin(): void
     if (empty($_SESSION['admin_id'])) {
         redirect(base_url('admin/login.php'));
     }
-    $st = db()->prepare('SELECT id, username, nom, email, role, actif, derniere_connexion, date_creation FROM admins WHERE id = ?');
+    $st = db()->prepare('SELECT id, username, prenom, nom, email, telephone, role, actif, derniere_connexion, date_creation FROM admins WHERE id = ?');
     $st->execute([(int)$_SESSION['admin_id']]);
     $adminConnecte = $st->fetch() ?: null;
     if (!$adminConnecte || !(int)$adminConnecte['actif']) {
@@ -21,7 +21,7 @@ function require_admin(): void
         flash('warning', 'Votre compte administrateur est désactivé ou n\'existe plus.');
         redirect(base_url('admin/login.php'));
     }
-    $_SESSION['admin_nom'] = $adminConnecte['nom'] ?: $adminConnecte['username'];
+    $_SESSION['admin_nom'] = trim(($adminConnecte['prenom'] ?? '') . ' ' . $adminConnecte['nom']) ?: $adminConnecte['username'];
     $_SESSION['admin_role'] = $adminConnecte['role'];
 }
 

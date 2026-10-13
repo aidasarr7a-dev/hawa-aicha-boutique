@@ -33,8 +33,14 @@ function erreurs_compte(array $v, int $idExclu = 0): array
             return ['Certains caractères envoyés sont invalides. Merci de ressaisir le formulaire.'];
         }
     }
+    if (mb_strlen($v['prenom']) < 2 || mb_strlen($v['prenom']) > 100) {
+        $erreurs[] = 'Le prénom doit contenir entre 2 et 100 caractères.';
+    }
     if (mb_strlen($v['nom']) < 2 || mb_strlen($v['nom']) > 100) {
         $erreurs[] = 'Le nom doit contenir entre 2 et 100 caractères.';
+    }
+    if ($v['telephone'] !== '' && !preg_match('/^\+?[0-9 .\-()]{6,30}$/', $v['telephone'])) {
+        $erreurs[] = 'Le numéro de téléphone n\'est pas valide (chiffres, espaces et + uniquement).';
     }
     if (!preg_match('/^[A-Za-z0-9._-]{3,50}$/', $v['username'])) {
         $erreurs[] = 'Le nom d\'utilisateur doit contenir 3 à 50 caractères : lettres sans accent, chiffres, point, tiret ou tiret bas.';
@@ -69,8 +75,26 @@ function nb_principaux_actifs(): int
 function champs_compte(): array
 {
     return [
-        'nom'      => trim((string)($_POST['nom'] ?? '')),
-        'username' => trim((string)($_POST['username'] ?? '')),
-        'email'    => mb_strtolower(trim((string)($_POST['email'] ?? ''))),
+        'prenom'    => trim((string)($_POST['prenom'] ?? '')),
+        'nom'       => trim((string)($_POST['nom'] ?? '')),
+        'username'  => trim((string)($_POST['username'] ?? '')),
+        'email'     => mb_strtolower(trim((string)($_POST['email'] ?? ''))),
+        'telephone' => trim((string)($_POST['telephone'] ?? '')),
     ];
+}
+
+/** Nom affiché d'un compte : « Prénom Nom », ou l'identifiant à défaut. */
+function nom_complet_admin(array $a): string
+{
+    $complet = trim(($a['prenom'] ?? '') . ' ' . ($a['nom'] ?? ''));
+    return $complet !== '' ? $complet : (string)($a['username'] ?? '');
+}
+
+/** Champ mot de passe avec bouton « afficher / masquer » (géré par admin.js). */
+function champ_mot_de_passe(string $id, string $name, string $autocomplete, bool $requis = false, string $attrs = ''): string
+{
+    return '<div class="input-group champ-mdp">'
+         . '<input class="form-control" id="' . e($id) . '" name="' . e($name) . '" type="password" autocomplete="' . e($autocomplete) . '"' . ($requis ? ' required' : '') . ' ' . $attrs . '>'
+         . '<button class="btn btn-voir-mdp" type="button" data-voir-mdp="' . e($id) . '" aria-label="Afficher le mot de passe" title="Afficher le mot de passe"><i class="fa-regular fa-eye"></i></button>'
+         . '</div>';
 }

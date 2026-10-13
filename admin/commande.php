@@ -13,7 +13,7 @@ function charger_commande(PDO $pdo, int $id): ?array
 
 function charger_paiement(PDO $pdo, int $id): ?array
 {
-    $st = $pdo->prepare('SELECT pa.*, a.nom AS confirme_par_nom FROM paiements pa LEFT JOIN admins a ON a.id = pa.confirme_par WHERE pa.commande_id = ?');
+    $st = $pdo->prepare('SELECT pa.*, CONCAT_WS(\' \', a.prenom, a.nom) AS confirme_par_nom FROM paiements pa LEFT JOIN admins a ON a.id = pa.confirme_par WHERE pa.commande_id = ?');
     $st->execute([$id]);
     return $st->fetch() ?: null;
 }

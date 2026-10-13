@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare('UPDATE admins SET derniere_connexion = NOW() WHERE id = ?')->execute([$admin['id']]);
             session_regenerate_id(true);
             $_SESSION['admin_id'] = (int)$admin['id'];
-            $_SESSION['admin_nom'] = $admin['nom'] ?: $admin['username'];
+            $_SESSION['admin_nom'] = trim(($admin['prenom'] ?? '') . ' ' . $admin['nom']) ?: $admin['username'];
             $_SESSION['admin_role'] = $admin['role'];
             redirect('index.php');
         }
