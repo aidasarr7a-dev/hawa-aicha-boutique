@@ -186,6 +186,21 @@ function info_paiement(string $mode): array
 }
 
 /** Consignes de paiement affichées au client selon le mode choisi (HTML). */
+/**
+ * Lien de paiement Wave Business avec le montant de la commande déjà rempli.
+ * Le montant vient toujours de la base (total calculé par le serveur), jamais du navigateur.
+ * Renvoie '' si aucun lien marchand valide n'est configuré.
+ */
+function lien_paiement_wave(int $montant): string
+{
+    $base = trim(WAVE_LIEN_PAIEMENT);
+    if ($montant <= 0 || !preg_match('#^https://pay\.wave\.com/m/[A-Za-z0-9_-]+#', $base, $m)) {
+        return '';
+    }
+    // XOF : montant entier, sans décimales ni séparateurs
+    return $m[0] . '?amount=' . $montant;
+}
+
 function instructions_paiement(string $mode, int $montant, string $numeroCommande): string
 {
     $comptes = ['Wave' => WAVE_NUMERO, 'Orange Money' => ORANGE_MONEY_NUMERO];
@@ -235,8 +250,9 @@ function bloc_payer(array $cmd, array $paiement): void
               <div class="qr-code"></div>
               <small><strong>Vous êtes sur ordinateur ?</strong><br>Scannez ce code avec votre téléphone : il compose #144# pour payer avec Orange Money.</small>
             </div>
-          <?php elseif ($mode === 'Wave' && WAVE_LIEN_PAIEMENT !== ''): ?>
-            <a class="btn btn-pay-wave btn-lg w-100" href="<?= e(WAVE_LIEN_PAIEMENT) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-2"></i>Payer avec Wave</a>
+          <?php elseif ($mode === 'Wave' && ($lienWave = lien_paiement_wave((int)$cmd['total'])) !== ''): ?>
+            <a class="btn btn-pay-wave btn-lg w-100" href="<?= e($lienWave) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-2"></i>Payer <?= fcfa($cmd['total']) ?> avec Wave</a>
+            <small class="d-block text-muted mt-2"><i class="fa-solid fa-circle-info me-1"></i>La page Wave s'ouvre avec le montant déjà rempli. Après le paiement, indiquez ci-dessous la référence reçue par SMS.</small>
           <?php else: ?>
             <a class="btn btn-pay-wave btn-lg w-100" href="https://www.wave.com/fr/" data-ouvrir-wave target="_blank" rel="noopener"><i class="fa-solid fa-mobile-screen me-2"></i>Payer avec Wave · ouvrir l'application</a>
             <small class="d-block text-muted mt-2"><i class="fa-solid fa-circle-info me-1"></i>Dans Wave, touchez « Envoyer », collez le numéro ci-dessus puis le montant.</small>
