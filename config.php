@@ -66,7 +66,7 @@ defined('MAIL_NOM_EXPEDITEUR')   || define('MAIL_NOM_EXPEDITEUR', 'Hawa Aïcha B
 defined('FACTURE_CLE_SECRETE')   || define('FACTURE_CLE_SECRETE', '');  // signe les liens « voir ma facture » des e-mails
 
 // --- Connexion des clients avec Google (identifiants OAuth, dans config.local.php) ---
-// Tant qu'ils sont vides, le bouton « Continuer avec Google » n'apparaît pas.
+// Tant qu'ils sont vides, le bouton « Continuer avec Google » affiche « bientôt disponible » au clic.
 defined('GOOGLE_CLIENT_ID')      || define('GOOGLE_CLIENT_ID', '');
 defined('GOOGLE_CLIENT_SECRET')  || define('GOOGLE_CLIENT_SECRET', '');
 
