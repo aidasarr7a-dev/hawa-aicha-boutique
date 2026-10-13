@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $adminPage = 'profil';
 $titre = 'Mon profil';
 require __DIR__ . '/_header.php';
-[$roleLibelle, $roleIcone] = ROLES_ADMIN[$adminConnecte['role']] ?? [$adminConnecte['role'], 'fa-user'];
+$roleLibelle = ROLES_ADMIN[$adminConnecte['role']][0] ?? $adminConnecte['role'];
 $nomAffiche = nom_complet_admin($adminConnecte);
 ?>
 
@@ -78,7 +78,7 @@ $nomAffiche = nom_complet_admin($adminConnecte);
     <div class="panel profil-carte">
       <div class="profil-avatar"><?= e(mb_strtoupper(mb_substr($nomAffiche, 0, 1))) ?></div>
       <div class="cellule-principale fs-5"><?= e($nomAffiche) ?></div>
-      <span class="badge rounded-pill role-<?= e($adminConnecte['role']) ?> mt-2"><i class="fa-solid <?= $roleIcone ?> me-1"></i><?= e($roleLibelle) ?></span>
+      <span class="badge rounded-pill role-<?= e($adminConnecte['role']) ?> mt-2"><?= e($roleLibelle) ?></span>
       <dl class="admin-fiche text-start mt-4">
         <div><dt>Nom d'utilisateur</dt><dd><?= e($adminConnecte['username']) ?></dd></div>
         <div><dt>E-mail</dt><dd><?= e($adminConnecte['email'] ?: '—') ?></dd></div>
@@ -94,7 +94,7 @@ $nomAffiche = nom_complet_admin($adminConnecte);
       <?= csrf_field() ?>
 
       <section class="profil-bloc">
-        <h2 class="h5"><i class="fa-solid fa-id-card"></i>Identité</h2>
+        <h2 class="h5">Identité</h2>
         <div class="row g-3">
           <div class="col-md-6"><label class="form-label" for="prenom">Prénom</label><input class="form-control" id="prenom" name="prenom" value="<?= e($val['prenom']) ?>" required maxlength="100" autocomplete="given-name"></div>
           <div class="col-md-6"><label class="form-label" for="nom">Nom</label><input class="form-control" id="nom" name="nom" value="<?= e($val['nom']) ?>" required maxlength="100" autocomplete="family-name"></div>
@@ -103,7 +103,7 @@ $nomAffiche = nom_complet_admin($adminConnecte);
       </section>
 
       <section class="profil-bloc">
-        <h2 class="h5"><i class="fa-solid fa-right-to-bracket"></i>Connexion</h2>
+        <h2 class="h5">Connexion</h2>
         <p class="text-muted small">Votre nom d'utilisateur et votre e-mail servent tous deux à vous connecter.</p>
         <div class="row g-3">
           <div class="col-md-6"><label class="form-label" for="username">Nom d'utilisateur</label><input class="form-control" id="username" name="username" value="<?= e($val['username']) ?>" required maxlength="50" pattern="[A-Za-z0-9._\-]{3,50}" autocomplete="username"></div>
@@ -112,7 +112,7 @@ $nomAffiche = nom_complet_admin($adminConnecte);
       </section>
 
       <section class="profil-bloc">
-        <h2 class="h5"><i class="fa-solid fa-key"></i>Mot de passe</h2>
+        <h2 class="h5">Mot de passe</h2>
         <p class="text-muted small">Laissez ces deux champs vides pour garder votre mot de passe actuel. Sinon : <?= MDP_LONGUEUR_MIN ?> caractères minimum, avec au moins une lettre et un chiffre.</p>
         <div class="row g-3">
           <div class="col-md-6"><label class="form-label" for="nouveau">Nouveau mot de passe</label><?= champ_mot_de_passe('nouveau', 'nouveau', 'new-password', false, 'minlength="' . MDP_LONGUEUR_MIN . '"') ?></div>
@@ -126,11 +126,11 @@ $nomAffiche = nom_complet_admin($adminConnecte);
             <label class="form-label" for="actuel">Mot de passe actuel</label>
             <?= champ_mot_de_passe('actuel', 'actuel', 'current-password') ?>
           </div>
-          <div class="col-md-6"><p class="text-muted small mb-md-2 mb-0"><i class="fa-solid fa-shield-halved me-1"></i>Obligatoire uniquement pour changer d'identifiant, d'e-mail ou de mot de passe.</p></div>
+          <div class="col-md-6"><p class="text-muted small mb-md-2 mb-0">Obligatoire uniquement pour changer d'identifiant, d'e-mail ou de mot de passe.</p></div>
         </div>
       </section>
 
-      <div class="admin-form-pied"><button class="btn btn-rose px-4"><i class="fa-solid fa-floppy-disk me-1"></i>Enregistrer mon profil</button></div>
+      <div class="admin-form-pied"><button class="btn btn-rose px-4">Enregistrer mon profil</button></div>
     </form>
   </div>
 </div>
