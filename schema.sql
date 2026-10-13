@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS clients (
   telephone VARCHAR(30) NOT NULL,
   email VARCHAR(150) NULL,
   mot_de_passe_hash VARCHAR(255) NULL,
+  google_id VARCHAR(64) NULL UNIQUE,
   adresse VARCHAR(255) NULL,
   ville VARCHAR(100) NULL,
   date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

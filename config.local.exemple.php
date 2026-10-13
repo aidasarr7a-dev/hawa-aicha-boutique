@@ -19,3 +19,8 @@ define('MAIL_NOM_EXPEDITEUR', 'Hawa Aïcha Boutique');
 
 // Clé secrète qui signe les liens « Voir ma facture » envoyés par e-mail (longue chaîne aléatoire).
 define('FACTURE_CLE_SECRETE', '');
+
+// Connexion avec Google : identifiants OAuth créés sur https://console.cloud.google.com/apis/credentials
+// (type « Application Web », URI de redirection autorisée : <adresse du site>/google-retour.php)
+define('GOOGLE_CLIENT_ID', '');
+define('GOOGLE_CLIENT_SECRET', '');

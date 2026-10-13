@@ -65,6 +65,11 @@ defined('MAIL_MOT_DE_PASSE')     || define('MAIL_MOT_DE_PASSE', '');  // mot de 
 defined('MAIL_NOM_EXPEDITEUR')   || define('MAIL_NOM_EXPEDITEUR', 'Hawa Aïcha Boutique');
 defined('FACTURE_CLE_SECRETE')   || define('FACTURE_CLE_SECRETE', '');  // signe les liens « voir ma facture » des e-mails
 
+// --- Connexion des clients avec Google (identifiants OAuth, dans config.local.php) ---
+// Tant qu'ils sont vides, le bouton « Continuer avec Google » n'apparaît pas.
+defined('GOOGLE_CLIENT_ID')      || define('GOOGLE_CLIENT_ID', '');
+defined('GOOGLE_CLIENT_SECRET')  || define('GOOGLE_CLIENT_SECRET', '');
+
 // --- Détection automatique du dossier du site (ne pas modifier en général) ---
 $__root = realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '';
 $__dir  = realpath(__DIR__) ?: __DIR__;
