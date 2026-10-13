@@ -118,9 +118,6 @@ require __DIR__ . '/includes/header.php';
     <a class="<?= $onglet === 'inscription' ? 'on' : '' ?>" href="compte.php?onglet=inscription&amp;retour=<?= e(rawurlencode($retour)) ?>">Créer un compte</a>
   </div>
 
-  <?php if ($erreurs): ?>
-    <div class="alert alert-danger rounded-4"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
-  <?php endif; ?>
 
   <div class="panel">
     <?php if ($onglet === 'connexion'): ?>

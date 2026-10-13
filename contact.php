@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // E-mail et sujet ne sont plus demandés : l'e-mail du compte client est conservé s'il est connecté.
         db()->prepare('INSERT INTO messages_contact (nom, telephone, email, sujet, message) VALUES (?, ?, ?, ?, ?)')
             ->execute([$val['nom'], $val['telephone'], $client['email'] ?? null, null, $val['message']]);
-        flash('success', '<i class="fa-solid fa-circle-check me-1"></i> Merci ! Votre message a bien été envoyé à la boutique. Nous vous répondons rapidement.');
+        flash('success', 'Merci ! Votre message a bien été envoyé à la boutique. Nous vous répondons rapidement.');
         redirect(base_url('contact.php'));
     }
 }
@@ -61,9 +61,6 @@ $telLien = normaliser_telephone(CONTACT_TELEPHONE);
     <div class="panel contact-formulaire">
       <h2 class="h5 mb-1">Envoyer un message</h2>
       <p class="text-muted small mb-4">Nous vous rappelons ou vous répondons au numéro indiqué.</p>
-      <?php if ($erreurs): ?>
-        <div class="alert alert-danger rounded-4"><ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div>
-      <?php endif; ?>
       <form method="post" class="row g-3" data-envoi-unique>
         <?= csrf_field() ?>
         <div class="d-none" aria-hidden="true"><label>Site web<input name="site_web" tabindex="-1" autocomplete="off"></label></div>

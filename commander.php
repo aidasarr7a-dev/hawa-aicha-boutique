@@ -138,12 +138,6 @@ require __DIR__ . '/includes/header.php';
   <p class="text-muted mb-0">Indiquez vos coordonnées, choisissez votre paiement et validez : c'est tout.</p>
 </div>
 
-<?php if ($erreurs): ?>
-  <div class="alert alert-danger rounded-4">
-    <ul class="mb-0"><?php foreach ($erreurs as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul>
-  </div>
-<?php endif; ?>
-
 <?php if (!$lignes): ?>
   <div class="panel empty-state">
     <i class="fa-solid fa-bag-shopping"></i>

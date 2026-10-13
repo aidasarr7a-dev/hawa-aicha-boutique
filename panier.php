@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $actuel = $_SESSION['panier'][$id] ?? 0;
             $nouveau = min($actuel + $qty, (int)$p['stock']);
             $_SESSION['panier'][$id] = $nouveau;
-            $msg = '<i class="fa-solid fa-circle-check me-1"></i> <strong>' . e($p['nom']) . '</strong> ajouté au panier. '
-                 . '<a href="' . e(base_url('panier.php')) . '" class="alert-link">Voir le panier</a>';
+            $msg = '<strong>' . e($p['nom']) . '</strong> ajouté au panier. '
+                 . '<a href="' . e(base_url('panier.php')) . '">Voir le panier</a>';
             if ($actuel + $qty > (int)$p['stock']) {
                 $msg .= '<br><small>Quantité limitée au stock disponible (' . (int)$p['stock'] . ').</small>';
             }

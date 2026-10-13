@@ -141,3 +141,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 5000);
   });
 });
+
+// Notifications « Toast » du site : disparition automatique, barre de temps en pause au survol
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.bootstrap) return;
+  document.querySelectorAll('#site-toasts .toast').forEach(function (el) {
+    var delai = parseInt(el.dataset.bsDelay || '5000', 10);
+    var barre = el.querySelector('.site-toast-temps');
+    if (barre) barre.style.animationDuration = delai + 'ms';
+    el.addEventListener('mouseenter', function () { if (barre) barre.style.animationPlayState = 'paused'; });
+    el.addEventListener('mouseleave', function () { if (barre) barre.style.animationPlayState = 'running'; });
+    el.addEventListener('hidden.bs.toast', function () { el.remove(); });
+    bootstrap.Toast.getOrCreateInstance(el, { delay: delai, autohide: true }).show();
+  });
+});

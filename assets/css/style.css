@@ -433,3 +433,35 @@ a.contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hov
 .reseaux-pastel .carte-reseau:hover { border-color: var(--rose-poudre); }
 .reseau-ic.ic-pastel { background: var(--rose-pastel); color: var(--rose-dark); }
 .reseau-ic.ic-saumon { background: var(--rose-saumon); color: var(--rose-dark); }
+
+/* ---------- Notifications « Toast » (site visiteurs) ---------- */
+.site-toasts { position: fixed; top: 5.5rem; right: 1.25rem; z-index: 1090; display: flex; flex-direction: column; gap: .75rem; width: min(380px, calc(100vw - 2rem)); pointer-events: none; }
+.site-toast {
+  --toast-accent: var(--rose);
+  --toast-fond: var(--rose-pastel);
+  position: relative; overflow: hidden; width: 100%; pointer-events: auto;
+  background: #fff; border: 1px solid var(--ligne); border-left: 4px solid var(--toast-accent); border-radius: 1rem;
+  box-shadow: 0 14px 34px rgba(var(--rose-profond-rgb), .14); font-size: .9rem;
+}
+.site-toast.toast-success { --toast-accent: var(--rose); --toast-fond: var(--rose-pastel); }
+.site-toast.toast-danger  { --toast-accent: #C0392B; --toast-fond: #FDECEC; }
+.site-toast.toast-warning { --toast-accent: #C27A0E; --toast-fond: #FFF3DC; }
+.site-toast.toast-info    { --toast-accent: var(--rose-poudre); --toast-fond: var(--rose-bg); }
+.site-toast-corps { display: flex; align-items: flex-start; gap: .85rem; padding: .95rem 1rem 1.05rem; }
+.site-toast-ic { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--toast-fond); color: var(--toast-accent); font-size: 1.05rem; }
+.site-toast strong { color: var(--titre); font-size: .92rem; margin-bottom: .1rem; }
+.site-toast-msg { color: var(--muted); line-height: 1.45; word-break: break-word; }
+.site-toast-msg a { color: var(--rose-dark); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.site-toast .btn-close { flex: none; margin-top: .15rem; font-size: .7rem; opacity: .45; }
+.site-toast .btn-close:hover { opacity: .85; }
+.site-toast-temps { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--toast-accent); opacity: .35; transform-origin: left; animation: site-toast-temps linear forwards; }
+@keyframes site-toast-temps { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.site-toast.showing, .site-toast.show { animation: site-toast-entree .28s ease-out; }
+@keyframes site-toast-entree { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+@media (max-width: 575.98px) {
+  /* Au-dessus du bouton WhatsApp flottant (56 px + 18 px de marge) */
+  .site-toasts { top: auto; bottom: 5.25rem; right: 1rem; left: 1rem; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-toast.showing, .site-toast.show { animation: none; }
+}
