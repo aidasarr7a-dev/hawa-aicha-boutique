@@ -6,6 +6,16 @@ Boutique en ligne dynamique (PHP 8, MySQL/MariaDB, PDO, HTML5, CSS3, Bootstrap 5
 conforme au cahier des charges `Cahier_des_charges_Hawa_Aicha_Boutique.pdf`.
 Palette rose : `#FDEEF3` · `#F6C9D9` · `#E895B3` · `#C5628C` · `#9F3E63` · texte `#333333`.
 
+## Aperçu
+
+| Accueil | Catalogue |
+|---|---|
+| ![Page d'accueil](docs/captures/accueil.jpg) | ![Catalogue des produits](docs/captures/catalogue.jpg) |
+| **Fiche produit** | **Tableau de bord de l'administration** |
+| ![Fiche produit](docs/captures/produit.jpg) | ![Tableau de bord](docs/captures/tableau-de-bord.jpg) |
+
+Captures réelles du site sur XAMPP, avec les 14 produits de démonstration installés par `schema.sql`.
+
 ---
 
 ## 1. Lancer le site sur XAMPP
@@ -64,8 +74,9 @@ contre les doubles envois, commande bloquée si le stock a changé avant la vali
 (mode, date, référence facultative). Statuts : En attente, Payé, Échec/annulé, Remboursé —
 indépendants du statut de la commande. Aucun paiement n'est marqué « Payé » automatiquement.
 
-**Administration** : tableau de bord (produits, commandes, nouvelles commandes, paiements en attente,
-ruptures, ventes réellement payées), produits (ajout, modification, photo, désactivation, suppression),
+**Administration** : tableau de bord (actions à traiter, ventes encaissées, commandes, paiements en attente,
+panier moyen, graphique des ventes des 30 derniers jours avec évolution, suivi des commandes par statut,
+meilleures ventes et produits à réapprovisionner avec leur photo, dernières commandes), produits (ajout, modification, photo, désactivation, suppression),
 stock (à réapprovisionner, épuisés, masqués), catégories, commandes (recherche par numéro, téléphone
 ou nom ; statuts Nouvelle → En préparation → Prête → Livrée/remise, ou Annulée ; frais de livraison),
 paiements, reçu imprimable, changement de mot de passe, déconnexion sécurisée.
