@@ -275,22 +275,22 @@ $miniature = function (array $p): string {
       </div>
       <?php if ($dernieres): ?>
       <div class="table-responsive">
-        <table class="table table-rose align-middle">
+        <table class="table table-rose align-middle table-cartes">
           <thead><tr><th>Cliente / client</th><th>N°</th><th>Total</th><th>Commande</th><th>Paiement</th><th></th></tr></thead>
           <tbody>
           <?php foreach ($dernieres as $c): ?>
             <tr>
-              <td>
+              <td class="cel-titre">
                 <div class="d-flex align-items-center gap-2">
                   <span class="dash-avatar"><?= e(mb_strtoupper(mb_substr(trim($c['nom_complet']) ?: '?', 0, 1))) ?></span>
                   <span class="min-w-0"><span class="d-block text-nowrap fw-medium"><?= e($c['nom_complet']) ?></span><span class="small text-muted text-nowrap"><?= e(date('d/m/Y à H:i', strtotime($c['created_at']))) ?></span></span>
                 </div>
               </td>
-              <td class="text-nowrap cellule-principale"><?= e($c['numero_commande']) ?></td>
-              <td class="text-nowrap fw-medium"><?= fcfa($c['total']) ?></td>
-              <td><?= badge_statut($c['statut']) ?></td>
-              <td><?= badge_paiement($c['statut_paiement']) ?></td>
-              <td class="text-end"><a class="btn btn-outline-rose btn-sm" href="commande.php?id=<?= (int)$c['id'] ?>">Voir</a></td>
+              <td class="text-nowrap cellule-principale" data-label="N°"><?= e($c['numero_commande']) ?></td>
+              <td class="text-nowrap fw-medium" data-label="Total"><?= fcfa($c['total']) ?></td>
+              <td data-label="Commande"><?= badge_statut($c['statut']) ?></td>
+              <td data-label="Paiement"><?= badge_paiement($c['statut_paiement']) ?></td>
+              <td class="text-end cel-actions"><a class="btn btn-outline-rose btn-sm" href="commande.php?id=<?= (int)$c['id'] ?>">Voir</a></td>
             </tr>
           <?php endforeach; ?>
           </tbody>

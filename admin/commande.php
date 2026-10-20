@@ -171,11 +171,11 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
 </div>
 
 <div class="row g-4">
-  <div class="col-lg-7">
+  <div class="col-xl-7">
     <div class="panel mb-4">
       <h2 class="h5 mb-3">Articles</h2>
       <div class="table-responsive">
-        <table class="table table-rose align-middle mb-0">
+        <table class="table table-rose align-middle mb-0 table-articles">
           <thead><tr><th>Produit</th><th>Prix unitaire</th><th>Qté</th><th class="text-end">Sous-total</th></tr></thead>
           <tbody>
           <?php foreach ($items as $i): ?>
@@ -275,7 +275,7 @@ $modifiable = !in_array($cmd['statut'], ['annulee', 'livree'], true) && $statutP
     </div>
   </div>
 
-  <div class="col-lg-5">
+  <div class="col-xl-5">
     <div class="panel">
       <h2 class="h5 mb-3">Client</h2>
       <dl class="admin-fiche">

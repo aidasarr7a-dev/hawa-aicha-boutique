@@ -81,15 +81,19 @@ $produits = $st->fetchAll();
 <div class="panel panel-table">
 <?php if ($produits): ?>
   <div class="table-responsive">
-    <table class="table table-rose align-middle">
-      <thead><tr><th style="width:76px"></th><th>Produit</th><th>Prix</th><th>Stock</th><th>État</th><th class="text-end">Actions</th></tr></thead>
+    <table class="table table-rose align-middle table-cartes">
+      <thead><tr><th>Produit</th><th>Prix</th><th>Stock</th><th>État</th><th class="text-end">Actions</th></tr></thead>
       <tbody>
       <?php foreach ($produits as $p): $img = product_image($p['image']); ?>
         <tr class="<?= $p['actif'] ? '' : 'opacity-50' ?>">
-          <td><?php if ($img): ?><img class="admin-thumb" src="<?= e($img) ?>" alt=""><?php else: ?><span class="admin-thumb"><i class="fa-solid <?= e($p['icone'] ?? 'fa-gem') ?>"></i></span><?php endif; ?></td>
-          <td style="min-width:200px"><span class="cellule-principale"><?= e($p['nom']) ?></span><div class="small text-muted"><?= e($p['categorie'] ?? 'Sans catégorie') ?><?= $p['nouveau'] ? ' · <span style="color:var(--rose)">Nouveau</span>' : '' ?></div></td>
-          <td class="text-nowrap fw-medium"><?= fcfa($p['prix']) ?></td>
-          <td>
+          <td class="cel-titre">
+            <div class="d-flex align-items-center gap-3">
+              <?php if ($img): ?><img class="admin-thumb" src="<?= e($img) ?>" alt=""><?php else: ?><span class="admin-thumb"><i class="fa-solid <?= e($p['icone'] ?? 'fa-gem') ?>"></i></span><?php endif; ?>
+              <div class="min-w-0"><span class="cellule-principale"><?= e($p['nom']) ?></span><div class="small text-muted"><?= e($p['categorie'] ?? 'Sans catégorie') ?><?= $p['nouveau'] ? ' · <span style="color:var(--rose)">Nouveau</span>' : '' ?></div></div>
+            </div>
+          </td>
+          <td class="text-nowrap fw-medium" data-label="Prix"><?= fcfa($p['prix']) ?></td>
+          <td data-label="Stock">
             <div class="stock-cellule">
               <form method="post">
                 <?= csrf_field() ?><input type="hidden" name="action" value="stock"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
@@ -99,13 +103,13 @@ $produits = $st->fetchAll();
               <?php [$sl, $sc] = stock_info((int)$p['stock']); ?><span class="stock-badge stock-<?= e($sc) ?> m-0"><?= e($sl) ?></span>
             </div>
           </td>
-          <td>
+          <td data-label="État">
             <form method="post">
               <?= csrf_field() ?><input type="hidden" name="action" value="toggle"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><input type="hidden" name="q" value="<?= e($q) ?>">
               <button class="badge rounded-pill border-0 text-bg-<?= $p['actif'] ? 'success' : 'secondary' ?>" title="Cliquer pour changer"><i class="fa-solid <?= $p['actif'] ? 'fa-eye' : 'fa-eye-slash' ?> me-1"></i><?= $p['actif'] ? 'Visible' : 'Masqué' ?></button>
             </form>
           </td>
-          <td class="text-end">
+          <td class="text-end cel-actions">
             <div class="admin-actions">
               <a class="btn btn-outline-rose btn-sm btn-ic" href="produit_form.php?id=<?= (int)$p['id'] ?>" title="Modifier"><i class="fa-solid fa-pen"></i></a>
               <?php if (est_principal()): ?>

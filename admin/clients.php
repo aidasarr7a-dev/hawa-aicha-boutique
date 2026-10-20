@@ -42,18 +42,16 @@ $clients = $st->fetchAll();
 <div class="panel panel-table">
 <?php if ($clients): ?>
   <div class="table-responsive">
-    <table class="table table-rose align-middle">
-      <thead><tr><th>Client</th><th>Contact</th><th>Adresse</th><th>Compte</th><th class="text-center">Commandes</th><th>Total</th><th></th></tr></thead>
+    <table class="table table-rose align-middle table-cartes">
+      <thead><tr><th>Client</th><th>Contact</th><th>Adresse</th><th>Commandes</th><th></th></tr></thead>
       <tbody>
       <?php foreach ($clients as $c): ?>
         <tr>
-          <td style="min-width:160px"><span class="cellule-principale"><?= e($c['nom_complet']) ?></span><div class="small text-muted">depuis le <?= e(date('d/m/Y', strtotime($c['date_creation']))) ?></div></td>
-          <td class="small"><a href="tel:<?= e($c['telephone']) ?>"><?= e($c['telephone']) ?></a><?= $c['email'] ? '<br><a href="mailto:' . e($c['email']) . '">' . e($c['email']) . '</a>' : '' ?></td>
-          <td class="small" style="min-width:140px"><?= e(trim(($c['adresse'] ?? '') . ($c['ville'] ? ', ' . $c['ville'] : ''), ', ') ?: '—') ?></td>
-          <td class="text-nowrap"><?= $c['mot_de_passe_hash'] ? '<span class="badge rounded-pill text-bg-success">Compte client</span>' : '<span class="badge rounded-pill text-bg-light border">Sans compte</span>' ?></td>
-          <td class="text-center"><span class="fw-medium"><?= (int)$c['nb_commandes'] ?></span><?= $c['derniere_commande'] ? '<div class="small text-muted text-nowrap">dernière : ' . e(date('d/m/Y', strtotime($c['derniere_commande']))) . '</div>' : '' ?></td>
-          <td class="text-nowrap fw-medium"><?= fcfa($c['total_commandes']) ?></td>
-          <td class="text-end"><?php if ($c['nb_commandes']): ?><a class="btn btn-outline-rose btn-sm text-nowrap" href="commandes.php?q=<?= e(rawurlencode($c['telephone'])) ?>">Ses commandes</a><?php endif; ?></td>
+          <td class="cel-titre"><div><span class="cellule-principale"><?= e($c['nom_complet']) ?></span><div class="small text-muted">depuis le <?= e(date('d/m/Y', strtotime($c['date_creation']))) ?></div></div><div class="mt-1"><?= $c['mot_de_passe_hash'] ? '<span class="badge rounded-pill text-bg-success">Compte client</span>' : '<span class="badge rounded-pill text-bg-light border">Sans compte</span>' ?></div></td>
+          <td class="small cel-contact" data-label="Contact"><a class="text-nowrap" href="tel:<?= e($c['telephone']) ?>"><?= e($c['telephone']) ?></a><?= $c['email'] ? '<br><a href="mailto:' . e($c['email']) . '">' . e($c['email']) . '</a>' : '' ?></td>
+          <td class="small cel-livraison" data-label="Adresse"><?= e(trim(($c['adresse'] ?? '') . ($c['ville'] ? ', ' . $c['ville'] : ''), ', ') ?: '—') ?></td>
+          <td data-label="Commandes"><span class="fw-medium text-nowrap"><?= fcfa($c['total_commandes']) ?></span><div class="small text-muted"><?= (int)$c['nb_commandes'] ?> commande<?= $c['nb_commandes'] > 1 ? 's' : '' ?><?= $c['derniere_commande'] ? ' · dernière le ' . e(date('d/m/Y', strtotime($c['derniere_commande']))) : '' ?></div></td>
+          <td class="text-end cel-actions"><?php if ($c['nb_commandes']): ?><a class="btn btn-outline-rose btn-sm text-nowrap" href="commandes.php?q=<?= e(rawurlencode($c['telephone'])) ?>">Ses commandes</a><?php endif; ?></td>
         </tr>
       <?php endforeach; ?>
       </tbody>

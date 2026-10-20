@@ -307,8 +307,71 @@
   .admin-modale .modal-header, .admin-modale .modal-body, .admin-modale .modal-footer { padding-left: 1.1rem; padding-right: 1.1rem; }
 }
 
-/* ---------- Administrateurs : le tableau devient une liste de cartes sur tablette et téléphone ---------- */
-@media (max-width: 991.98px) {
+/* ---------- Tableaux « table-cartes » (Commandes, Paiements, Clients, Produits…) ----------
+   Grand écran : colonnes regroupées qui tiennent dans la largeur, sans défilement horizontal.
+   Portable étroit, tablette et téléphone : chaque ligne devient une carte, chaque information
+   est précédée de son intitulé (attribut data-label de la cellule). */
+.badges-pile { display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; }
+.admin-body .table-cartes td { padding: .9rem .75rem; }
+.table-cartes .cel-livraison { min-width: 150px; max-width: 260px; }
+.table-cartes .cel-reference { max-width: 220px; word-break: break-word; }
+@media (max-width: 1199.98px) {
+  .table-cartes thead { display: none; }
+  .table-cartes, .table-cartes tbody, .table-cartes tr, .table-cartes td { display: block; width: 100%; }
+  .table-cartes tr {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem 1.25rem;
+    padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--admin-bord);
+  }
+  .table-cartes tbody tr:last-child { border-bottom: 0; }
+  .admin-body .panel-table .table-cartes td, .panel-table .table-cartes td:first-child, .panel-table .table-cartes td:last-child {
+    padding: 0; border: 0; min-width: 0; max-width: none; white-space: normal; background: none !important; text-align: left;
+  }
+  .table-cartes td[data-label]::before {
+    content: attr(data-label); display: block; margin-bottom: .3rem;
+    font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--admin-texte-doux);
+  }
+  .table-cartes td:empty { display: none; }
+  .table-cartes td.text-center, .table-cartes td.text-end { text-align: left !important; }
+  /* En-tête de la carte : identifiant à gauche, détail (date, statut…) à droite */
+  .table-cartes .cel-titre { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem 1rem; }
+  .table-cartes .cel-titre > div { margin: 0 !important; }
+  .table-cartes .cel-titre .cellule-principale { font-size: 1rem; }
+  .table-cartes .cel-pleine { grid-column: 1 / -1; }
+  .table-cartes .cel-actions { grid-column: 1 / -1; padding-top: .9rem !important; border-top: 1px dashed var(--admin-bord) !important; }
+  .table-cartes .cel-actions .admin-actions { justify-content: flex-start; flex-wrap: wrap; }
+  .table-cartes .badges-pile { flex-direction: row; flex-wrap: wrap; }
+}
+.table-cartes .cel-contact { word-break: break-word; }
+@media (max-width: 1199.98px) {
+  .table-cartes .cel-icone { display: none; }
+  .table-cartes .cel-nom { grid-column: 1 / span 2; }
+}
+@media (max-width: 575.98px) {
+  .table-cartes tr { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 1.1rem; }
+  .table-cartes .cel-livraison, .table-cartes .cel-reference, .table-cartes .cel-contact, .table-cartes .cel-nom { grid-column: 1 / -1; }
+  .table-cartes .cel-actions > .btn { display: block; width: 100%; }
+  .table-cartes .badge { white-space: normal; text-align: left; }
+}
+
+/* Articles d'une commande (admin/commande.php) : sur téléphone, chaque article tient sur deux lignes */
+.admin-body .table-articles thead th { white-space: normal; }
+@media (max-width: 575.98px) {
+  .table-articles thead { display: none; }
+  .table-articles, .table-articles tbody, .table-articles tfoot, .table-articles tr, .table-articles td { display: block; }
+  .table-articles tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .15rem 1rem; padding: .8rem 0; border-bottom: 1px solid var(--admin-bord); }
+  .admin-body .table-articles td, .panel-table .table-articles td:first-child, .panel-table .table-articles td:last-child { padding: 0; border: 0; background: none !important; }
+  .table-articles tbody td:nth-child(1) { grid-column: 1 / -1; font-weight: 500; }
+  .table-articles tbody td:nth-child(2) { grid-column: 1; color: var(--admin-texte-doux); font-size: .85rem; }
+  .table-articles tbody td:nth-child(3) { grid-column: 1; color: var(--admin-texte-doux); font-size: .85rem; }
+  .table-articles tbody td:nth-child(3)::before { content: "Quantité : "; }
+  .table-articles tbody td:nth-child(4) { grid-column: 2; grid-row: 2 / span 2; align-self: center; font-weight: 600; }
+  .table-articles tfoot tr { display: flex; justify-content: space-between; gap: 1rem; }
+  .admin-body .table-articles tfoot td, .admin-body .table-articles tfoot tr:first-child td { padding: .55rem 0 0; border: 0; text-align: left !important; }
+  .table-articles tfoot td:last-child { text-align: right !important; }
+}
+
+/* ---------- Administrateurs : le tableau devient une liste de cartes sur tablette, portable et téléphone ---------- */
+@media (max-width: 1399.98px) {
   .table-admins thead { display: none; }
   .table-admins, .table-admins tbody, .table-admins tr, .table-admins td { display: block; width: 100%; }
   .table-admins tr {

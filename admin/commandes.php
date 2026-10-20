@@ -55,19 +55,17 @@ $qs = $q !== '' ? '&q=' . rawurlencode($q) : '';
 <div class="panel panel-table">
 <?php if ($commandes): ?>
   <div class="table-responsive">
-    <table class="table table-rose align-middle">
-      <thead><tr><th>N°</th><th>Client</th><th>Téléphone</th><th>Livraison</th><th>Total</th><th>Commande</th><th>Paiement</th><th></th></tr></thead>
+    <table class="table table-rose align-middle table-cartes">
+      <thead><tr><th>Commande</th><th>Client</th><th>Livraison</th><th>Total</th><th>Statut</th><th></th></tr></thead>
       <tbody>
       <?php foreach ($commandes as $c): ?>
         <tr>
-          <td class="text-nowrap cellule-principale"><?= e($c['numero_commande']) ?></td>
-          <td style="min-width:150px"><?= e($c['nom_complet']) ?><div class="small text-muted text-nowrap"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
-          <td class="text-nowrap"><a href="tel:<?= e($c['telephone']) ?>"><?= e($c['telephone']) ?></a></td>
-          <td style="min-width:170px"><?= e(adresse_commande($c)) ?><div class="small text-muted"><?= e($c['mode_livraison']) ?></div></td>
-          <td class="text-nowrap fw-medium"><?= fcfa($c['total']) ?><div class="small text-muted fw-normal"><?= e($c['paiement']) ?></div></td>
-          <td><?= badge_statut($c['statut']) ?></td>
-          <td><?= badge_paiement($c['statut_paiement']) ?></td>
-          <td class="text-end"><a class="btn btn-outline-rose btn-sm text-nowrap" href="commande.php?id=<?= (int)$c['id'] ?>">Détails</a></td>
+          <td class="cel-titre"><span class="text-nowrap cellule-principale"><?= e($c['numero_commande']) ?></span><div class="small text-muted text-nowrap"><?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div></td>
+          <td data-label="Client"><?= e($c['nom_complet']) ?><div class="small"><a class="text-nowrap" href="tel:<?= e($c['telephone']) ?>"><i class="fa-solid fa-phone me-1"></i><?= e($c['telephone']) ?></a></div></td>
+          <td class="cel-livraison" data-label="Livraison"><?= e(adresse_commande($c)) ?><div class="small text-muted"><?= e($c['mode_livraison']) ?></div></td>
+          <td class="text-nowrap fw-medium" data-label="Total"><?= fcfa($c['total']) ?><div class="small text-muted fw-normal"><?= e($c['paiement']) ?></div></td>
+          <td data-label="Statut"><div class="badges-pile"><?= badge_statut($c['statut']) ?><?= badge_paiement($c['statut_paiement']) ?></div></td>
+          <td class="text-end cel-actions"><a class="btn btn-outline-rose btn-sm text-nowrap" href="commande.php?id=<?= (int)$c['id'] ?>">Détails</a></td>
         </tr>
       <?php endforeach; ?>
       </tbody>

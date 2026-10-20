@@ -81,19 +81,17 @@ function lien_filtre(string $statut, string $mode): string
 <div class="panel panel-table">
 <?php if ($paiements): ?>
   <div class="table-responsive">
-    <table class="table table-rose align-middle">
-      <thead><tr><th>Commande</th><th>Client</th><th>Mode</th><th>Montant</th><th>Statut</th><th>Référence</th><th>Confirmé le</th><th></th></tr></thead>
+    <table class="table table-rose align-middle table-cartes">
+      <thead><tr><th>Commande</th><th>Client</th><th>Montant</th><th>Statut</th><th>Référence</th><th></th></tr></thead>
       <tbody>
       <?php foreach ($paiements as $p): ?>
         <tr>
-          <td class="text-nowrap"><span class="cellule-principale"><?= e($p['numero_commande']) ?></span><div class="mt-1"><?= badge_statut($p['statut_commande']) ?></div></td>
-          <td style="min-width:150px"><?= e($p['nom_complet']) ?><div class="small text-muted"><?= e($p['telephone']) ?></div></td>
-          <td class="text-nowrap"><?= e($p['mode_paiement']) ?></td>
-          <td class="text-nowrap fw-medium"><?= fcfa($p['montant']) ?></td>
-          <td><?= badge_paiement($p['statut_paiement']) ?></td>
-          <td class="small"><?= e($p['reference_transaction'] ?? '—') ?><?php if (!empty($p['date_declaration']) && $p['statut_paiement'] === 'en_attente'): ?><div class="mt-1"><span class="badge rounded-pill text-bg-info">Déclaré payé</span> <?= e($p['reference_client']) ?></div><?php endif; ?></td>
-          <td class="small text-nowrap"><?= $p['date_confirmation'] ? e(date('d/m/Y H:i', strtotime($p['date_confirmation']))) : '—' ?></td>
-          <td class="text-end"><a class="btn <?= $p['statut_paiement'] === 'en_attente' ? 'btn-rose' : 'btn-outline-rose' ?> btn-sm text-nowrap" href="commande.php?id=<?= (int)$p['commande_id'] ?>#paiement"><?= $p['statut_paiement'] === 'en_attente' ? 'Vérifier' : 'Détails' ?></a></td>
+          <td class="cel-titre"><span class="text-nowrap cellule-principale"><?= e($p['numero_commande']) ?></span><div class="mt-1"><?= badge_statut($p['statut_commande']) ?></div></td>
+          <td data-label="Client"><?= e($p['nom_complet']) ?><div class="small text-muted text-nowrap"><?= e($p['telephone']) ?></div></td>
+          <td class="text-nowrap fw-medium" data-label="Montant"><?= fcfa($p['montant']) ?><div class="small text-muted fw-normal"><?= e($p['mode_paiement']) ?></div></td>
+          <td data-label="Statut"><?= badge_paiement($p['statut_paiement']) ?><div class="small text-muted text-nowrap mt-1"><?= $p['date_confirmation'] ? 'Confirmé le ' . e(date('d/m/Y H:i', strtotime($p['date_confirmation']))) : 'Non confirmé' ?></div></td>
+          <td class="small cel-reference" data-label="Référence"><?= e($p['reference_transaction'] ?? '—') ?><?php if (!empty($p['date_declaration']) && $p['statut_paiement'] === 'en_attente'): ?><div class="mt-1"><span class="badge rounded-pill text-bg-info">Déclaré payé</span> <?= e($p['reference_client']) ?></div><?php endif; ?></td>
+          <td class="text-end cel-actions"><a class="btn <?= $p['statut_paiement'] === 'en_attente' ? 'btn-rose' : 'btn-outline-rose' ?> btn-sm text-nowrap" href="commande.php?id=<?= (int)$p['commande_id'] ?>#paiement"><?= $p['statut_paiement'] === 'en_attente' ? 'Vérifier' : 'Détails' ?></a></td>
         </tr>
       <?php endforeach; ?>
       </tbody>

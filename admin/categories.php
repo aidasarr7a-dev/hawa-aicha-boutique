@@ -60,7 +60,7 @@ function icone_select(string $courant): string
 </div>
 
 <div class="row g-4">
-  <div class="col-lg-4">
+  <div class="col-xxl-4">
     <div class="panel">
       <h2 class="h5 mb-4">Nouvelle catégorie</h2>
       <form method="post">
@@ -71,19 +71,19 @@ function icone_select(string $courant): string
       </form>
     </div>
   </div>
-  <div class="col-lg-8">
+  <div class="col-xxl-8">
     <div class="panel panel-table">
       <?php if ($cats): ?>
       <div class="table-responsive">
-        <table class="table table-rose align-middle">
+        <table class="table table-rose align-middle table-cartes">
           <thead><tr><th style="width:52px"></th><th>Catégorie</th><th class="text-center">Produits</th><th class="text-end">Icône et actions</th></tr></thead>
           <tbody>
           <?php foreach ($cats as $c): $fid = 'f' . (int)$c['id']; ?>
             <tr>
-              <td><span class="stat-ic m-0" style="width:36px;height:36px;font-size:.9rem"><i class="fa-solid <?= e($c['icone']) ?>"></i></span></td>
-              <td style="min-width:180px"><input form="<?= $fid ?>" class="form-control form-control-sm" name="nom" value="<?= e($c['nom']) ?>" required maxlength="100" aria-label="Nom de la catégorie"></td>
-              <td class="text-center fw-medium"><?= (int)$c['nb'] ?></td>
-              <td class="text-end">
+              <td class="cel-icone"><span class="stat-ic m-0" style="width:36px;height:36px;font-size:.9rem"><i class="fa-solid <?= e($c['icone']) ?>"></i></span></td>
+              <td class="cel-nom" data-label="Nom"><input form="<?= $fid ?>" class="form-control form-control-sm" name="nom" value="<?= e($c['nom']) ?>" required maxlength="100" aria-label="Nom de la catégorie"></td>
+              <td class="text-center fw-medium" data-label="Produits"><?= (int)$c['nb'] ?></td>
+              <td class="text-end cel-actions" data-label="Icône et actions">
                 <div class="admin-actions">
                   <form id="<?= $fid ?>" method="post">
                     <?= csrf_field() ?><input type="hidden" name="action" value="edit"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
