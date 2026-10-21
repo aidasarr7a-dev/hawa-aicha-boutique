@@ -26,7 +26,7 @@ define('BOUTIQUE_ADRESSE', 'Golf Sud, arrêt BRT de Golf Sud');
 // Pour un point plus précis : ouvrez Google Maps, appuyez longuement sur la boutique et recopiez les deux nombres.
 define('BOUTIQUE_LAT', 14.76705);
 define('BOUTIQUE_LON', -17.41415);
-define('ZONE_LIVRAISON', '');         // ex : 'Dakar et banlieue'
+define('ZONE_LIVRAISON', 'Partout dans le monde');
 define('WAVE_NUMERO', '78 545 25 44');          // numéro Wave qui reçoit les paiements
 define('ORANGE_MONEY_NUMERO', '78 545 25 44');  // numéro Orange Money qui reçoit les paiements
 // Lien marchand Wave Business, sans montant : le site ajoute « ?amount=<total de la commande> » automatiquement.

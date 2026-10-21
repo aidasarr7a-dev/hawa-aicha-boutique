@@ -161,17 +161,17 @@ INSERT INTO categories (id, nom, icone) VALUES
 
 -- Les quatorze produits de démonstration (prix de démonstration, à modifier dans l'administration)
 INSERT INTO produits (categorie_id, nom, description, prix, stock, nouveau, image) VALUES
-  (1, 'Parfum d''intérieur', 'Parfum destiné à apporter une senteur agréable à la maison.', 4000, 8, 0, 'aa6d9e308b60110b5075.jpg'),
-  (1, 'Parfum corporel', 'Parfum pour une utilisation quotidienne.', 3500, 12, 1, '63ddb7d39bcb946365bb.jpg'),
-  (2, 'Crème solaire', 'Produit de protection solaire pour les soins de la peau.', 5000, 15, 1, '08662ba3f88d249c97d3.jpg'),
-  (3, 'Sac à main féminin', 'Sac élégant pour sorties et usage quotidien.', 9500, 5, 1, 'e10cf1b5d0e50d857246.jpg'),
-  (4, 'Voile pour femme', 'Voile élégant pour compléter différentes tenues.', 6000, 10, 1, '4044a31816ba993c6f1c.jpg'),
-  (5, 'Jalabé', 'Tenue traditionnelle élégante et confortable.', 12000, 4, 0, '0f0394656b0681c5f813.jpg'),
-  (1, 'Encens traditionnel', 'Encens à brûler pour parfumer agréablement la maison.', 2500, 20, 1, '242fa0978b3b994e02ed.jpg'),
-  (2, 'Lait corporel', 'Lait pour le soin quotidien du corps.', 4500, 12, 0, '99ddb9b86ebb96d8c75c.jpg'),
-  (2, 'Huile de soin', 'Huile pour le soin quotidien de la peau.', 3500, 10, 1, 'ec7fe0bba75bd9204fcd.jpg'),
-  (3, 'Pochette de soirée', 'Petite pochette élégante pour les sorties et les cérémonies.', 7500, 6, 1, 'd987633b1de1f353877d.jpg'),
-  (3, 'Bijoux fantaisie dorés', 'Collier et bracelets fantaisie de couleur dorée.', 5000, 8, 0, 'a5c143c32c3e706fa2b0.jpg'),
-  (3, 'Lunettes de soleil', 'Lunettes de soleil au style rétro.', 3000, 15, 0, '57a663074db811848997.jpg'),
-  (7, 'Sandales pour femme', 'Sandales confortables pour tous les jours.', 8000, 3, 1, '8a72f390a1f279db2b22.jpg'),
-  (6, 'Coussins décoratifs', 'Coussins pour décorer et apporter du confort au salon ou à la chambre.', 6500, 8, 1, '1c329fda442b5e6ae8d6.jpg');
+  (1, 'Parfum d''intérieur', 'Parfum d''ambiance qui laisse une senteur agréable et chaleureuse dans le salon, la chambre ou l''entrée. Quelques pulvérisations suffisent pour accueillir vos invités dans une maison qui sent bon. Son parfum dure plusieurs heures.', 4000, 8, 0, 'aa6d9e308b60110b5075.jpg'),
+  (1, 'Parfum corporel', 'Parfum corporel à la senteur douce et durable, pour se sentir fraîche toute la journée. Quelques pulvérisations sur le cou et les poignets suffisent. Il convient aussi bien pour le travail que pour les sorties.', 3500, 12, 1, '63ddb7d39bcb946365bb.jpg'),
+  (2, 'Crème solaire', 'Crème qui protège la peau du soleil et de la chaleur au quotidien. Sa texture légère pénètre vite, sans laisser de traces blanches. À appliquer le matin sur le visage et le corps, puis à renouveler après une longue exposition.', 5000, 15, 1, '08662ba3f88d249c97d3.jpg'),
+  (3, 'Sac à main féminin', 'Sac à main élégant et pratique, assez grand pour le téléphone, le portefeuille et les petits essentiels de la journée. Ses anses solides se portent à la main ou au creux du bras. Il accompagne aussi bien une tenue de bureau qu''une tenue de sortie.', 9500, 5, 1, 'e10cf1b5d0e50d857246.jpg'),
+  (4, 'Voile pour femme', 'Voile léger et doux, agréable à porter même par temps chaud. Son tissu fluide se drape facilement et tient bien toute la journée. Il se marie avec toutes vos tenues, pour le quotidien comme pour les grandes occasions.', 6000, 10, 1, '4044a31816ba993c6f1c.jpg'),
+  (5, 'Jalabé', 'Jalabé ample et confortable, au tissu fluide qui laisse respirer la peau. Sa coupe élégante convient pour la maison, la prière, les visites ou les cérémonies. Une tenue traditionnelle facile à porter et à entretenir.', 12000, 4, 0, '0f0394656b0681c5f813.jpg'),
+  (1, 'Encens traditionnel', 'Encens traditionnel à brûler, pour parfumer la maison d''une senteur chaude et persistante. Il suffit d''en déposer un peu sur le charbon de l''encensoir. Idéal pour accueillir les invités ou parfumer le linge.', 2500, 20, 1, '242fa0978b3b994e02ed.jpg'),
+  (2, 'Lait corporel', 'Lait hydratant pour le corps, à la texture fluide qui pénètre rapidement. Il laisse la peau douce, souple et délicatement parfumée toute la journée. À appliquer chaque jour après la douche.', 4500, 12, 0, '99ddb9b86ebb96d8c75c.jpg'),
+  (2, 'Huile de soin', 'Huile qui nourrit et adoucit la peau en profondeur, sans laisser de film gras. Elle s''utilise sur le corps, les mains et les pointes des cheveux. Appliquez-la après la douche, sur une peau encore légèrement humide, pour un meilleur résultat.', 3500, 10, 1, 'ec7fe0bba75bd9204fcd.jpg'),
+  (3, 'Pochette de soirée', 'Petite pochette élégante pour les soirées, les mariages et les cérémonies. Elle contient l''essentiel : téléphone, clés, rouge à lèvres et un peu de monnaie. Elle se tient à la main pour une allure raffinée.', 7500, 6, 1, 'd987633b1de1f353877d.jpg'),
+  (3, 'Bijoux fantaisie dorés', 'Parure fantaisie de couleur dorée, avec un collier et des bracelets assortis. Elle illumine une tenue simple comme une tenue de cérémonie : mariage, baptême ou fête. Légère et agréable à porter.', 5000, 8, 0, 'a5c143c32c3e706fa2b0.jpg'),
+  (3, 'Lunettes de soleil', 'Lunettes de soleil au style rétro, qui protègent les yeux de la lumière et donnent une touche chic à votre tenue. Leur monture légère se porte confortablement toute la journée.', 3000, 15, 0, '57a663074db811848997.jpg'),
+  (7, 'Sandales pour femme', 'Sandales pour femme légères et confortables, faciles à enfiler. Leur semelle souple permet de marcher toute la journée sans fatigue. Elles vont avec les tenues de tous les jours comme avec les tenues traditionnelles.', 8000, 3, 1, '8a72f390a1f279db2b22.jpg'),
+  (6, 'Coussins décoratifs', 'Coussins décoratifs moelleux, pour apporter du confort et une touche chaleureuse au salon ou à la chambre. Ils s''accordent facilement avec un canapé, un lit ou des fauteuils. Une façon simple de renouveler la décoration de la maison.', 6500, 8, 1, '1c329fda442b5e6ae8d6.jpg');
